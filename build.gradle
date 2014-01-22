@@ -11,6 +11,8 @@ buildscript {
     }
 }
 
+apply plugin: 'forge'
+
 ext.configFile = file "build.properties"
 
 configFile.withReader {
@@ -22,7 +24,6 @@ configFile.withReader {
 File releaseDir = file('release')
 
 allprojects {
-	apply plugin: 'forge'
 	
 	version = "${config.minecraft_version}-${config.version_major}.${config.version_minor}.${config.version_revision}"
 
@@ -51,6 +52,10 @@ archivesBaseName = "ServerTools-CORE"
 subprojects {
 	dependencies {
 		compile rootProject
+	}
+	
+	rootProject.reobf {
+		reobf subproj.tasks.jar
 	}
 
 	group = "servertools." + name.toLowerCase()
