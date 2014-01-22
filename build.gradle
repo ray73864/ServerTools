@@ -1,0 +1,60 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.0-SNAPSHOT'
+    }
+}
+
+ext.configFile = file "build.properties"
+
+configFile.withReader {
+	def prop = new Properties()
+	prop.load(it)
+	project.ext.config = new ConfigSlurper().parse prop
+}
+
+File releaseDir = file('release')
+
+allprojects {
+	apply plugin: 'forge'
+	
+	version = "${config.minecraft_version}-${config.version_major}.${config.version_minor}.${config.version_revision}"
+
+	minecraft {
+		version = config.minecraft_version + "-" + config.forge_version
+		assetDir = getRootDir().getAbsolutePath() + "/run/assets"
+	}
+
+
+	
+	task release(type: Copy) {
+		dependsOn 'clean', 'reobf'
+		
+		for (File file : releaseDir.listFiles()) {
+            file.delete()
+        }
+		
+		from project.tasks.jar.destinationDir
+		into project.file(releaseDir)
+	}
+}
+
+group = "servertools.core"
+archivesBaseName = "ServerTools-CORE"
+
+subprojects {
+	dependencies {
+		compile rootProject
+	}
+
+	group = "servertools." + name.toLowerCase()
+	archivesBaseName = "ServerTools-" + name.toUpperCase()
+
+	genIntellijRuns.enabled = false
+}

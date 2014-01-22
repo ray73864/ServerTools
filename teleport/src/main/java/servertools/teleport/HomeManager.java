@@ -1,0 +1,136 @@
+package servertools.teleport;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
+import servertools.core.STLog;
+import servertools.core.util.FileUtils;
+
+import java.io.*;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
+
+public class HomeManager {
+
+    private static final Map<String, Map<Integer, Location>> userHomeMap = new HashMap<String, Map<Integer, Location>>();
+    private static File homeDir;
+    private static Gson gson;
+
+    public static void init(File homeDirectory) {
+
+        gson = new GsonBuilder().setPrettyPrinting().create();
+        homeDir = homeDirectory;
+        if (homeDir.mkdirs()) {
+            STLog.fine(String.format("Creating home directory: %s", homeDir.getAbsolutePath()));
+        }
+
+        loadHomes();
+    }
+
+    private static void saveHome(String username) {
+
+        if (userHomeMap.containsKey(username)) {
+            if (!(userHomeMap.get(username).isEmpty())) {
+                STLog.info(String.format("Saving user home file for %s", username));
+                String gsonRepresentation = gson.toJson(userHomeMap.get(username));
+                try {
+                    FileUtils.writeStringToFile(gsonRepresentation, new File(homeDir, username + ".json"));
+                } catch (IOException e) {
+                    STLog.warning(String.format("Failed to save %s's homes to file", username));
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public static void setHome(String username, int dimension, double x, double y, double z) {
+
+        if (!userHomeMap.containsKey(username)) {
+            userHomeMap.put(username, new HashMap<Integer, Location>());
+        }
+
+        userHomeMap.get(username).put(dimension, new Location(x, y, z));
+
+        saveHome(username);
+    }
+
+    public static Location getHome(String username, int dimension) {
+
+        if (userHomeMap.containsKey(username)) {
+            if (userHomeMap.get(username).containsKey(dimension)) {
+                return userHomeMap.get(username).get(dimension);
+            }
+        }
+
+        return null;
+    }
+
+    public static boolean clearHome(String username, int dimension) {
+
+        if (userHomeMap.containsKey(username)) {
+            if (userHomeMap.get(username).containsKey(dimension)) {
+                userHomeMap.get(username).remove(dimension);
+                saveHome(username);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static void loadHomes() {
+
+        File[] fileList = homeDir.listFiles();
+
+        if (fileList == null || fileList.length == 0)
+            return;
+
+        userHomeMap.clear();
+
+        for (File file : fileList) {
+            if (file.getName().endsWith(".json")) {
+                String username = file.getName().substring(0, file.getName().length() - 5);
+
+                try {
+
+                    FileReader reader = new FileReader(file);
+                    BufferedReader bufferedReader = new BufferedReader(reader);
+
+                    Type type = new TypeToken<Map<Integer, Location>>() {
+                    }.getType();
+
+                    Map<Integer, Location> map = gson.fromJson(bufferedReader, type);
+
+                    if (map != null)
+                        userHomeMap.put(username, map);
+
+                    bufferedReader.close();
+
+                }catch (JsonParseException e) {
+                    e.printStackTrace();
+                    STLog.warning(String.format("The home file for %s could not be parsed as json, it will not be loaded", username));
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    STLog.warning(String.format("Tried to load home file for %s, but it didn't exist", username));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    STLog.warning(String.format("Failed to close buffered reader stream for: %s", file.getAbsolutePath()));
+                }
+            }
+        }
+    }
+
+    public static class Location {
+        public final double x;
+        public final double y;
+        public final double z;
+
+        Location(double x, double y, double z) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+    }
+}

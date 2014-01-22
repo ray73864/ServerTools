@@ -1,0 +1,18 @@
+## gradle
+/.gradle
+/*/.gradle
+/build
+/*/build
+
+## ForgeGradle
+/run
+
+## intellij
+/out
+/*/out
+/.idea
+/*/.idea
+/*.iml
+/*/*.iml
+
+/release/*
