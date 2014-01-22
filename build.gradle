@@ -55,7 +55,7 @@ subprojects {
 	}
 	
 	rootProject.reobf {
-		reobf subproj.tasks.jar
+		reobf jar
 	}
 
 	group = "servertools." + name.toLowerCase()
