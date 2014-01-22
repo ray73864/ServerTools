@@ -13,6 +13,9 @@ buildscript {
 
 apply plugin: 'forge'
 
+group = "servertools.core"
+archivesBaseName = "ServerTools-CORE"
+
 ext.configFile = file "build.properties"
 
 configFile.withReader {
@@ -23,47 +26,41 @@ configFile.withReader {
 
 File releaseDir = file('release')
 
-allprojects {
-	
-	version = "${config.minecraft_version}-${config.version_major}.${config.version_minor}.${config.version_revision}"
-
-	apply plugin: 'java'
-	
-	minecraft {
-		version = config.minecraft_version + "-" + config.forge_version
-		assetDir = getRootDir().getAbsolutePath() + "/run/assets"
-	}
-
-
-	
-	task release(type: Copy) {
-		dependsOn 'clean', 'reobf'
-		
-		for (File file : releaseDir.listFiles()) {
-            file.delete()
-        }
-		
-		from project.tasks.jar.destinationDir
-		into project.file(releaseDir)
-	}
+minecraft {
+	version = config.minecraft_version + "-" + config.forge_version
+	assetDir = getRootDir().getAbsolutePath() + "/run/assets"
 }
 
-group = "servertools.core"
-archivesBaseName = "ServerTools-CORE"
+allProjects.version = "${config.minecraft_version}-${config.version_major}.${config.version_minor}.${config.version_revision}"
 
 subprojects {
+	apply plugin: 'java'
+	
+	group = "servertools." + name.toLowerCase()
+	archivesBaseName = "ServerTools-" + name.toUpperCase()
+	
 	dependencies {
 		compile rootProject
 	}
 	
 	rootProject.reobf {
-		reobf jar
+		reobf(jar) { spec ->
+			soec.classpath = sourceSets.main.compileClasspath
+		}
 	}
-	
-	
+}
 
-	group = "servertools." + name.toLowerCase()
-	archivesBaseName = "ServerTools-" + name.toUpperCase()
-
-	genIntellijRuns.enabled = false
+// release
+task release(type: Copy) {
+	dependsOn 'clean', 'reobf'
+	from subprojects*.tasks.jar.destinationDir
+	into project.file(releaseDir)
+	
+	// clean first
+	doFirst {
+		if (releaseDir.exists() && releaseDir.isDirectory())
+			releaseDir.deletedDir()
+		
+		releaseDir.mkdirs()
+	}
 }
