@@ -54,9 +54,13 @@ subprojects {
 		compile rootProject
 	}
 	
+	apply plugin: 'java'
+	
 	rootProject.reobf {
 		reobf jar
 	}
+	
+	
 
 	group = "servertools." + name.toLowerCase()
 	archivesBaseName = "ServerTools-" + name.toUpperCase()
