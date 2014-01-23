@@ -73,20 +73,24 @@ allprojects{
     }
 }
 
+task cleanAll() {
+    dependsOn subprojects.clean, 'clean'
+}
+
 // release
 task release(type: Copy) {
-	dependsOn 'clean', 'reobf'
-	from subprojects*.tasks.jar.destinationDir, project.tasks.jar.destinationDir
-	into project.file(releaseDir)
+	dependsOn 'cleanAll', 'reobf'
 	
 	// clean first
-	doFirst {
-		if (releaseDir.exists()) {
-            println("Release Dir Exists")
-            for (File file : releaseDir.listFiles()) {
-                println("Deleting: " + file.getName())
-                file.delete()
-            }
+	if (releaseDir.exists() && releaseDir.isDirectory()) {
+        for (File file : releaseDir.listFiles()) {
+            println("Deleting old file: " + file.getName())
+            file.delete()
         }
-	}
+    }
+
+    releaseDir.mkdirs()
+
+    from subprojects*.tasks.jar.destinationDir, project.tasks.jar.destinationDir
+    into project.file(releaseDir)
 }
