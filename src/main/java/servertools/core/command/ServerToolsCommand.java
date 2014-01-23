@@ -29,7 +29,7 @@ public abstract class ServerToolsCommand extends CommandBase {
         this.defaultName = defaultName;
     }
 
-    public String getCommandName() {
+    public final String getCommandName() {
 
         return name;
     }
