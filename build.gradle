@@ -33,6 +33,24 @@ minecraft {
 
 allprojects {
 	version = "${config.minecraft_version}-${config.version_major}.${config.version_minor}.${config.version_revision}"
+
+    processResources {
+
+        from (sourceSets.main.resources.srcDirs) {
+            include '**/*.info'
+            include '**/*.properties'
+
+            expand ([
+                    'version': project.version,
+                    'minecraft_version': config.minecraft_version
+            ])
+        }
+
+        from (sourceSets.main.resources.srcDirs) {
+            exclude '**/*.info'
+            exclude '**/*.properties'
+        }
+    }
 }
 
 subprojects {
