@@ -32,7 +32,27 @@ minecraft {
 }
 
 allprojects {
-	version = "${config.minecraft_version}-${config.version_major}.${config.version_minor}.${config.version_revision}"
+	version = "${config.version_major}.${config.version_minor}.${config.version_revision}"
+}
+
+subprojects {
+	apply plugin: 'java'
+
+	group = "servertools." + name.toLowerCase()
+	archivesBaseName = "ServerTools-" + name.toUpperCase()
+
+	dependencies {
+		compile rootProject
+	}
+
+	rootProject.reobf {
+		reobf(jar) { spec ->
+			spec.classpath = sourceSets.main.compileClasspath
+		}
+	}
+}
+
+allprojects{
 
     processResources {
 
@@ -42,7 +62,7 @@ allprojects {
 
             expand ([
                     'version': project.version,
-                    'minecraft_version': config.minecraft_version
+                    'minecraft_version': rootProject.config.minecraft_version
             ])
         }
 
@@ -53,23 +73,6 @@ allprojects {
     }
 }
 
-subprojects {
-	apply plugin: 'java'
-	
-	group = "servertools." + name.toLowerCase()
-	archivesBaseName = "ServerTools-" + name.toUpperCase()
-	
-	dependencies {
-		compile rootProject
-	}
-	
-	rootProject.reobf {
-		reobf(jar) { spec ->
-			spec.classpath = sourceSets.main.compileClasspath
-		}
-	}
-}
-
 // release
 task release(type: Copy) {
 	dependsOn 'clean', 'reobf'
@@ -78,9 +81,12 @@ task release(type: Copy) {
 	
 	// clean first
 	doFirst {
-		if (releaseDir.exists() && releaseDir.isDirectory())
-			releaseDir.deleteDir()
-		
-		releaseDir.mkdirs()
+		if (releaseDir.exists()) {
+            println("Release Dir Exists")
+            for (File file : releaseDir.listFiles()) {
+                println("Deleting: " + file.getName())
+                file.delete()
+            }
+        }
 	}
 }
