@@ -35,6 +35,11 @@ public class CommandTeleport extends ServerToolsCommand {
     }
 
     @Override
+    public int getRequiredPermissionLevel() {
+        return 0;
+    }
+
+    @Override
     public List addTabCompletionOptions(ICommandSender par1ICommandSender, String[] par2ArrayOfStr) {
 
         Set<String> entries = TeleportManager.teleportMap.keySet();

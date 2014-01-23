@@ -37,6 +37,11 @@ public class CommandSpawnMob extends ServerToolsCommand {
     }
 
     @Override
+    public int getRequiredPermissionLevel() {
+        return 2;
+    }
+
+    @Override
     public List addTabCompletionOptions(ICommandSender var1, String[] var2) {
         List<?> var = getValidEntities();
         return var2.length >= 1 ? getListOfStringsMatchingLastWord(var2, (String[]) var.toArray()) : null;

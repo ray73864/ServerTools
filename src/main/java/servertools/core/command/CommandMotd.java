@@ -28,6 +28,11 @@ public class CommandMotd extends ServerToolsCommand {
     }
 
     @Override
+    public int getRequiredPermissionLevel() {
+        return 0;
+    }
+
+    @Override
     public void processCommand(ICommandSender sender, String[] args) {
 
         if (sender instanceof EntityPlayer) {

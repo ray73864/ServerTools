@@ -36,6 +36,11 @@ public class CommandTPS extends ServerToolsCommand{
     }
 
     @Override
+    public int getRequiredPermissionLevel() {
+        return 0;
+    }
+
+    @Override
     public void processCommand(ICommandSender sender, String[] args) {
 
         if (args.length < 1) {

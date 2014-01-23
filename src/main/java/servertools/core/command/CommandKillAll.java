@@ -35,6 +35,11 @@ public class CommandKillAll extends ServerToolsCommand {
     }
 
     @Override
+    public int getRequiredPermissionLevel() {
+        return 2;
+    }
+
+    @Override
     public List<?> addTabCompletionOptions(ICommandSender var1, String[] var2) {
 
         Collection var = EntityList.classToStringMapping.values();

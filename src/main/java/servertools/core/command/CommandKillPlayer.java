@@ -31,6 +31,11 @@ public class CommandKillPlayer extends ServerToolsCommand {
     }
 
     @Override
+    public int getRequiredPermissionLevel() {
+        return 2;
+    }
+
+    @Override
     public List getCommandAliases() {
 
         return Arrays.asList("kp");

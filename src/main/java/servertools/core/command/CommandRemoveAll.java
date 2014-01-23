@@ -35,6 +35,11 @@ public class CommandRemoveAll extends ServerToolsCommand {
     }
 
     @Override
+    public int getRequiredPermissionLevel() {
+        return 2;
+    }
+
+    @Override
     public String getCommandUsage(ICommandSender sender) {
 
         return "/" + name + " [blockID | \"liquid\"] {radius}";

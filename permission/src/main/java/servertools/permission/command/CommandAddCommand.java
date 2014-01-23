@@ -36,6 +36,11 @@ public class CommandAddCommand extends ServerToolsCommand {
     }
 
     @Override
+    public int getRequiredPermissionLevel() {
+        return 3;
+    }
+
+    @Override
     public List addTabCompletionOptions(ICommandSender sender, String[] strings) {
 
         if (strings.length == 1) {

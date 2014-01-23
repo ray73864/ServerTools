@@ -28,6 +28,11 @@ public class CommandDisarm extends ServerToolsCommand {
     }
 
     @Override
+    public int getRequiredPermissionLevel() {
+        return 2;
+    }
+
+    @Override
     public String getCommandUsage(ICommandSender icommandsender) {
 
         return "/" + name + " {username}";

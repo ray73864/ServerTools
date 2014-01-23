@@ -35,6 +35,11 @@ public class CommandRemoveUser extends ServerToolsCommand {
     }
 
     @Override
+    public int getRequiredPermissionLevel() {
+        return 3;
+    }
+
+    @Override
     public List addTabCompletionOptions(ICommandSender par1ICommandSender, String[] par2ArrayOfStr) {
 
         if (par2ArrayOfStr.length == 1) {

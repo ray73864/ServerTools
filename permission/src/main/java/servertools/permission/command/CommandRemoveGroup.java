@@ -34,6 +34,11 @@ public class CommandRemoveGroup extends ServerToolsCommand {
     }
 
     @Override
+    public int getRequiredPermissionLevel() {
+        return 3;
+    }
+
+    @Override
     public String getCommandUsage(ICommandSender icommandsender) {
         return "/" + name + " [groupname]";
     }

@@ -33,6 +33,11 @@ public class CommandWhereIs extends ServerToolsCommand {
     }
 
     @Override
+    public int getRequiredPermissionLevel() {
+        return 0;
+    }
+
+    @Override
     public boolean isUsernameIndex(String[] par1ArrayOfStr, int par2) {
 
         return par2 == 0;

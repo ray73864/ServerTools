@@ -33,6 +33,11 @@ public class CommandVoice extends ServerToolsCommand {
     }
 
     @Override
+    public int getRequiredPermissionLevel() {
+        return 3;
+    }
+
+    @Override
     public String getCommandUsage(ICommandSender sender) {
 
         return String.format("/%s [add|remove|reload} {username}", name);

@@ -34,6 +34,9 @@ public abstract class ServerToolsCommand extends CommandBase {
         return name;
     }
 
+    @Override
+    public abstract int getRequiredPermissionLevel();
+
     @SuppressWarnings("NullableProblems")
     @Override
     public int compareTo(Object o) {

@@ -33,6 +33,11 @@ public class CommandSilence extends ServerToolsCommand {
     }
 
     @Override
+    public int getRequiredPermissionLevel() {
+        return 2;
+    }
+
+    @Override
     public boolean isUsernameIndex(String[] par1ArrayOfStr, int par2) {
 
         return par2 == 1;
