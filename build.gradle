@@ -31,7 +31,9 @@ minecraft {
 	assetDir = getRootDir().getAbsolutePath() + "/run/assets"
 }
 
-allProjects.version = "${config.minecraft_version}-${config.version_major}.${config.version_minor}.${config.version_revision}"
+allprojects {
+	version = "${config.minecraft_version}-${config.version_major}.${config.version_minor}.${config.version_revision}"
+}
 
 subprojects {
 	apply plugin: 'java'
@@ -45,7 +47,7 @@ subprojects {
 	
 	rootProject.reobf {
 		reobf(jar) { spec ->
-			soec.classpath = sourceSets.main.compileClasspath
+			spec.classpath = sourceSets.main.compileClasspath
 		}
 	}
 }
@@ -53,13 +55,13 @@ subprojects {
 // release
 task release(type: Copy) {
 	dependsOn 'clean', 'reobf'
-	from subprojects*.tasks.jar.destinationDir
+	from subprojects*.tasks.jar.destinationDir, project.tasks.jar.destinationDir
 	into project.file(releaseDir)
 	
 	// clean first
 	doFirst {
 		if (releaseDir.exists() && releaseDir.isDirectory())
-			releaseDir.deletedDir()
+			releaseDir.deleteDir()
 		
 		releaseDir.mkdirs()
 	}
