@@ -26,6 +26,7 @@ public class STPermissionPlugin implements IFMLLoadingPlugin, IFMLCallHook {
 
     @Override
     public Void call() throws Exception {
+        System.out.println("Initializing ServerTools Permission CoreMod");
         return null;
     }
 

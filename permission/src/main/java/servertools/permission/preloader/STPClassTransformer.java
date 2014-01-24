@@ -6,7 +6,6 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
-import servertools.core.STLog;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -62,8 +61,8 @@ public class STPClassTransformer implements IClassTransformer {
         ClassReader targetClassReader = new ClassReader(transformedBytes);
         targetClassReader.accept(targetClassNode, 0);
 
-        STLog.fine( "Patching Class: " + patchNotes.targetClass);
-        STLog.fine("Mapped Class Name: " + targetClassNode.name);
+        System.out.println( "Patching Class: " + patchNotes.targetClass);
+        System.out.println("Mapped Class Name: " + targetClassNode.name);
 
         Map<MethodNode, MethodNode> replaceMap = new HashMap<MethodNode, MethodNode>();
 

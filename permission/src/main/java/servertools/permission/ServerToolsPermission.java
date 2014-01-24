@@ -2,10 +2,12 @@ package servertools.permission;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
+import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import servertools.core.CommandManager;
 import servertools.core.STLog;
 import servertools.core.ServerTools;
+import servertools.core.config.ConfigSettings;
 import servertools.permission.command.*;
 
 import java.io.File;
@@ -43,7 +45,7 @@ public class ServerToolsPermission {
     }
 
     @Mod.EventHandler
-    public void serverStarting(FMLServerStartingEvent event) {
+    public void serverAboutToStart(FMLServerAboutToStartEvent event) {
 
         CommandManager.addSTCommand(new CommandAddUser("adduser"));
         CommandManager.addSTCommand(new CommandRemoveUser("removeuser"));
@@ -53,9 +55,22 @@ public class ServerToolsPermission {
         CommandManager.addSTCommand(new CommandRemoveCommand("removecommand"));
     }
 
+    @Mod.EventHandler
+    public void serverStarted(FMLServerStartedEvent event) {
+
+        if (GroupManager.shouldLoadDefaultGroups()) {
+            GroupManager.loadDefaultGroups();
+        }
+    }
+
     public static void log(Level level, Object object) {
 
         STLog.log(level, " [PERMISSION] " + object);
+    }
+
+    public static void debug(Object object) {
+
+        if (ConfigSettings.DEBUG_MODE) STLog.log(Level.INFO, " [DEBUG] " + object.toString());
     }
 
 }

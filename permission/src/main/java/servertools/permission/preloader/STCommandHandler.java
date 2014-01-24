@@ -1,7 +1,7 @@
 package servertools.permission.preloader;
 
 import net.minecraft.command.*;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.MinecraftForge;
@@ -54,7 +54,7 @@ public class STCommandHandler extends CommandHandler {
 
             boolean canUse;
 
-            if (!(sender instanceof EntityPlayerMP)) {
+            if (!(sender instanceof EntityPlayer)) {
                 canUse = icommand.canCommandSenderUseCommand(sender);
             } else {
                 canUse = GroupManager.canUseCommand(sender.getCommandSenderName(), icommand.getCommandName());

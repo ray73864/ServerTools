@@ -3,6 +3,9 @@ package servertools.permission;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.ICommand;
+import net.minecraft.server.MinecraftServer;
 import servertools.core.util.FileUtils;
 import servertools.permission.elements.Group;
 import servertools.permission.elements.GroupException;
@@ -40,12 +43,16 @@ public class GroupManager {
 
     private static Gson gson;
 
+    private static boolean loadDefaultGroups = false;
+
     public static void init(File groupDirectory) {
 
         gson = new GsonBuilder().setPrettyPrinting().create();
 
         groupDir = groupDirectory;
-        groupDir.mkdirs();
+        if (groupDir.mkdirs()) {
+            ServerToolsPermission.log(Level.FINE, String.format("Creating Group directory at: %s", groupDir.getAbsolutePath()));
+        }
 
         loadGroupsFromFile();
     }
@@ -221,14 +228,17 @@ public class GroupManager {
     /**
      * Clears the map of groups and reloads it from file
      */
-    public static void loadGroupsFromFile() {
+    private static void loadGroupsFromFile() {
 
         groups.clear();
 
         File[] fileList = groupDir.listFiles();
 
-        if (fileList == null || fileList.length == 0)
+        if (fileList == null || fileList.length == 0) {
+
+            loadDefaultGroups = true;
             return;
+        }
 
         for (File file : fileList) {
 
@@ -247,5 +257,71 @@ public class GroupManager {
                 }
             }
         }
+    }
+
+    public static void loadDefaultGroups() {
+
+        ServerToolsPermission.log(Level.WARNING, "Loading default groups, you should review the groups and make changes as necessary");
+
+        String ADMIN = "admin";
+        String MODERATOR = "moderator";
+        String PLAYER = "player";
+
+        try {
+
+            groups.clear();
+
+            createGroup(ADMIN);
+            createGroup(MODERATOR);
+            createGroup(PLAYER);
+
+            for (Object obj : MinecraftServer.getServer().getCommandManager().getCommands().entrySet()) {
+
+                Object value = ((Map.Entry) obj).getValue();
+
+                if (value instanceof CommandBase) {
+                    CommandBase base = (CommandBase) value;
+
+                    ServerToolsPermission.debug(String.format("Found CommandBase: %s, Permission Level: %s", base.getCommandName(), base.getRequiredPermissionLevel()));
+
+                    switch (base.getRequiredPermissionLevel()) {
+
+                        case 4:
+                        case 3:
+                            addAllowedCommand(base.getCommandName(), ADMIN);
+                            break;
+                        case 2:
+                            addAllowedCommand(base.getCommandName(), MODERATOR);
+                            break;
+                        default:
+                            addAllowedCommand(base.getCommandName(), PLAYER);
+
+                    }
+                } else if (value instanceof ICommand) {
+                    ICommand iCommand = (ICommand) value;
+
+                    ServerToolsPermission.debug(String.format("Found ICommand: %s", iCommand.getCommandName()));
+
+                    addAllowedCommand(iCommand.getCommandName(), ADMIN);
+                } else
+                    ServerToolsPermission.debug(String.format("Found Object: %s With Class: %s", value, value.getClass()));
+
+                for (Object op : MinecraftServer.getServer().getConfigurationManager().getOps()) {
+
+                    if (op instanceof String)
+                        addUserToGroup(op.toString(), ADMIN);
+                }
+
+            }
+
+        } catch (GroupException e) {
+            e.printStackTrace();
+            ServerToolsPermission.log(Level.WARNING, "Failed to load default groups");
+        }
+    }
+
+    public static boolean shouldLoadDefaultGroups() {
+
+        return loadDefaultGroups;
     }
 }

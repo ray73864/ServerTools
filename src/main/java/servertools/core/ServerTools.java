@@ -79,15 +79,10 @@ public class ServerTools {
 
         /* Initialize the Voice Handler */
         if (voiceHandler == null) voiceHandler = new VoiceHandler();
-    }
-
-    @Mod.EventHandler
-    public void serverStarted(FMLServerStartedEvent event) {
 
         /* Register Commands with the Server */
         CommandHandler ch = (CommandHandler) MinecraftServer.getServer().getCommandManager();
         CommandManager.registerCommands(ch);
-
     }
 
     @Mod.EventHandler
