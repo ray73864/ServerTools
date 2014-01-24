@@ -164,6 +164,27 @@ public class GroupManager {
     }
 
     /**
+     * Add a child group to another group. This adds permissions from the child group to the group
+     *
+     * @param childGroupName the name of the child group
+     * @param groupName      the name of the group
+     * @throws GroupException if the child group or the parent group doesn't exist
+     */
+    public static void addChildGroupToGroup(String childGroupName, String groupName) throws GroupException {
+
+        if (groups.containsKey(groupName)) {
+            if (groups.containsKey(childGroupName)) {
+
+                groups.get(groupName).addChildGroup(childGroupName);
+                saveGroupToFile(groupName);
+
+            } else
+                throw new GroupException("That child group doesn't exist");
+        } else
+            throw new GroupException("That parent group doesn't exist");
+    }
+
+    /**
      * Get a map of the current groups
      *
      * @return a {@link java.util.HashMap} of groups
@@ -182,6 +203,7 @@ public class GroupManager {
     public static Set<String> getAllowedCommands(String groupName) {
 
         if (groups.containsKey(groupName)) {
+
             return groups.get(groupName).getAllowedCommands();
         }
 
@@ -200,9 +222,8 @@ public class GroupManager {
         for (Map.Entry<String, Group> entry : groups.entrySet()) {
             Group group = entry.getValue();
             if (group.isMember(username)) {
-                for (String str : group.getAllowedCommands()) {
-                    if (str.equals(commandName))
-                        return true;
+                if (getAllowedCommands(group.groupName).contains(commandName)) {
+                    return true;
                 }
             }
         }
@@ -274,6 +295,9 @@ public class GroupManager {
             createGroup(ADMIN);
             createGroup(MODERATOR);
             createGroup(PLAYER);
+
+            addChildGroupToGroup(PLAYER, MODERATOR);
+            addChildGroupToGroup(MODERATOR, ADMIN);
 
             for (Object obj : MinecraftServer.getServer().getCommandManager().getCommands().entrySet()) {
 

@@ -1,6 +1,7 @@
 package servertools.permission.elements;
 
 import com.google.common.collect.ImmutableSet;
+import servertools.permission.GroupManager;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,19 +25,36 @@ import java.util.Set;
 public class Group {
 
     public final String groupName;
-    private Set<String> members;
-    private Set<String> allowedCommands;
+    private final Set<String> members;
+    private final Set<String> allowedCommands;
+    private final Set<String> childGroups;
 
     public Group(String groupName) {
 
         this.groupName = groupName;
         members = new HashSet<String>();
         allowedCommands = new HashSet<String>();
+        childGroups = new HashSet<String>();
     }
 
     public void addMember(String username) {
 
         members.add(username);
+    }
+
+    public void addChildGroup(String groupName) {
+
+        childGroups.add(groupName);
+    }
+
+    public boolean removeChildGroup(String groupName) {
+
+        if (childGroups.contains(groupName)) {
+            childGroups.remove(groupName);
+            return true;
+        }
+
+        return false;
     }
 
     public boolean removeUser(String username) {
@@ -61,12 +79,6 @@ public class Group {
 
     public boolean removeAllowedCommand(String commandName) {
 
-        System.out.println("Trying to remove:" + commandName);
-
-        for (String entry : allowedCommands) {
-            System.out.println("Allowed Command:" + entry);
-        }
-
         if (allowedCommands.contains(commandName)) {
             allowedCommands.remove(commandName);
             return true;
@@ -82,6 +94,21 @@ public class Group {
 
     public Set<String> getAllowedCommands() {
 
-        return ImmutableSet.copyOf(allowedCommands);
+        Set<String> set = new HashSet<String>();
+
+        set.addAll(allowedCommands);
+
+        for (String child : childGroups) {
+            if (GroupManager.getGroups().containsKey(child)) {
+                set.addAll(GroupManager.getGroups().get(child).getAllowedCommands());
+            }
+        }
+
+        return set;
+    }
+
+    public Set<String> getChildGroups() {
+
+        return ImmutableSet.copyOf(childGroups);
     }
 }

@@ -7,6 +7,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.CommandEvent;
 import servertools.permission.GroupManager;
+import servertools.permission.ServerToolsPermission;
 
 /*
  * Copyright 2014 matthewprenger
@@ -58,6 +59,7 @@ public class STCommandHandler extends CommandHandler {
                 canUse = icommand.canCommandSenderUseCommand(sender);
             } else {
                 canUse = GroupManager.canUseCommand(sender.getCommandSenderName(), icommand.getCommandName());
+                ServerToolsPermission.debug(String.format("Player: %s, CanUse %s = %s", sender.getCommandSenderName(), icommand.getCommandName(), canUse));
             }
 
             if (canUse) {

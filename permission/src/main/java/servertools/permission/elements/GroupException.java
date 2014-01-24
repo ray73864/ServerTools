@@ -18,7 +18,7 @@ package servertools.permission.elements;
 
 public class GroupException extends Exception {
 
-    String message;
+    final String message;
 
     public GroupException(String message) {
 
