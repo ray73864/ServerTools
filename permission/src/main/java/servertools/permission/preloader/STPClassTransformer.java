@@ -36,6 +36,8 @@ public class STPClassTransformer implements IClassTransformer {
     static {
         PatchNotes commandHandlerPatch = new PatchNotes("net.minecraft.command.CommandHandler", "servertools.permission.preloader.STCommandHandler");
         commandHandlerPatch.addMethodToPatch(new MethodNotes("executeCommand","a","(Lnet/minecraft/command/ICommandSender;Ljava/lang/String;)I","(Lab;Ljava/lang/String;)I"));
+        commandHandlerPatch.addMethodToPatch(new MethodNotes("getPossibleCommands", "a", "(Lnet/minecraft/command/ICommandSender;Ljava/lang/String;)Ljava/util/List;", "(Lab;Ljava/util/List;)"));
+        commandHandlerPatch.addMethodToPatch(new MethodNotes("getPossibleCommands", "b", "(Lnet/minecraft/command/ICommandSender;)Ljava/util/List;", "(Lab;Ljava/lang/String;)Ljava/util/List;"));
         patches.add(commandHandlerPatch);
     }
 
@@ -82,6 +84,9 @@ public class STPClassTransformer implements IClassTransformer {
 
             for (MethodNode method : replaceMap.keySet()) {
                 MethodNode replacement = replaceMap.get(method);
+
+                System.out.println(String.format("Patching Method: %s, Desc: %s", method.name, method.desc));
+
                 targetClassNode.methods.remove(method);
                 targetClassNode.methods.add(replacement);
             }

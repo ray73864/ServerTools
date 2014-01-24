@@ -5,6 +5,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommand;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import servertools.core.util.FileUtils;
 import servertools.permission.elements.Group;
@@ -229,6 +231,22 @@ public class GroupManager {
         }
 
         return false;
+    }
+
+    /**
+     * See if an {@link net.minecraft.command.ICommandSender} can use an {@link net.minecraft.command.ICommand}
+     *
+     * @param sender the command sender
+     * @param iCommand the command
+     * @return if the sender can use the command
+     */
+    public static boolean canUseCommand(ICommandSender sender, ICommand iCommand) {
+
+        if (!(sender instanceof EntityPlayer))
+            return iCommand.canCommandSenderUseCommand(sender);
+        else {
+            return canUseCommand(sender.getCommandSenderName(), iCommand.getCommandName());
+        }
     }
 
     private static void saveGroupToFile(String groupName) {

@@ -1,17 +1,14 @@
 package servertools.permission.preloader;
 
 import net.minecraft.command.*;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.CommandEvent;
 import servertools.permission.GroupManager;
-import servertools.permission.ServerToolsPermission;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /*
  * Copyright 2014 matthewprenger
@@ -57,16 +54,8 @@ public class STCommandHandler extends CommandHandler {
                 throw new CommandNotFoundException();
             }
 
-            boolean canUse;
+            if (GroupManager.canUseCommand(sender, icommand)) {
 
-            if (!(sender instanceof EntityPlayer)) {
-                canUse = icommand.canCommandSenderUseCommand(sender);
-            } else {
-                canUse = GroupManager.canUseCommand(sender.getCommandSenderName(), icommand.getCommandName());
-                ServerToolsPermission.debug(String.format("Player: %s, CanUse %s = %s", sender.getCommandSenderName(), icommand.getCommandName(), canUse));
-            }
-
-            if (canUse) {
                 CommandEvent event = new CommandEvent(icommand, sender, args);
                 if (MinecraftForge.EVENT_BUS.post(event)) {
                     if (event.exception != null) {
@@ -94,41 +83,38 @@ public class STCommandHandler extends CommandHandler {
     }
 
     @Override
-    public List getPossibleCommands(ICommandSender par1ICommandSender, String par2Str) {
+    public List getPossibleCommands(ICommandSender sender, String par2Str) {
 
-        String[] astring = par2Str.split(" ", -1);
-        String s1 = astring[0];
+        String[] args = par2Str.split(" ", -1);
+        String commandName = args[0];
 
-        if (astring.length == 1) {
+        if (args.length == 1) {
             ArrayList<String> arraylist = new ArrayList<String>();
 
-            for (Object o : super.getCommands().entrySet()) {
-                Map.Entry entry = (Map.Entry) o;
+            for (Object o : super.getCommands().keySet()) {
+                ICommand icommand = (ICommand) super.getCommands().get(o);
 
-                if (CommandBase.doesStringStartWith(s1, (String) entry.getKey())) {
-
-                    if (!(par1ICommandSender instanceof EntityPlayer)) {
-
-                    } else {
-                        //TODO
+                if (icommand != null) {
+                    if (CommandBase.doesStringStartWith(commandName, icommand.getCommandName())) {
+                        if (GroupManager.canUseCommand(sender, icommand)) {
+                            arraylist.add(icommand.getCommandName());
+                        }
                     }
-                    arraylist.add(entry.getKey().toString());
                 }
             }
 
             return arraylist;
         } else {
-            if (astring.length > 1) {
-                ICommand icommand = (ICommand) super.getCommands().get(s1);
+            if (args.length > 1) {
+                ICommand icommand = (ICommand) super.getCommands().get(commandName);
 
                 if (icommand != null) {
-                    String[] astring1 = new String[astring.length - 1];
 
-                    System.arraycopy(astring, 1, astring1, 0, astring.length - 1);
+                    String[] astring1 = new String[args.length - 1];
 
-                    astring = astring1;
+                    System.arraycopy(args, 1, astring1, 0, args.length - 1);
 
-                    return icommand.addTabCompletionOptions(par1ICommandSender, astring);
+                    return icommand.addTabCompletionOptions(sender, astring1);
                 }
             }
 
@@ -137,7 +123,21 @@ public class STCommandHandler extends CommandHandler {
     }
 
     @Override
-    public List getPossibleCommands(ICommandSender par1ICommandSender) {
-        return super.getPossibleCommands(par1ICommandSender);
+    public List getPossibleCommands(ICommandSender sender) {
+
+        ArrayList<ICommand> arraylist = new ArrayList<ICommand>();
+
+        for (Object o : super.getCommands().keySet()) {
+            ICommand icommand = (ICommand) super.getCommands().get(o);
+
+            if (icommand != null) {
+
+                if (GroupManager.canUseCommand(sender, icommand)) {
+                    arraylist.add(icommand);
+                }
+            }
+        }
+
+        return arraylist;
     }
 }
