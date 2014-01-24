@@ -9,6 +9,10 @@ import net.minecraftforge.event.CommandEvent;
 import servertools.permission.GroupManager;
 import servertools.permission.ServerToolsPermission;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /*
  * Copyright 2014 matthewprenger
  *
@@ -87,5 +91,53 @@ public class STCommandHandler extends CommandHandler {
         }
 
         return j;
+    }
+
+    @Override
+    public List getPossibleCommands(ICommandSender par1ICommandSender, String par2Str) {
+
+        String[] astring = par2Str.split(" ", -1);
+        String s1 = astring[0];
+
+        if (astring.length == 1) {
+            ArrayList<String> arraylist = new ArrayList<String>();
+
+            for (Object o : super.getCommands().entrySet()) {
+                Map.Entry entry = (Map.Entry) o;
+
+                if (CommandBase.doesStringStartWith(s1, (String) entry.getKey())) {
+
+                    if (!(par1ICommandSender instanceof EntityPlayer)) {
+
+                    } else {
+                        //TODO
+                    }
+                    arraylist.add(entry.getKey().toString());
+                }
+            }
+
+            return arraylist;
+        } else {
+            if (astring.length > 1) {
+                ICommand icommand = (ICommand) super.getCommands().get(s1);
+
+                if (icommand != null) {
+                    String[] astring1 = new String[astring.length - 1];
+
+                    System.arraycopy(astring, 1, astring1, 0, astring.length - 1);
+
+                    astring = astring1;
+
+                    return icommand.addTabCompletionOptions(par1ICommandSender, astring);
+                }
+            }
+
+            return null;
+        }
+    }
+
+    @Override
+    public List getPossibleCommands(ICommandSender par1ICommandSender) {
+        return super.getPossibleCommands(par1ICommandSender);
     }
 }
