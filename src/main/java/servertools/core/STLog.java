@@ -2,6 +2,7 @@ package servertools.core;
 
 import cpw.mods.fml.common.FMLLog;
 import servertools.core.config.ConfigSettings;
+import servertools.core.lib.Reference;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -27,7 +28,7 @@ import java.util.logging.*;
 
 public class STLog {
 
-    private static final Logger stLogger = Logger.getLogger(CoreConstants.MOD_ID);
+    private static final Logger stLogger = Logger.getLogger(Reference.MOD_ID);
 
     static {
         stLogger.setParent(FMLLog.getLogger());
@@ -121,7 +122,7 @@ public class STLog {
             }
 
             msg.append(formatMessage(record));
-            msg.append(CoreConstants.LINE_SEPARATOR);
+            msg.append(Reference.LINE_SEPARATOR);
             Throwable thr = record.getThrown();
 
             if (thr != null) {

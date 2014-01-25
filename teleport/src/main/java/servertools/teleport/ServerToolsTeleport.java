@@ -6,9 +6,9 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import servertools.core.CommandManager;
-import servertools.core.CoreConstants;
 import servertools.core.STLog;
 import servertools.core.ServerTools;
+import servertools.core.lib.Reference;
 import servertools.teleport.command.CommandEditTeleport;
 import servertools.teleport.command.CommandHome;
 import servertools.teleport.command.CommandTeleport;
@@ -47,7 +47,7 @@ public class ServerToolsTeleport {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         ModMetadata metadata = event.getModMetadata();
-        metadata.version = CoreConstants.VERSION;
+        metadata.version = Reference.VERSION;
 
         teleportLog = STLog.getModuleLogger("ServerTools|Teleport");
 

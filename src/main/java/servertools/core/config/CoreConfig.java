@@ -2,7 +2,7 @@ package servertools.core.config;
 
 import cpw.mods.fml.common.FMLLog;
 import net.minecraftforge.common.Configuration;
-import servertools.core.CoreConstants;
+import servertools.core.lib.Reference;
 
 import java.io.File;
 
@@ -39,7 +39,7 @@ public class CoreConfig {
 
         } catch (Exception e) {
             e.printStackTrace(System.err);
-            FMLLog.severe(CoreConstants.MOD_NAME + " has failed to load its core configuration, game will exit now");
+            FMLLog.severe(Reference.MOD_NAME + " has failed to load its core configuration, game will exit now");
             System.exit(1);
         } finally {
             if (configuration.hasChanged()) {

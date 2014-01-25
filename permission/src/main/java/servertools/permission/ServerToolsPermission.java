@@ -30,7 +30,7 @@ import java.util.logging.Level;
  * limitations under the License.
  */
 
-@Mod(modid = PermissionConstants.MOD_ID, name = PermissionConstants.MOD_NAME, version = PermissionConstants.VERSION, dependencies = PermissionConstants.DEPENDENCIES)
+@Mod(modid = PermissionReference.MOD_ID, name = PermissionReference.MOD_NAME, version = PermissionReference.VERSION, dependencies = PermissionReference.DEPENDENCIES)
 public class ServerToolsPermission {
 
     @Mod.Instance

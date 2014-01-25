@@ -5,6 +5,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatMessageComponent;
 import servertools.core.config.ConfigSettings;
+import servertools.core.lib.Reference;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -46,9 +47,9 @@ public class Motd implements IPlayerTracker {
             if (!motdFile.exists()) {
                 Writer out = new OutputStreamWriter(new FileOutputStream(motdFile), FILE_ENCODING);
 
-                for (String line : CoreConstants.DEFAULT_MOTD) {
+                for (String line : Reference.DEFAULT_MOTD) {
                     out.write(line);
-                    out.write(CoreConstants.LINE_SEPARATOR);
+                    out.write(Reference.LINE_SEPARATOR);
                 }
                 out.close();
             }

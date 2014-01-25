@@ -9,6 +9,7 @@ import servertools.core.config.ConfigSettings;
 import servertools.core.config.CoreConfig;
 import servertools.core.handler.FlatBedrockHandler;
 import servertools.core.handler.VoiceHandler;
+import servertools.core.lib.Reference;
 import servertools.core.task.TaskManager;
 
 import java.io.File;
@@ -29,7 +30,7 @@ import java.io.File;
  * limitations under the License.
  */
 
-@Mod(modid = CoreConstants.MOD_ID, name = CoreConstants.MOD_NAME, version = CoreConstants.VERSION, dependencies = CoreConstants.DEPENDENCIES)
+@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = Reference.DEPENDENCIES)
 public class ServerTools {
 
     public static final File serverToolsDir = new File("servertools");
@@ -39,7 +40,7 @@ public class ServerTools {
             STLog.fine(String.format("Creating ServerTools root dir at: %s", ServerTools.serverToolsDir.getAbsolutePath()));
     }
 
-    @Mod.Instance(CoreConstants.MOD_ID)
+    @Mod.Instance(Reference.MOD_ID)
     public static ServerTools instance;
 
     public Motd motd;
