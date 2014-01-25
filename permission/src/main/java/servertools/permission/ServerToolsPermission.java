@@ -4,6 +4,7 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import servertools.core.CommandManager;
 import servertools.core.STLog;
 import servertools.core.ServerTools;
@@ -35,13 +36,13 @@ public class ServerToolsPermission {
     @Mod.Instance
     public static ServerToolsPermission instance;
 
+    public static PlayerTracker playerTracker;
+
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
 
         /* Initialize the Permission Configuration */
         PermissionConfig.init(new File(ServerTools.serverToolsDir, "permission.cfg"));
-
-        GroupManager.init(new File(ServerTools.serverToolsDir, "groups"));
     }
 
     @Mod.EventHandler
@@ -56,7 +57,15 @@ public class ServerToolsPermission {
     }
 
     @Mod.EventHandler
+    public void serverStarting(FMLServerStartingEvent event) {
+
+        if (playerTracker == null) playerTracker = new PlayerTracker();
+    }
+
+    @Mod.EventHandler
     public void serverStarted(FMLServerStartedEvent event) {
+
+        GroupManager.init(new File(ServerTools.serverToolsDir, "groups"));
 
         if (GroupManager.shouldLoadDefaultGroups()) {
             GroupManager.loadDefaultGroups();

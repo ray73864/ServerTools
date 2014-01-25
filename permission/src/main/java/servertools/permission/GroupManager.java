@@ -16,9 +16,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.logging.Level;
 
 /*
@@ -57,6 +55,14 @@ public class GroupManager {
         }
 
         loadGroupsFromFile();
+
+        if (!(groups.containsKey(PermissionConfig.defaultGroup)))
+            try {
+                createGroup(PermissionConfig.defaultGroup);
+            } catch (GroupException e) {
+                e.printStackTrace();
+                ServerToolsPermission.log(Level.WARNING, "Tried to create the default group, but it already existed....This shouldn't happen");
+            }
     }
 
     /**
@@ -359,6 +365,29 @@ public class GroupManager {
         } catch (GroupException e) {
             e.printStackTrace();
             ServerToolsPermission.log(Level.WARNING, "Failed to load default groups");
+        }
+    }
+
+    public static List<Group> getPlayerGroups(String username) {
+
+        List<Group> playerGroups = new ArrayList<Group>();
+
+        for (Map.Entry<String, Group> entry : groups.entrySet()) {
+            if (entry.getValue().isMember(username)) {
+                playerGroups.add(entry.getValue());
+            }
+        }
+
+        return playerGroups;
+    }
+
+    public static void assignDefaultGroup(String username) {
+
+        try {
+            addUserToGroup(username, PermissionConfig.defaultGroup);
+        } catch (GroupException e) {
+            e.printStackTrace();
+            ServerToolsPermission.log(Level.WARNING, "This should't ever happen... congratulations");
         }
     }
 

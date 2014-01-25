@@ -23,6 +23,8 @@ import java.util.logging.Level;
 
 public class PermissionConfig {
 
+    public static String defaultGroup;
+
     public static void init(File file) {
 
         Configuration configuration = new Configuration(file);
@@ -31,6 +33,7 @@ public class PermissionConfig {
 
             configuration.load();
 
+            defaultGroup = configuration.get(Configuration.CATEGORY_GENERAL, "defaultGroup", "player", "The group players will be added to if they aren't in any groups").getString();
 
             if (configuration.hasChanged()) {
                 configuration.save();
