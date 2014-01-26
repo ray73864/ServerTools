@@ -19,10 +19,13 @@ package servertools.backup;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import servertools.backup.lib.Reference;
+import servertools.core.STLog;
 import servertools.core.util.Util;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, dependencies = Reference.DEPENDENCIES)
 public class ServerToolsBackup {
+
+    public static final STLog log = new STLog(Reference.MOD_ID);
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
