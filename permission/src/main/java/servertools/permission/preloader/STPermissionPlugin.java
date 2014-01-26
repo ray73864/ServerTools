@@ -21,6 +21,7 @@ import java.util.Map;
  * limitations under the License.
  */
 
+@IFMLLoadingPlugin.TransformerExclusions({"servertools.permission.preloader"})
 @IFMLLoadingPlugin.MCVersion("1.6.4")
 public class STPermissionPlugin implements IFMLLoadingPlugin, IFMLCallHook {
 
