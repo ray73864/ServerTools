@@ -38,6 +38,8 @@ public class ServerToolsPermission {
     @Mod.Instance
     public static ServerToolsPermission instance;
 
+    public static File permissionDir;
+
     public static PlayerTracker playerTracker;
 
     @Mod.EventHandler
@@ -48,8 +50,11 @@ public class ServerToolsPermission {
 
         Util.checkModuleVersion("Permission", Reference.VERSION);
 
+        permissionDir = new File(ServerTools.serverToolsDir, "permission");
+        if (permissionDir.mkdirs()) STLog.fine("Creating Permission Directory at: " + permissionDir.getAbsolutePath());
+
         /* Initialize the Permission Configuration */
-        PermissionConfig.init(new File(ServerTools.serverToolsDir, "permission.cfg"));
+        PermissionConfig.init(new File(permissionDir, "permission.cfg"));
     }
 
     @Mod.EventHandler
@@ -72,7 +77,7 @@ public class ServerToolsPermission {
     @Mod.EventHandler
     public void serverStarted(FMLServerStartedEvent event) {
 
-        GroupManager.init(new File(ServerTools.serverToolsDir, "groups"));
+        GroupManager.init(new File(permissionDir, "groups"));
 
         if (GroupManager.shouldLoadDefaultGroups()) {
             GroupManager.loadDefaultGroups();
