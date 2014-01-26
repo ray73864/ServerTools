@@ -1,17 +1,17 @@
 package servertools.teleport;
 
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import servertools.core.CommandManager;
 import servertools.core.STLog;
 import servertools.core.ServerTools;
-import servertools.core.lib.Reference;
+import servertools.core.util.Util;
 import servertools.teleport.command.CommandEditTeleport;
 import servertools.teleport.command.CommandHome;
 import servertools.teleport.command.CommandTeleport;
+import servertools.teleport.lib.Reference;
 
 import java.io.File;
 import java.util.logging.Logger;
@@ -32,7 +32,7 @@ import java.util.logging.Logger;
  * limitations under the License.
  */
 
-@Mod(modid = "ServerTools|Teleport", name = "ServerTools|Teleport", dependencies = "required-after:ServerTools")
+@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, dependencies = Reference.DEPENDENCIES)
 public class ServerToolsTeleport {
 
     private static final File serverToolsTeleportDir = new File(ServerTools.serverToolsDir, "teleport");
@@ -46,8 +46,11 @@ public class ServerToolsTeleport {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        ModMetadata metadata = event.getModMetadata();
-        metadata.version = Reference.VERSION;
+
+        event.getModMetadata().version = Reference.VERSION;
+        event.getModMetadata().parent = "ServerTools";
+
+        Util.checkModuleVersion("Teleport", Reference.VERSION);
 
         teleportLog = STLog.getModuleLogger("ServerTools|Teleport");
 

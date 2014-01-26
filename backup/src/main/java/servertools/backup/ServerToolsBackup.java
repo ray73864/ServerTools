@@ -16,5 +16,20 @@ package servertools.backup;
  * limitations under the License.
  */
 
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import servertools.backup.lib.Reference;
+import servertools.core.util.Util;
+
+@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, dependencies = Reference.DEPENDENCIES)
 public class ServerToolsBackup {
+
+    @Mod.EventHandler
+    public void preInit(FMLPreInitializationEvent event) {
+
+        event.getModMetadata().version = Reference.VERSION;
+        event.getModMetadata().parent = "ServerTools";
+
+        Util.checkModuleVersion("Backup", Reference.VERSION);
+    }
 }

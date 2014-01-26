@@ -9,7 +9,9 @@ import servertools.core.CommandManager;
 import servertools.core.STLog;
 import servertools.core.ServerTools;
 import servertools.core.config.ConfigSettings;
+import servertools.core.util.Util;
 import servertools.permission.command.*;
+import servertools.permission.lib.Reference;
 
 import java.io.File;
 import java.util.logging.Level;
@@ -30,7 +32,7 @@ import java.util.logging.Level;
  * limitations under the License.
  */
 
-@Mod(modid = PermissionReference.MOD_ID, name = PermissionReference.MOD_NAME, version = PermissionReference.VERSION, dependencies = PermissionReference.DEPENDENCIES)
+@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, dependencies = Reference.DEPENDENCIES)
 public class ServerToolsPermission {
 
     @Mod.Instance
@@ -40,6 +42,11 @@ public class ServerToolsPermission {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+
+        event.getModMetadata().version = Reference.VERSION;
+        event.getModMetadata().parent = "ServerTools";
+
+        Util.checkModuleVersion("Permission", Reference.VERSION);
 
         /* Initialize the Permission Configuration */
         PermissionConfig.init(new File(ServerTools.serverToolsDir, "permission.cfg"));

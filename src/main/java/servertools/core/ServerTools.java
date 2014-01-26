@@ -30,7 +30,7 @@ import java.io.File;
  * limitations under the License.
  */
 
-@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = Reference.DEPENDENCIES)
+@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, dependencies = Reference.DEPENDENCIES)
 public class ServerTools {
 
     public static final File serverToolsDir = new File("servertools");
@@ -51,6 +51,8 @@ public class ServerTools {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+
+        event.getModMetadata().version = Reference.VERSION;
 
         CoreConfig.init(new File(serverToolsDir, "core.cfg"));
 
