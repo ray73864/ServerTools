@@ -75,14 +75,14 @@ public class TeleportManager {
         FileUtils.writeStringToFile(gson.toJson(teleportMap), teleportSaveFile);
         } catch (IOException e) {
             e.printStackTrace();
-            ServerToolsTeleport.teleportLog.log(Level.WARNING, "Failed to save teleport file");
+            ServerToolsTeleport.log.log(Level.WARNING, "Failed to save teleport file");
         }
     }
 
     private static void loadTeleportFile() {
 
         if (!teleportSaveFile.exists()) {
-            ServerToolsTeleport.teleportLog.log(Level.FINE, "Teleport save file doesn't exist, skipping it");
+            ServerToolsTeleport.log.log(Level.FINE, "Teleport save file doesn't exist, skipping it");
             return;
         }
 
@@ -104,13 +104,13 @@ public class TeleportManager {
 
         } catch (JsonParseException e) {
             e.printStackTrace();
-            ServerToolsTeleport.teleportLog.log(Level.WARNING, String.format("The teleport file %s could not be parsed as valid JSON, it will not be loaded", teleportSaveFile.getAbsolutePath()));
+            ServerToolsTeleport.log.log(Level.WARNING, String.format("The teleport file %s could not be parsed as valid JSON, it will not be loaded", teleportSaveFile.getAbsolutePath()));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            ServerToolsTeleport.teleportLog.log(Level.WARNING, String.format("Tried to load non-existant file: %s", teleportSaveFile.getAbsolutePath()));
+            ServerToolsTeleport.log.log(Level.WARNING, String.format("Tried to load non-existant file: %s", teleportSaveFile.getAbsolutePath()));
         } catch (IOException e) {
             e.printStackTrace();
-            ServerToolsTeleport.teleportLog.log(Level.WARNING, String.format("Failed to close buffered reader stream for: %s", teleportSaveFile.getAbsolutePath()));
+            ServerToolsTeleport.log.log(Level.WARNING, String.format("Failed to close buffered reader stream for: %s", teleportSaveFile.getAbsolutePath()));
         }
     }
 

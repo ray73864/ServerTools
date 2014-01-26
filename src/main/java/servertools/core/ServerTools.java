@@ -35,9 +35,11 @@ public class ServerTools {
 
     public static final File serverToolsDir = new File("servertools");
 
+    public static final STLog log = new STLog(Reference.MOD_ID);
+
     static {
         if (serverToolsDir.mkdirs())
-            STLog.fine(String.format("Creating ServerTools root dir at: %s", ServerTools.serverToolsDir.getAbsolutePath()));
+            log.fine(String.format("Creating ServerTools root dir at: %s", ServerTools.serverToolsDir.getAbsolutePath()));
     }
 
     @Mod.Instance(Reference.MOD_ID)

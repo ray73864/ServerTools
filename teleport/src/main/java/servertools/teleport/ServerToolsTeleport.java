@@ -14,7 +14,6 @@ import servertools.teleport.command.CommandTeleport;
 import servertools.teleport.lib.Reference;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 /*
  * Copyright 2014 matthewprenger
@@ -38,11 +37,11 @@ public class ServerToolsTeleport {
     private static final File serverToolsTeleportDir = new File(ServerTools.serverToolsDir, "teleport");
     static {
         if (serverToolsTeleportDir.mkdirs()) {
-            STLog.fine(String.format("Creating root ServerTools-Teleport dir: %s", serverToolsTeleportDir.getAbsolutePath()));
+            ServerToolsTeleport.log.fine(String.format("Creating root ServerTools-Teleport dir: %s", serverToolsTeleportDir.getAbsolutePath()));
         }
     }
 
-    public static Logger teleportLog;
+    public static STLog log = new STLog(Reference.MOD_ID);
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -51,8 +50,6 @@ public class ServerToolsTeleport {
         event.getModMetadata().parent = "ServerTools";
 
         Util.checkModuleVersion("Teleport", Reference.VERSION);
-
-        teleportLog = STLog.getModuleLogger("ServerTools|Teleport");
 
         TeleportConfig.init(new File(serverToolsTeleportDir, "teleport.cfg"));
     }

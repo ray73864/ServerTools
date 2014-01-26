@@ -38,7 +38,7 @@ public class TeleportConfig {
 
         } catch (Exception e) {
             e.printStackTrace();
-            ServerToolsTeleport.teleportLog.log(Level.SEVERE, "Failed to load Teleport config");
+            ServerToolsTeleport.log.log(Level.SEVERE, "Failed to load Teleport config");
         } finally {
             if (teleportConfig.hasChanged()) {
                 teleportConfig.save();

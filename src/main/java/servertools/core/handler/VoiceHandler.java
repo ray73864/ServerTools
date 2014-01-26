@@ -14,7 +14,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.ServerChatEvent;
-import servertools.core.STLog;
 import servertools.core.ServerTools;
 import servertools.core.lib.Strings;
 
@@ -124,7 +123,7 @@ public class VoiceHandler {
             writeStringToFile(gsonRepresentation, voiceFile);
         } catch (IOException e) {
             e.printStackTrace(System.err);
-            STLog.warning("Error saving voice file");
+            ServerTools.log.warning("Error saving voice file");
         }
     }
 
@@ -139,7 +138,7 @@ public class VoiceHandler {
             voicedUsers = gson.fromJson(reader, HashSet.class);
         } catch (Exception e) {
             e.printStackTrace(System.err);
-            STLog.warning("Error loading voice file");
+            ServerTools.log.warning("Error loading voice file");
         }
     }
 
@@ -151,7 +150,7 @@ public class VoiceHandler {
             writeStringToFile(gsonRepresentation, silenceFile);
         } catch (IOException e) {
             e.printStackTrace(System.err);
-            STLog.warning("Error saving silence file");
+            ServerTools.log.warning("Error saving silence file");
         }
     }
 
@@ -166,7 +165,7 @@ public class VoiceHandler {
             silencedUsers = gson.fromJson(reader, HashSet.class);
         } catch (Exception e) {
             e.printStackTrace(System.err);
-            STLog.warning("Error loading silence file");
+            ServerTools.log.warning("Error loading silence file");
         }
     }
 

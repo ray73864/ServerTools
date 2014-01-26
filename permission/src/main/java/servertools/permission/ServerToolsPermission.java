@@ -8,13 +8,11 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import servertools.core.CommandManager;
 import servertools.core.STLog;
 import servertools.core.ServerTools;
-import servertools.core.config.ConfigSettings;
 import servertools.core.util.Util;
 import servertools.permission.command.*;
 import servertools.permission.lib.Reference;
 
 import java.io.File;
-import java.util.logging.Level;
 
 /*
  * Copyright 2014 matthewprenger
@@ -40,6 +38,8 @@ public class ServerToolsPermission {
 
     public static File permissionDir;
 
+    public static STLog log = new STLog(Reference.MOD_ID);
+
     public static PlayerTracker playerTracker;
 
     @Mod.EventHandler
@@ -51,7 +51,7 @@ public class ServerToolsPermission {
         Util.checkModuleVersion("Permission", Reference.VERSION);
 
         permissionDir = new File(ServerTools.serverToolsDir, "permission");
-        if (permissionDir.mkdirs()) STLog.fine("Creating Permission Directory at: " + permissionDir.getAbsolutePath());
+        if (permissionDir.mkdirs()) ServerToolsPermission.log.fine("Creating Permission Directory at: " + permissionDir.getAbsolutePath());
 
         /* Initialize the Permission Configuration */
         PermissionConfig.init(new File(permissionDir, "permission.cfg"));
@@ -83,15 +83,4 @@ public class ServerToolsPermission {
             GroupManager.loadDefaultGroups();
         }
     }
-
-    public static void log(Level level, Object object) {
-
-        STLog.log(level, " [PERMISSION] " + object);
-    }
-
-    public static void debug(Object object) {
-
-        if (ConfigSettings.DEBUG_MODE) STLog.log(Level.INFO, " [DEBUG] " + object.toString());
-    }
-
 }

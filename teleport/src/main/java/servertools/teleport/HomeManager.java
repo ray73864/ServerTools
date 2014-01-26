@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
-import servertools.core.STLog;
 import servertools.core.util.FileUtils;
 
 import java.io.*;
@@ -39,7 +38,7 @@ public class HomeManager {
         gson = new GsonBuilder().setPrettyPrinting().create();
         homeDir = homeDirectory;
         if (homeDir.mkdirs()) {
-            STLog.fine(String.format("Creating home directory: %s", homeDir.getAbsolutePath()));
+            ServerToolsTeleport.log.fine(String.format("Creating home directory: %s", homeDir.getAbsolutePath()));
         }
 
         loadHomes();
@@ -49,12 +48,12 @@ public class HomeManager {
 
         if (userHomeMap.containsKey(username)) {
             if (!(userHomeMap.get(username).isEmpty())) {
-                STLog.info(String.format("Saving user home file for %s", username));
+                ServerToolsTeleport.log.info(String.format("Saving user home file for %s", username));
                 String gsonRepresentation = gson.toJson(userHomeMap.get(username));
                 try {
                     FileUtils.writeStringToFile(gsonRepresentation, new File(homeDir, username + ".json"));
                 } catch (IOException e) {
-                    STLog.warning(String.format("Failed to save %s's homes to file", username));
+                    ServerToolsTeleport.log.warning(String.format("Failed to save %s's homes to file", username));
                     e.printStackTrace();
                 }
             }
@@ -126,13 +125,13 @@ public class HomeManager {
 
                 }catch (JsonParseException e) {
                     e.printStackTrace();
-                    STLog.warning(String.format("The home file for %s could not be parsed as json, it will not be loaded", username));
+                    ServerToolsTeleport.log.warning(String.format("The home file for %s could not be parsed as json, it will not be loaded", username));
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
-                    STLog.warning(String.format("Tried to load home file for %s, but it didn't exist", username));
+                    ServerToolsTeleport.log.warning(String.format("Tried to load home file for %s, but it didn't exist", username));
                 } catch (IOException e) {
                     e.printStackTrace();
-                    STLog.warning(String.format("Failed to close buffered reader stream for: %s", file.getAbsolutePath()));
+                    ServerToolsTeleport.log.warning(String.format("Failed to close buffered reader stream for: %s", file.getAbsolutePath()));
                 }
             }
         }

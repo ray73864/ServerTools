@@ -3,7 +3,6 @@ package servertools.permission;
 import net.minecraftforge.common.Configuration;
 
 import java.io.File;
-import java.util.logging.Level;
 
 /*
  * Copyright 2014 matthewprenger
@@ -41,7 +40,7 @@ public class PermissionConfig {
 
         } catch (Exception e) {
             e.printStackTrace();
-            ServerToolsPermission.log(Level.SEVERE, "Failed to load permission configuration");
+            ServerToolsPermission.log.severe("Failed to load permission configuration");
         }
     }
 }

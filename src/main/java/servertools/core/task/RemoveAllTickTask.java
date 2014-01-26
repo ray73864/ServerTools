@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
-import servertools.core.STLog;
+import servertools.core.ServerTools;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -43,7 +43,7 @@ public class RemoveAllTickTask implements ITickTask {
         world = player.worldObj;
 
         if (world == null) {
-            STLog.warning(String.format("Player: %s tried to start a removeall task, but their worldObj was null", player.username));
+            ServerTools.log.warning(String.format("Player: %s tried to start a removeall task, but their worldObj was null", player.username));
             isComplete = true;
             return;
         }

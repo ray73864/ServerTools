@@ -71,8 +71,8 @@ public class CommandManager {
     protected static void registerCommands(CommandHandler commandHandler) {
 
         for (ServerToolsCommand command : commandsToLoad) {
-            STLog.fine(String.format("Command: %s , has name: %s", command.getClass(), command.name));
-            STLog.info("Registering Command: " + command.name);
+            ServerTools.log.fine(String.format("Command: %s , has name: %s", command.getClass(), command.name));
+            ServerTools.log.info("Registering Command: " + command.name);
             commandHandler.registerCommand(command);
         }
 

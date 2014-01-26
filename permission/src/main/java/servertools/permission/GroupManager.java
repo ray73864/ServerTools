@@ -17,7 +17,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
-import java.util.logging.Level;
 
 /*
  * Copyright 2014 matthewprenger
@@ -51,7 +50,7 @@ public class GroupManager {
 
         groupDir = groupDirectory;
         if (groupDir.mkdirs()) {
-            ServerToolsPermission.log(Level.FINE, String.format("Creating Group directory at: %s", groupDir.getAbsolutePath()));
+            ServerToolsPermission.log.fine(String.format("Creating Group directory at: %s", groupDir.getAbsolutePath()));
         }
 
         loadGroupsFromFile();
@@ -61,7 +60,7 @@ public class GroupManager {
                 createGroup(PermissionConfig.defaultGroup);
             } catch (GroupException e) {
                 e.printStackTrace();
-                ServerToolsPermission.log(Level.WARNING, "Tried to create the default group, but it already existed....This shouldn't happen");
+                ServerToolsPermission.log.warning("Tried to create the default group, but it already existed....This shouldn't happen");
             }
     }
 
@@ -265,7 +264,7 @@ public class GroupManager {
                 FileUtils.writeStringToFile(gson.toJson(group), groupFile);
             } catch (IOException e) {
                 e.printStackTrace();
-                ServerToolsPermission.log(Level.WARNING, String.format("Failed to save group file: %s", groupFile.getAbsolutePath()));
+                ServerToolsPermission.log.warning(String.format("Failed to save group file: %s", groupFile.getAbsolutePath()));
             }
         }
     }
@@ -298,7 +297,7 @@ public class GroupManager {
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    ServerToolsPermission.log(Level.WARNING, String.format("Failed to load group %s from file", file.getName()));
+                    ServerToolsPermission.log.warning(String.format("Failed to load group %s from file", file.getName()));
                 }
             }
         }
@@ -306,7 +305,7 @@ public class GroupManager {
 
     public static void loadDefaultGroups() {
 
-        ServerToolsPermission.log(Level.WARNING, "Loading default groups, you should review the groups and make changes as necessary");
+        ServerToolsPermission.log.warning("Loading default groups, you should review the groups and make changes as necessary");
 
         String ADMIN = "admin";
         String MODERATOR = "moderator";
@@ -330,7 +329,7 @@ public class GroupManager {
                 if (value instanceof CommandBase) {
                     CommandBase base = (CommandBase) value;
 
-                    ServerToolsPermission.debug(String.format("Found CommandBase: %s, Permission Level: %s", base.getCommandName(), base.getRequiredPermissionLevel()));
+                    ServerToolsPermission.log.debug(String.format("Found CommandBase: %s, Permission Level: %s", base.getCommandName(), base.getRequiredPermissionLevel()));
 
                     switch (base.getRequiredPermissionLevel()) {
 
@@ -348,11 +347,11 @@ public class GroupManager {
                 } else if (value instanceof ICommand) {
                     ICommand iCommand = (ICommand) value;
 
-                    ServerToolsPermission.debug(String.format("Found ICommand: %s", iCommand.getCommandName()));
+                    ServerToolsPermission.log.debug(String.format("Found ICommand: %s", iCommand.getCommandName()));
 
                     addAllowedCommand(iCommand.getCommandName(), ADMIN);
                 } else
-                    ServerToolsPermission.debug(String.format("Found Object: %s With Class: %s", value, value.getClass()));
+                    ServerToolsPermission.log.debug(String.format("Found Object: %s With Class: %s", value, value.getClass()));
 
                 for (Object op : MinecraftServer.getServer().getConfigurationManager().getOps()) {
 
@@ -364,7 +363,7 @@ public class GroupManager {
 
         } catch (GroupException e) {
             e.printStackTrace();
-            ServerToolsPermission.log(Level.WARNING, "Failed to load default groups");
+            ServerToolsPermission.log.warning("Failed to load default groups");
         }
     }
 
@@ -387,7 +386,7 @@ public class GroupManager {
             addUserToGroup(username, PermissionConfig.defaultGroup);
         } catch (GroupException e) {
             e.printStackTrace();
-            ServerToolsPermission.log(Level.WARNING, "This should't ever happen... congratulations");
+            ServerToolsPermission.log.warning("This should't ever happen... congratulations");
         }
     }
 

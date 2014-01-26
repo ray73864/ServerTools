@@ -65,7 +65,7 @@ public class Motd implements IPlayerTracker {
 
         } catch (Exception e) {
             e.printStackTrace(System.err);
-            STLog.warning("Unable to read the MOTD from file");
+            ServerTools.log.warning("Unable to read the MOTD from file");
         }
     }
 

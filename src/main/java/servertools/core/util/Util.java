@@ -16,7 +16,7 @@ package servertools.core.util;
  * limitations under the License.
  */
 
-import servertools.core.STLog;
+import servertools.core.ServerTools;
 import servertools.core.lib.Reference;
 
 import javax.swing.*;
@@ -36,13 +36,13 @@ public class Util {
 
             String versionMismatch = "ServerTools is %s, %s is %s";
 
-            STLog.severe("####################################");
-            STLog.severe("######### Version Mismatch #########");
-            STLog.severe(String.format(versionMismatch, Reference.VERSION, moduleName, moduleVersion));
-            STLog.severe("Please download matching versions of ServerTools Modules!");
-            STLog.severe("The game will not load");
-            STLog.severe("####################################");
-            STLog.severe("####################################");
+            ServerTools.log.severe("####################################");
+            ServerTools.log.severe("######### Version Mismatch #########");
+            ServerTools.log.severe(String.format(versionMismatch, Reference.VERSION, moduleName, moduleVersion));
+            ServerTools.log.severe("Please download matching versions of ServerTools Modules!");
+            ServerTools.log.severe("The game will not load");
+            ServerTools.log.severe("####################################");
+            ServerTools.log.severe("####################################");
 
             JEditorPane editorPane = new JEditorPane("text/html",
                     "<html>" + "Version Mismatch: " +
