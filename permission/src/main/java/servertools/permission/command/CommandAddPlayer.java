@@ -28,9 +28,9 @@ import java.util.Set;
  * limitations under the License.
  */
 
-public class CommandAddUser extends ServerToolsCommand {
+public class CommandAddPlayer extends ServerToolsCommand {
 
-    public CommandAddUser(String defaultName) {
+    public CommandAddPlayer(String defaultName) {
         super(defaultName);
     }
 

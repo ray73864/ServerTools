@@ -28,9 +28,9 @@ import java.util.Set;
  * limitations under the License.
  */
 
-public class CommandRemoveUser extends ServerToolsCommand {
+public class CommandRemovePlayer extends ServerToolsCommand {
 
-    public CommandRemoveUser(String defaultName) {
+    public CommandRemovePlayer(String defaultName) {
         super(defaultName);
     }
 

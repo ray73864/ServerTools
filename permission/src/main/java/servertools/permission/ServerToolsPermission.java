@@ -10,6 +10,7 @@ import servertools.core.STLog;
 import servertools.core.ServerTools;
 import servertools.core.util.Util;
 import servertools.permission.command.*;
+import servertools.permission.event.EventHandler;
 import servertools.permission.lib.Reference;
 
 import java.io.File;
@@ -40,7 +41,7 @@ public class ServerToolsPermission {
 
     public static STLog log = new STLog(Reference.MOD_ID);
 
-    public static PlayerTracker playerTracker;
+    public static EventHandler eventHandler;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -60,18 +61,19 @@ public class ServerToolsPermission {
     @Mod.EventHandler
     public void serverAboutToStart(FMLServerAboutToStartEvent event) {
 
-        CommandManager.addSTCommand(new CommandAddUser("adduser"));
-        CommandManager.addSTCommand(new CommandRemoveUser("removeuser"));
+        CommandManager.addSTCommand(new CommandAddPlayer("addplayer"));
+        CommandManager.addSTCommand(new CommandRemovePlayer("removeplayer"));
         CommandManager.addSTCommand(new CommandAddGroup("addgroup"));
         CommandManager.addSTCommand(new CommandRemoveGroup("removegroup"));
         CommandManager.addSTCommand(new CommandAddCommand("addcommand"));
         CommandManager.addSTCommand(new CommandRemoveCommand("removecommand"));
+        CommandManager.addSTCommand(new CommandSetGroupColor("setgroupcolor"));
     }
 
     @Mod.EventHandler
     public void serverStarting(FMLServerStartingEvent event) {
 
-        if (playerTracker == null) playerTracker = new PlayerTracker();
+        if (eventHandler == null) eventHandler = new EventHandler();
     }
 
     @Mod.EventHandler

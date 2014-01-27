@@ -254,6 +254,22 @@ public class GroupManager {
         }
     }
 
+    /**
+     * Set the chat prefix color for a group
+     *
+     * @param groupName the group name
+     * @param color the index of the {@link net.minecraft.util.EnumChatFormatting} color
+     * @throws GroupException
+     */
+    public static void setGroupChatColor(String groupName, int color) throws GroupException{
+
+        if (groups.containsKey(groupName)) {
+            groups.get(groupName).setChatColor(color);
+            saveGroupToFile(groupName);
+        } else
+            throw new GroupException("That group doesn't exist");
+    }
+
     private static void saveGroupToFile(String groupName) {
 
         if (groups.containsKey(groupName)) {
@@ -307,9 +323,9 @@ public class GroupManager {
 
         ServerToolsPermission.log.warning("Loading default groups, you should review the groups and make changes as necessary");
 
-        String ADMIN = "admin";
-        String MODERATOR = "moderator";
-        String PLAYER = "player";
+        String ADMIN = "Admin";
+        String MODERATOR = "Moderator";
+        String PLAYER = "Player";
 
         try {
 
@@ -318,6 +334,10 @@ public class GroupManager {
             createGroup(ADMIN);
             createGroup(MODERATOR);
             createGroup(PLAYER);
+
+            setGroupChatColor(ADMIN, 12);
+            setGroupChatColor(MODERATOR, 9);
+            setGroupChatColor(PLAYER, 15);
 
             addChildGroupToGroup(PLAYER, MODERATOR);
             addChildGroupToGroup(MODERATOR, ADMIN);

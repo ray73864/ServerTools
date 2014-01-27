@@ -23,6 +23,7 @@ import java.io.File;
 public class PermissionConfig {
 
     public static String defaultGroup;
+    public static boolean prefixChatGroupName;
 
     public static void init(File file) {
 
@@ -32,7 +33,8 @@ public class PermissionConfig {
 
             configuration.load();
 
-            defaultGroup = configuration.get(Configuration.CATEGORY_GENERAL, "defaultGroup", "player", "The group players will be added to if they aren't in any groups").getString();
+            defaultGroup = configuration.get(Configuration.CATEGORY_GENERAL, "defaultGroup", "Player", "The group players will be added to if they aren't in any groups").getString();
+            prefixChatGroupName = configuration.get(Configuration.CATEGORY_GENERAL, "prefixChatGroupName", true, "Prefix players names in chat with their group names").getBoolean(true);
 
             if (configuration.hasChanged()) {
                 configuration.save();
