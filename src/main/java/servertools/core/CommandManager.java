@@ -26,8 +26,8 @@ import java.util.Set;
 
 public class CommandManager {
 
-    public static final String ENABLE_COMMAND_CONFIG_CATEGORY = "enableCommand";
-    public static final String COMMAND_NAME_CONFIG_CATEGORY = "commandName";
+    private static final String ENABLE_COMMAND_CONFIG_CATEGORY = "enableCommand";
+    private static final String COMMAND_NAME_CONFIG_CATEGORY = "commandName";
 
     private static final Configuration commandConfig = new Configuration(new File(ServerTools.serverToolsDir, "command.cfg"));
 
@@ -40,7 +40,7 @@ public class CommandManager {
         if (commandConfig.hasChanged()) commandConfig.save();
     }
 
-    public static final Set<ServerToolsCommand> commandsToLoad = new HashSet<ServerToolsCommand>();
+    private static final Set<ServerToolsCommand> commandsToLoad = new HashSet<ServerToolsCommand>();
 
     private static boolean commandsLoaded = false;
 
@@ -49,7 +49,7 @@ public class CommandManager {
      *
      * @param command A command that extends ServerToolsCommand
      */
-    public static void addSTCommand(ServerToolsCommand command) {
+    public static void registerSTCommand(ServerToolsCommand command) {
 
         if (commandsLoaded) {
             throw new IllegalStateException("Only call this method before FMLServerStarting");
@@ -68,7 +68,7 @@ public class CommandManager {
 
     }
 
-    protected static void registerCommands(CommandHandler commandHandler) {
+    static void registerCommands(CommandHandler commandHandler) {
 
         for (ServerToolsCommand command : commandsToLoad) {
             ServerTools.log.fine(String.format("Command: %s , has name: %s", command.getClass(), command.name));
@@ -86,20 +86,20 @@ public class CommandManager {
 
     public static void initCoreCommands() {
 
-        addSTCommand(new CommandMotd("motd"));
-        addSTCommand(new CommandVoice("voice"));
-        addSTCommand(new CommandSilence("silence"));
-        addSTCommand(new CommandDisarm("disarm"));
-        addSTCommand(new CommandEntityCount("entitycount"));
-        addSTCommand(new CommandHeal("heal"));
-        addSTCommand(new CommandInventory("inventory"));
-        addSTCommand(new CommandKillPlayer("killplayer"));
-        addSTCommand(new CommandKillAll("killall"));
-        addSTCommand(new CommandReloadMotd("reloadmotd"));
-        addSTCommand(new CommandSpawnMob("spawnmob"));
-        addSTCommand(new CommandWhereIs("whereis"));
-        addSTCommand(new CommandTPS("tps"));
-        addSTCommand(new CommandRemoveAll("removeall"));
+        registerSTCommand(new CommandMotd("motd"));
+        registerSTCommand(new CommandVoice("voice"));
+        registerSTCommand(new CommandSilence("silence"));
+        registerSTCommand(new CommandDisarm("disarm"));
+        registerSTCommand(new CommandEntityCount("entitycount"));
+        registerSTCommand(new CommandHeal("heal"));
+        registerSTCommand(new CommandInventory("inventory"));
+        registerSTCommand(new CommandKillPlayer("killplayer"));
+        registerSTCommand(new CommandKillAll("killall"));
+        registerSTCommand(new CommandReloadMotd("reloadmotd"));
+        registerSTCommand(new CommandSpawnMob("spawnmob"));
+        registerSTCommand(new CommandWhereIs("whereis"));
+        registerSTCommand(new CommandTPS("tps"));
+        registerSTCommand(new CommandRemoveAll("removeall"));
     }
 
     public static boolean areCommandsLoaded() {

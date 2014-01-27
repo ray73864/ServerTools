@@ -19,7 +19,7 @@ import java.util.List;
  * limitations under the License.
  */
 
-public class PatchNotes {
+class PatchNotes {
 
     public final String targetClass;
     public final String replacementClass;

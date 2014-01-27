@@ -41,7 +41,7 @@ public class ServerToolsTeleport {
         }
     }
 
-    public static STLog log = new STLog(Reference.MOD_ID);
+    public static final STLog log = new STLog(Reference.MOD_ID);
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -57,9 +57,9 @@ public class ServerToolsTeleport {
     @Mod.EventHandler
     public void serverAboutToStart(FMLServerAboutToStartEvent event) {
 
-        CommandManager.addSTCommand(new CommandHome("home"));
-        CommandManager.addSTCommand(new CommandTeleport("teleport"));
-        CommandManager.addSTCommand(new CommandEditTeleport("editteleport"));
+        CommandManager.registerSTCommand(new CommandHome("home"));
+        CommandManager.registerSTCommand(new CommandTeleport("teleport"));
+        CommandManager.registerSTCommand(new CommandEditTeleport("editteleport"));
     }
 
     @Mod.EventHandler

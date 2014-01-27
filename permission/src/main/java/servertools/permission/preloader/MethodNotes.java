@@ -16,7 +16,7 @@ package servertools.permission.preloader;
  * limitations under the License.
  */
 
-public class MethodNotes {
+class MethodNotes {
 
     public final String name;
     public final String mappedName;

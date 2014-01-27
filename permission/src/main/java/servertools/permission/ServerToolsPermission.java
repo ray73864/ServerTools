@@ -39,7 +39,7 @@ public class ServerToolsPermission {
 
     public static File permissionDir;
 
-    public static STLog log = new STLog(Reference.MOD_ID);
+    public static final STLog log = new STLog(Reference.MOD_ID);
 
     public static EventHandler eventHandler;
 
@@ -61,13 +61,13 @@ public class ServerToolsPermission {
     @Mod.EventHandler
     public void serverAboutToStart(FMLServerAboutToStartEvent event) {
 
-        CommandManager.addSTCommand(new CommandAddPlayer("addplayer"));
-        CommandManager.addSTCommand(new CommandRemovePlayer("removeplayer"));
-        CommandManager.addSTCommand(new CommandAddGroup("addgroup"));
-        CommandManager.addSTCommand(new CommandRemoveGroup("removegroup"));
-        CommandManager.addSTCommand(new CommandAddCommand("addcommand"));
-        CommandManager.addSTCommand(new CommandRemoveCommand("removecommand"));
-        CommandManager.addSTCommand(new CommandSetGroupColor("setgroupcolor"));
+        CommandManager.registerSTCommand(new CommandAddPlayer("addplayer"));
+        CommandManager.registerSTCommand(new CommandRemovePlayer("removeplayer"));
+        CommandManager.registerSTCommand(new CommandAddGroup("addgroup"));
+        CommandManager.registerSTCommand(new CommandRemoveGroup("removegroup"));
+        CommandManager.registerSTCommand(new CommandAddCommand("addcommand"));
+        CommandManager.registerSTCommand(new CommandRemoveCommand("removecommand"));
+        CommandManager.registerSTCommand(new CommandSetGroupColor("setgroupcolor"));
     }
 
     @Mod.EventHandler

@@ -29,7 +29,7 @@ import java.util.List;
 
 public class Motd implements IPlayerTracker {
 
-    public static final String FILE_ENCODING = "UTF-8";
+    private static final String FILE_ENCODING = "UTF-8";
 
     private String[] motd;
     private final File motdFile;

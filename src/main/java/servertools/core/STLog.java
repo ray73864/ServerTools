@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 
 public class STLog {
 
-    private Logger stLogger;
+    private final Logger stLogger;
 
     public STLog(String logName) {
         stLogger = Logger.getLogger(logName);
