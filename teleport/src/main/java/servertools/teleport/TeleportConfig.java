@@ -25,6 +25,7 @@ public class TeleportConfig {
 
     public static boolean ENABLE_TELEPORT_ACROSS_DIMENSION;
     public static boolean REQUIRE_OP_EDIT_TELEPORT;
+    public static boolean REQUIRE_WARPTO_ACCEPT;
 
     public static void init(File configFile) {
 
@@ -35,6 +36,7 @@ public class TeleportConfig {
 
             ENABLE_TELEPORT_ACROSS_DIMENSION = teleportConfig.get(Configuration.CATEGORY_GENERAL, "enableTeleportAcrossDimension", false, "Enables teleports to be available across dimensions").getBoolean(false);
             REQUIRE_OP_EDIT_TELEPORT = teleportConfig.get(Configuration.CATEGORY_GENERAL, "requireOPEditTeleport", true, "Only server operators can edit teleports").getBoolean(true);
+            REQUIRE_WARPTO_ACCEPT = teleportConfig.get(Configuration.CATEGORY_GENERAL, "requireWarpToAccept", true, "Require players to accept warpto requests").getBoolean(true);
 
         } catch (Exception e) {
             e.printStackTrace();

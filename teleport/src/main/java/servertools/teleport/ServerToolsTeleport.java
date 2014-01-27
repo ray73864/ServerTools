@@ -11,6 +11,7 @@ import servertools.core.util.Util;
 import servertools.teleport.command.CommandEditTeleport;
 import servertools.teleport.command.CommandHome;
 import servertools.teleport.command.CommandTeleport;
+import servertools.teleport.command.CommandYes;
 import servertools.teleport.lib.Reference;
 
 import java.io.File;
@@ -33,6 +34,14 @@ import java.io.File;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, dependencies = Reference.DEPENDENCIES)
 public class ServerToolsTeleport {
+
+    public CommandHome commandHome;
+    public CommandTeleport commandTeleport;
+    public CommandEditTeleport commandEditTeleport;
+    public CommandYes commandYes;
+
+    @Mod.Instance
+    public static ServerToolsTeleport instance;
 
     private static final File serverToolsTeleportDir = new File(ServerTools.serverToolsDir, "teleport");
     static {
@@ -57,9 +66,15 @@ public class ServerToolsTeleport {
     @Mod.EventHandler
     public void serverAboutToStart(FMLServerAboutToStartEvent event) {
 
-        CommandManager.registerSTCommand(new CommandHome("home"));
-        CommandManager.registerSTCommand(new CommandTeleport("teleport"));
-        CommandManager.registerSTCommand(new CommandEditTeleport("editteleport"));
+        commandHome = new CommandHome("home");
+        commandTeleport = new CommandTeleport("teleport");
+        commandEditTeleport = new CommandEditTeleport("editteleport");
+        commandYes = new CommandYes("yes");
+
+        CommandManager.registerSTCommand(commandHome);
+        CommandManager.registerSTCommand(commandTeleport);
+        CommandManager.registerSTCommand(commandEditTeleport);
+        CommandManager.registerSTCommand(commandYes);
     }
 
     @Mod.EventHandler
