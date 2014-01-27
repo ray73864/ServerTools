@@ -16,15 +16,17 @@ package servertools.teleport.command;
  * limitations under the License.
  */
 
+import com.google.common.base.Strings;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatMessageComponent;
-import net.minecraft.util.EnumChatFormatting;
 import servertools.core.command.ServerToolsCommand;
-import servertools.teleport.TeleportManager;
+import servertools.core.handler.YesNoHandler;
+import servertools.teleport.TeleportConfig;
+import servertools.teleport.WarpToRequest;
 
 import java.util.List;
 
@@ -66,9 +68,25 @@ public class CommandWarpTo extends ServerToolsCommand {
         if (!(sender instanceof EntityPlayerMP))
             throw new WrongUsageException("This command must be used by a player");
 
-        if (TeleportManager.addWarpToRequest(sender.getCommandSenderName(), args[0]))
-            sender.sendChatToPlayer(ChatMessageComponent.createFromText("Created Warp Request").setColor(EnumChatFormatting.GREEN));
-        else
+        String username = null;
+        for (String user : MinecraftServer.getServer().getAllUsernames()) {
+            if (user.equalsIgnoreCase(args[0])) {
+                username = user;
+                break;
+            }
+        }
+
+        if (Strings.isNullOrEmpty(username))
             throw new PlayerNotFoundException();
+
+        WarpToRequest request = new WarpToRequest(sender.getCommandSenderName(), username);
+
+        if (TeleportConfig.REQUIRE_WARPTO_ACCEPT) {
+            YesNoHandler.addYesNoRequest(username, request);
+            sender.sendChatToPlayer(ChatMessageComponent.createFromText("Warp request created"));
+        } else {
+            request.onYes();
+            sender.sendChatToPlayer(ChatMessageComponent.createFromText(String.format("Warped to %s", username)));
+        }
     }
 }

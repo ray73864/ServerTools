@@ -4,10 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatMessageComponent;
-import net.minecraft.util.EnumChatFormatting;
 import servertools.core.util.FileUtils;
 
 import java.io.*;
@@ -35,7 +31,6 @@ import java.util.logging.Level;
 public class TeleportManager {
 
     public static Map<String, Location> teleportMap = new HashMap<String, Location>();
-    public static Map<String, String> warpToMap = new HashMap<String, String>();
     private static File teleportSaveFile;
     private static Gson gson;
 
@@ -72,27 +67,6 @@ public class TeleportManager {
         }
 
         return false;
-    }
-
-    public static boolean addWarpToRequest(String senderUsername, String toUsername) {
-
-        EntityPlayerMP entityPlayerMP = null;
-        for (String string : MinecraftServer.getServer().getAllUsernames()) {
-            if (string.equalsIgnoreCase(toUsername)) {
-                entityPlayerMP = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(string);
-                break;
-            }
-        }
-
-        if (entityPlayerMP == null)
-            return false;
-
-        warpToMap.put(toUsername, senderUsername);
-
-        entityPlayerMP.sendChatToPlayer(ChatMessageComponent.createFromText(String.format("Player %s wants to teleport to you", senderUsername)).setColor(EnumChatFormatting.GOLD));
-        entityPlayerMP.sendChatToPlayer(ChatMessageComponent.createFromText(String.format("To accept type: /%s", ServerToolsTeleport.instance.commandYes.name)).setColor(EnumChatFormatting.GREEN));
-
-        return true;
     }
 
     private static void saveTeleportFile() {

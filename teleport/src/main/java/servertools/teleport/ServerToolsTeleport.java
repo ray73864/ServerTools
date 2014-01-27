@@ -11,7 +11,6 @@ import servertools.core.util.Util;
 import servertools.teleport.command.CommandEditTeleport;
 import servertools.teleport.command.CommandHome;
 import servertools.teleport.command.CommandTeleport;
-import servertools.teleport.command.CommandYes;
 import servertools.teleport.lib.Reference;
 
 import java.io.File;
@@ -38,12 +37,12 @@ public class ServerToolsTeleport {
     public CommandHome commandHome;
     public CommandTeleport commandTeleport;
     public CommandEditTeleport commandEditTeleport;
-    public CommandYes commandYes;
 
     @Mod.Instance
     public static ServerToolsTeleport instance;
 
     private static final File serverToolsTeleportDir = new File(ServerTools.serverToolsDir, "teleport");
+
     static {
         if (serverToolsTeleportDir.mkdirs()) {
             ServerToolsTeleport.log.fine(String.format("Creating root ServerTools-Teleport dir: %s", serverToolsTeleportDir.getAbsolutePath()));
@@ -69,12 +68,10 @@ public class ServerToolsTeleport {
         commandHome = new CommandHome("home");
         commandTeleport = new CommandTeleport("teleport");
         commandEditTeleport = new CommandEditTeleport("editteleport");
-        commandYes = new CommandYes("yes");
 
         CommandManager.registerSTCommand(commandHome);
         CommandManager.registerSTCommand(commandTeleport);
         CommandManager.registerSTCommand(commandEditTeleport);
-        CommandManager.registerSTCommand(commandYes);
     }
 
     @Mod.EventHandler
