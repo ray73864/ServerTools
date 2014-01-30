@@ -1,1 +1,2 @@
 include 'backup', 'permission', 'teleport'
+rootProject.name = 'ServerTools'

@@ -11,35 +11,38 @@ buildscript {
     }
 }
 
-apply plugin: 'forge'
+def actualVersion = "2.0.0"
+def mcversion = "1.6.4"
+def forgeversion = "9.11.1.964"
 
-group = "servertools.core"
+if (System.getenv("BUILD_NUMBER") != null) {
+	version = mcversion + "-" + actualVersion + "." + System.getenv("BUILD_NUMBER");
+	actualVersion += "." + System.getenv("BUILD_NUMBER");
+} else {
+	version = mcversion + "-" + actualVersion + ".dev";
+	actualVersion += ".dev";
+}
+
+allprojects {	
+	sourceCompatibility = '1.7'
+	targetCompatibility = '1.7'
+}
+
+apply plugin: 'forge'
+group = "com.matthewprenger.servertools.core"
 archivesBaseName = "ServerTools-CORE"
 
-ext.configFile = file "build.properties"
-
-configFile.withReader {
-	def prop = new Properties()
-	prop.load(it)
-	project.ext.config = new ConfigSlurper().parse prop
-}
-
-File releaseDir = file('release')
-
 minecraft {
-	version = config.minecraft_version + "-" + config.forge_version
-	assetDir = getRootDir().getAbsolutePath() + "/run/assets"
-}
-
-allprojects {
-	version = "${config.version_major}.${config.version_minor}.${config.version_revision}"
+	version = mcversion + "-" + forgeversion
+	assetDir = "run/assets"
 }
 
 subprojects {
 	apply plugin: 'java'
 
-	group = "servertools." + name.toLowerCase()
+	group = "com.matthewprenger.servertools." + name.toLowerCase()
 	archivesBaseName = "ServerTools-" + name.toUpperCase()
+	version = rootProject.version
 
 	dependencies {
 		compile rootProject
@@ -49,6 +52,10 @@ subprojects {
 		reobf(jar) { spec ->
 			spec.classpath = sourceSets.main.compileClasspath
 		}
+	}
+	
+	jar {
+		destinationDir = new File(rootProject.getBuildDir(), 'libs')
 	}
 }
 
@@ -61,8 +68,9 @@ allprojects{
             include '**/*.properties'
 
             expand ([
-                    'version': project.version,
-                    'minecraft_version': rootProject.config.minecraft_version
+                    'version': actualVersion,
+                    'minecraft_version': mcversion,
+					'forge_version': forgeversion
             ])
         }
 
@@ -71,26 +79,4 @@ allprojects{
             exclude '**/*.properties'
         }
     }
-}
-
-task cleanAll() {
-    dependsOn subprojects.clean, 'clean'
-}
-
-// release
-task release(type: Copy) {
-	dependsOn 'cleanAll', 'reobf'
-	
-	// clean first
-	if (releaseDir.exists() && releaseDir.isDirectory()) {
-        for (File file : releaseDir.listFiles()) {
-            println("Deleting old file: " + file.getName())
-            file.delete()
-        }
-    }
-
-    releaseDir.mkdirs()
-
-    from subprojects*.tasks.jar.destinationDir, project.tasks.jar.destinationDir
-    into project.file(releaseDir)
 }
