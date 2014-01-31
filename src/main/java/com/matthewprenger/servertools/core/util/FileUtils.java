@@ -1,8 +1,13 @@
 package com.matthewprenger.servertools.core.util;
 
+import org.apache.commons.io.comparator.LastModifiedFileComparator;
+import org.apache.commons.io.filefilter.FileFileFilter;
+
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 
 /*
  * Copyright 2014 matthewprenger
@@ -27,5 +32,41 @@ public class FileUtils {
         writer.write(string);
         writer.flush();
         writer.close();
+    }
+
+    /**
+     * Check the size of a directory
+     *
+     * @param directory the directory to check
+     * @return the size of the directory in bytes
+     */
+    public static long getFolderSize(File directory) {
+
+        long length = 0;
+        if (directory.exists() && directory.isDirectory()) {
+            for (File file : directory.listFiles()) {
+                if (file.isFile())
+                    length += file.length();
+                else
+                    length += getFolderSize(file);
+            }
+        }
+
+        return length;
+    }
+
+    /**
+     * Retrieve the oldest file in a directory
+     *
+     * @param directory the directory to check
+     * @return the oldest file
+     */
+    public static File getOldestFile(File directory) {
+
+        File[] files = directory.listFiles((FileFilter)FileFileFilter.FILE);
+
+        Arrays.sort(files, LastModifiedFileComparator.LASTMODIFIED_REVERSE);
+
+        return files.length > 0 ? files[0] : null;
     }
 }

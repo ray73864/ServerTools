@@ -1,0 +1,78 @@
+package com.matthewprenger.servertools.backup;
+
+/*
+ * Copyright 2014 matthewprenger
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import cpw.mods.fml.common.FMLLog;
+import net.minecraftforge.common.Configuration;
+
+import java.io.File;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import static net.minecraftforge.common.Configuration.CATEGORY_GENERAL;
+
+class BackupConfig {
+
+    public static String backupDirPath;
+    public static String backupFileNameTemplate;
+    public static int backupLifespanDays;
+    public static int backupDirMaxSize;
+    public static int backupMaxNumber;
+    public static final Set<String> fileBlacklist = new HashSet<String>();
+    public static boolean sendBackupMessageToOps;
+    public static boolean sendBackupMessageToUsers;
+    public static final Set<String> backupMessgeWhitelist = new HashSet<String>();
+
+    public static void init(File configFile) {
+
+        Configuration backupConfg = new Configuration(configFile);
+
+        try {
+
+            backupConfg.load();
+
+            backupDirPath = backupConfg.get(CATEGORY_GENERAL, "backupDir", "backup", "The backup directory").getString();
+            backupFileNameTemplate = backupConfg.get(CATEGORY_GENERAL, "filename", "%MONTH-%DAY-%YEAR_%HOUR-%MINUTE-%SECOND",
+                    "The Filename template for backup zips. %MONTH, %DAY, %YEAR, %HOUR, %MINUTE, %SECOND").getString();
+            backupLifespanDays = backupConfg.get(CATEGORY_GENERAL, "daysToKeepBackups", -1, "Set to -1 to disable").getInt(-1);
+            backupDirMaxSize = backupConfg.get(CATEGORY_GENERAL, "maxBackupDirSize", -1, "In megabytes, set to -1 to disable").getInt(-1);
+            backupMaxNumber = backupConfg.get(CATEGORY_GENERAL, "maxNumberBackups", -1, "Maximum number of backups to keep, Set to -1 to disable").getInt(-1);
+            sendBackupMessageToOps = backupConfg.get(CATEGORY_GENERAL, "sendBackupMessageToOps", true, "Send backup related message to ops").getBoolean(true);
+            sendBackupMessageToUsers = backupConfg.get(CATEGORY_GENERAL, "sendBackupMessageToUsers", false, "Send backup related messages to users").getBoolean(false);
+
+            String[] fileBlacklistArray = backupConfg.get(CATEGORY_GENERAL, "fileBlackList", "", "Comma separated list of files to not back up").getString().split(",");
+            if (fileBlacklistArray.length > 0) {
+                Collections.addAll(fileBlacklist, fileBlacklistArray);
+            }
+
+            fileBlacklist.add("level.dat_new"); /* Minecraft Temp File - Causes Backup Problems */
+
+            String[] backupMessageWhitelistArray = backupConfg.get(CATEGORY_GENERAL, "backupMessageWhitelist", "", "A list of users to send backup messages to").getString().split(",");
+            if (backupMessageWhitelistArray.length > 0) {
+                Collections.addAll(backupMessgeWhitelist, backupMessageWhitelistArray);
+            }
+
+            if (backupConfg.hasChanged())
+                backupConfg.save();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            FMLLog.warning("ServerTools Backup failed to loat its configuration", e);
+        }
+    }
+}

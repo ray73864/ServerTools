@@ -16,16 +16,23 @@ package com.matthewprenger.servertools.backup;
  * limitations under the License.
  */
 
-import com.matthewprenger.servertools.backup.lib.Reference;
+import com.matthewprenger.servertools.core.CommandManager;
 import com.matthewprenger.servertools.core.STLog;
+import com.matthewprenger.servertools.core.ServerTools;
 import com.matthewprenger.servertools.core.util.Util;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
+import cpw.mods.fml.common.event.FMLServerStartedEvent;
+
+import java.io.File;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, dependencies = Reference.DEPENDENCIES)
 public class ServerToolsBackup {
 
     public static final STLog log = new STLog(Reference.MOD_ID);
+
+    private static File backupDir;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -34,5 +41,22 @@ public class ServerToolsBackup {
         event.getModMetadata().parent = "ServerTools";
 
         Util.checkModuleVersion("Backup", Reference.VERSION);
+
+        backupDir = new File(ServerTools.serverToolsDir, "backup");
+        backupDir.mkdirs();
+
+        BackupConfig.init(new File(backupDir, "backup.cfg"));
+    }
+
+    @Mod.EventHandler
+    public void serverAboutToStart(FMLServerAboutToStartEvent event) {
+
+        CommandManager.registerSTCommand(new CommandBackup("backup"));
+    }
+
+    @Mod.EventHandler
+    public void serverStarted(FMLServerStartedEvent event) {
+
+        BackupHandler.init();
     }
 }
