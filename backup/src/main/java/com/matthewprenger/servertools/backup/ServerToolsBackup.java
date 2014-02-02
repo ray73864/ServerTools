@@ -24,15 +24,23 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.world.World;
 
 import java.io.File;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, dependencies = Reference.DEPENDENCIES)
-public class ServerToolsBackup {
+public class ServerToolsBackup implements ICommandSender {
 
     public static final STLog log = new STLog(Reference.MOD_ID);
 
     private static File backupDir;
+
+    @Mod.Instance
+    public static ServerToolsBackup instance;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -57,6 +65,36 @@ public class ServerToolsBackup {
     @Mod.EventHandler
     public void serverStarted(FMLServerStartedEvent event) {
 
-        BackupHandler.init();
+        new BackupHandler();
+    }
+
+    @Override
+    public String getCommandSenderName() {
+
+        return "STBackup";
+    }
+
+    @Override
+    public void sendChatToPlayer(ChatMessageComponent chatmessagecomponent) {
+
+        log.info(chatmessagecomponent.toString());
+    }
+
+    @Override
+    public boolean canCommandSenderUseCommand(int i, String s) {
+
+        return true;
+    }
+
+    @Override
+    public ChunkCoordinates getPlayerCoordinates() {
+
+        return new ChunkCoordinates(0, 0, 0);
+    }
+
+    @Override
+    public World getEntityWorld() {
+
+        return MinecraftServer.getServer().worldServers[0];
     }
 }

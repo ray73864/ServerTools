@@ -24,8 +24,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import static net.minecraftforge.common.Configuration.CATEGORY_GENERAL;
-
 class BackupConfig {
 
     public static String backupDirPath;
@@ -36,7 +34,10 @@ class BackupConfig {
     public static final Set<String> fileBlacklist = new HashSet<String>();
     public static boolean sendBackupMessageToOps;
     public static boolean sendBackupMessageToUsers;
-    public static final Set<String> backupMessgeWhitelist = new HashSet<String>();
+    public static final Set<String> backupMessageWhitelist = new HashSet<String>();
+
+    public static boolean enableAutoBackup;
+    public static int autoBackupInterval;
 
     public static void init(File configFile) {
 
@@ -45,34 +46,41 @@ class BackupConfig {
         try {
 
             backupConfg.load();
+            String category;
 
-            backupDirPath = backupConfg.get(CATEGORY_GENERAL, "backupDir", "backup", "The backup directory").getString();
-            backupFileNameTemplate = backupConfg.get(CATEGORY_GENERAL, "filename", "%MONTH-%DAY-%YEAR_%HOUR-%MINUTE-%SECOND",
-                    "The Filename template for backup zips. %MONTH, %DAY, %YEAR, %HOUR, %MINUTE, %SECOND").getString();
-            backupLifespanDays = backupConfg.get(CATEGORY_GENERAL, "daysToKeepBackups", -1, "Set to -1 to disable").getInt(-1);
-            backupDirMaxSize = backupConfg.get(CATEGORY_GENERAL, "maxBackupDirSize", -1, "In megabytes, set to -1 to disable").getInt(-1);
-            backupMaxNumber = backupConfg.get(CATEGORY_GENERAL, "maxNumberBackups", -1, "Maximum number of backups to keep, Set to -1 to disable").getInt(-1);
-            sendBackupMessageToOps = backupConfg.get(CATEGORY_GENERAL, "sendBackupMessageToOps", true, "Send backup related message to ops").getBoolean(true);
-            sendBackupMessageToUsers = backupConfg.get(CATEGORY_GENERAL, "sendBackupMessageToUsers", false, "Send backup related messages to users").getBoolean(false);
+            /* General Settings */
+            category = "general";
+            backupDirPath = backupConfg.get(category, "backupDir", "backup", "The backup directory").getString();
+            backupFileNameTemplate = backupConfg.get(category, "filename", "%MONTH-%DAY-%YEAR_%HOUR-%MINUTE-%SECOND", "The Filename template for backup zips. %MONTH, %DAY, %YEAR, %HOUR, %MINUTE, %SECOND").getString();
+            backupLifespanDays = backupConfg.get(category, "daysToKeepBackups", -1, "Set to -1 to disable").getInt(-1);
+            backupDirMaxSize = backupConfg.get(category, "maxBackupDirSize", -1, "In megabytes, set to -1 to disable").getInt(-1);
+            backupMaxNumber = backupConfg.get(category, "maxNumberBackups", -1, "Maximum number of backups to keep, Set to -1 to disable").getInt(-1);
+            sendBackupMessageToOps = backupConfg.get(category, "sendBackupMessageToOps", true, "Send backup related message to ops").getBoolean(true);
+            sendBackupMessageToUsers = backupConfg.get(category, "sendBackupMessageToUsers", false, "Send backup related messages to users").getBoolean(false);
 
-            String[] fileBlacklistArray = backupConfg.get(CATEGORY_GENERAL, "fileBlackList", "", "Comma separated list of files to not back up").getString().split(",");
+            String[] fileBlacklistArray = backupConfg.get(category, "fileBlackList", "", "Comma separated list of files to not back up").getString().split(",");
             if (fileBlacklistArray.length > 0) {
                 Collections.addAll(fileBlacklist, fileBlacklistArray);
             }
 
             fileBlacklist.add("level.dat_new"); /* Minecraft Temp File - Causes Backup Problems */
 
-            String[] backupMessageWhitelistArray = backupConfg.get(CATEGORY_GENERAL, "backupMessageWhitelist", "", "A list of users to send backup messages to").getString().split(",");
+            String[] backupMessageWhitelistArray = backupConfg.get(category, "backupMessageWhitelist", "", "A list of users to send backup messages to").getString().split(",");
             if (backupMessageWhitelistArray.length > 0) {
-                Collections.addAll(backupMessgeWhitelist, backupMessageWhitelistArray);
+                Collections.addAll(backupMessageWhitelist, backupMessageWhitelistArray);
             }
+
+            /* Settings for AutoBackups */
+            category = "autoBackup";
+            enableAutoBackup = backupConfg.get(category, "enableAutoBackup", false, "Enable automatic backups at specified intervals").getBoolean(false);
+            autoBackupInterval = backupConfg.get(category, "autoBackupInterval", 1440, "The interval in minutes for the auto backup to run").getInt(1440);
 
             if (backupConfg.hasChanged())
                 backupConfg.save();
 
         } catch (Exception e) {
             e.printStackTrace();
-            FMLLog.warning("ServerTools Backup failed to loat its configuration", e);
+            FMLLog.warning("ServerTools Backup failed to load its configuration", e);
         }
     }
 }

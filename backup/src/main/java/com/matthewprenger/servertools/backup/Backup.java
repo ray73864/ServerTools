@@ -16,7 +16,6 @@ package com.matthewprenger.servertools.backup;
  * limitations under the License.
  */
 
-import com.google.common.base.Strings;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -24,20 +23,19 @@ import java.io.*;
 import java.net.URI;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.TimerTask;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-class Backup implements Runnable {
+class Backup extends TimerTask {
 
     private final File sourceDir;
     private final File backupDir;
-    private final String backupFileName;
 
-    public Backup(File sourceDir, File backupDir, String backupFileName) throws IOException {
+    public Backup(File sourceDir, File backupDir) throws IOException {
 
         this.sourceDir = sourceDir;
         this.backupDir = backupDir;
-        this.backupFileName = backupFileName;
 
         if (!sourceDir.exists())
             throw new FileNotFoundException("The given backup source path doesn't exist");
@@ -48,20 +46,19 @@ class Backup implements Runnable {
         if (backupDir.exists() && !backupDir.isDirectory())
             throw new IOException("The given backup directory exists and isn't a directory");
 
-        if (Strings.isNullOrEmpty(backupFileName))
-            throw new IllegalArgumentException("Backup filename can't be null or empty");
-
         backupDir.mkdirs();
     }
 
     @Override
     public void run() {
 
+        String backupFileName = BackupHandler.getBackupName();
+
         ServerToolsBackup.log.info(String.format("Starting backup %s", backupFileName));
         BackupHandler.sendBackupMessage(ChatMessageComponent.createFromText("Starting Server Backup").setColor(EnumChatFormatting.AQUA));
 
-        //SaveOff
-        //SaveAll
+        BackupHandler.forceSaveWorld();
+        BackupHandler.setWorldCanSave(false);
 
         boolean completedSuccessfully = true;
         try {
@@ -71,19 +68,19 @@ class Backup implements Runnable {
             e.printStackTrace();
         }
 
-        //SaveOn
+        BackupHandler.setWorldCanSave(true);
 
         if (completedSuccessfully) {
             BackupHandler.sendBackupMessage(ChatMessageComponent.createFromText("Server Backup Finished").setColor(EnumChatFormatting.GREEN));
-            ServerToolsBackup.log.severe("Backup completed successfully");
+            ServerToolsBackup.log.info("Backup completed successfully");
         } else {
             BackupHandler.sendBackupMessage(ChatMessageComponent.createFromText("Server Backup Error - Check Server Logs").setColor(EnumChatFormatting.RED));
             ServerToolsBackup.log.severe("Backup didn't complete successfully");
         }
 
-        BackupHandler.checkBackupDirSize();
-        BackupHandler.checkForOldBackups();
-        BackupHandler.checkNumberBackups();
+        BackupHandler.instance.checkBackupDirSize();
+        BackupHandler.instance.checkForOldBackups();
+        BackupHandler.instance.checkNumberBackups();
     }
 
     void zipDirectory(File directory, File zipfile) throws IOException {

@@ -16,10 +16,14 @@ package com.matthewprenger.servertools.backup;
  * limitations under the License.
  */
 
+import com.google.common.base.Strings;
 import com.matthewprenger.servertools.core.util.FileUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.world.MinecraftException;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 
 import java.io.File;
@@ -27,44 +31,69 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Timer;
 
 public class BackupHandler {
 
     private static final String FILE_EXTENSION = ".zip";
     private static final BackupFileNameFilter backupFileNameFilter = new BackupFileNameFilter();
 
-    private static File backupDir;
-    private static File worldDir;
+    private File backupDir;
+    private File worldDir;
 
-    public static void init() {
+    private Timer backupTimer;
+
+    public static BackupHandler instance;
+
+    public BackupHandler() {
+
+        instance = this;
 
         ServerToolsBackup.log.info("Initializing ServerTools Backup Handler");
 
-        backupDir = new File(BackupConfig.backupDirPath);
-        if (backupDir.exists() && !backupDir.isDirectory())
-            throw new RuntimeException("Specified backup directory is a file!");
+        if (Strings.isNullOrEmpty(BackupConfig.backupDirPath))
+            throw new IllegalArgumentException("The configured backup path is not set");
 
+        backupDir = new File(BackupConfig.backupDirPath);
         worldDir = DimensionManager.getWorld(0).getChunkSaveLocation();
 
+        if (backupDir.exists() && backupDir.isFile())
+            throw new IllegalArgumentException("File exists with name of configured backup path, can't create backup directory");
+
+        ServerToolsBackup.log.config(String.format("Backup Directory: %s", backupDir.getAbsolutePath()));
+
         backupDir.mkdirs();
-        ServerToolsBackup.log.config(String.format("Backup directory: %s", backupDir.getAbsolutePath()));
+
+        backupTimer = new Timer(true);
+
+        if (BackupConfig.enableAutoBackup) {
+
+            ServerToolsBackup.log.info(String.format("Initializing ServerTools AutoBackup to run every %s minutes", BackupConfig.autoBackupInterval));
+
+            int interval = BackupConfig.autoBackupInterval * 60 * 1000;
+
+            if (interval <= 0)
+                throw new IllegalArgumentException("Autobackup interval must be greater than 0");
+
+            try {
+                backupTimer.scheduleAtFixedRate(
+                        new Backup(worldDir, backupDir), interval, interval
+                );
+            } catch (IOException e) {
+                e.printStackTrace();
+                ServerToolsBackup.log.severe("Failed to initialize autobackup");
+            }
+        }
     }
 
     /**
      * Run the server backup
      */
-    public static void doBackup() {
+    public void doBackup() throws IOException {
 
-        String backupName = getBackupName();
-
-        try {
-            Backup worldBackup = new Backup(worldDir, backupDir, backupName);
-            Thread worldBackupThread = new Thread(worldBackup);
-            worldBackupThread.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        backupTimer.schedule(
+                new Backup(worldDir, backupDir), 0
+        );
     }
 
     /**
@@ -72,7 +101,7 @@ public class BackupHandler {
      *
      * @return the name of the backup
      */
-    private static String getBackupName() {
+    public static String getBackupName() {
 
         Calendar cal = Calendar.getInstance();
 
@@ -97,7 +126,7 @@ public class BackupHandler {
      * <p/>
      * Does nothing if config setting is set to -1
      */
-    public static void checkForOldBackups() {
+    public void checkForOldBackups() {
 
         if (BackupConfig.backupLifespanDays == -1)
             return;
@@ -125,7 +154,7 @@ public class BackupHandler {
      * Check the size of the backup directory and delete the
      * oldest file if the directory is larger than the config option
      */
-    public static void checkBackupDirSize() {
+    public void checkBackupDirSize() {
 
         if (BackupConfig.backupDirMaxSize == -1)
             return;
@@ -148,7 +177,7 @@ public class BackupHandler {
     /**
      * Check the number of backups in the backup directory and delete old ones if necessary
      */
-    public static void checkNumberBackups() {
+    public void checkNumberBackups() {
 
         if (BackupConfig.backupMaxNumber == -1)
             return;
@@ -171,7 +200,7 @@ public class BackupHandler {
      *
      * @return the number of backups
      */
-    private static int getNumberBackups() {
+    private int getNumberBackups() {
 
         int number = 0;
 
@@ -202,10 +231,67 @@ public class BackupHandler {
                     playerMP.sendChatToPlayer(component);
                 else if (BackupConfig.sendBackupMessageToUsers)
                     playerMP.sendChatToPlayer(component);
-                else if (BackupConfig.backupMessgeWhitelist.contains(playerMP.getCommandSenderName()))
+                else if (BackupConfig.backupMessageWhitelist.contains(playerMP.getCommandSenderName()))
                     playerMP.sendChatToPlayer(component);
             }
         }
+
+        MinecraftServer.getServer().sendChatToPlayer(component);
+    }
+
+    /**
+     * Toggle if worldservers can save or not
+     *
+     * @param canSave if the worldservers can save
+     */
+    public static void setWorldCanSave(boolean canSave) {
+
+        MinecraftServer server = MinecraftServer.getServer();
+
+        for (WorldServer worldServer : server.worldServers) {
+
+            if (worldServer != null) {
+                worldServer.canNotSave = !canSave;
+            }
+        }
+
+        if (canSave)
+            sendBackupMessage(ChatMessageComponent.createFromTranslationWithSubstitutions("chat.type.admin", ServerToolsBackup.instance.getCommandSenderName(),
+                    ChatMessageComponent.createFromTranslationKey("commands.save.enabled")).setColor(EnumChatFormatting.GRAY));
+        else
+            sendBackupMessage(ChatMessageComponent.createFromTranslationWithSubstitutions("chat.type.admin", ServerToolsBackup.instance.getCommandSenderName(),
+                    ChatMessageComponent.createFromTranslationKey("commands.save.disabled")).setColor(EnumChatFormatting.GRAY));
+    }
+
+    /**
+     * Force save all worlds
+     */
+    public static void forceSaveWorld() {
+
+        MinecraftServer server = MinecraftServer.getServer();
+
+        if (server.getConfigurationManager() != null) {
+            server.getConfigurationManager().saveAllPlayerData();
+        }
+
+        try {
+            boolean flag;
+            for (WorldServer worldServer : server.worldServers) {
+                if (worldServer != null) {
+                    flag = worldServer.canNotSave;
+                    worldServer.canNotSave = false;
+                    worldServer.saveAllChunks(true, null);
+                    worldServer.canNotSave = flag;
+                }
+            }
+        } catch (MinecraftException e) {
+            sendBackupMessage(ChatMessageComponent.createFromTranslationWithSubstitutions("chat.type.admin", ServerToolsBackup.instance.getCommandSenderName(),
+                    ChatMessageComponent.createFromTranslationWithSubstitutions("commands.save.failed", e.getMessage())).setColor(EnumChatFormatting.GRAY));
+            return;
+        }
+
+        sendBackupMessage(ChatMessageComponent.createFromTranslationWithSubstitutions("chat.type.admin", ServerToolsBackup.instance.getCommandSenderName(),
+                ChatMessageComponent.createFromTranslationKey("commands.save.success")).setColor(EnumChatFormatting.GRAY));
     }
 
     private static class BackupFileNameFilter implements FilenameFilter {
