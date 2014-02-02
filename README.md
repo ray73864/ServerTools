@@ -1,6 +1,6 @@
 ServerTools
 =========
-**This repository is for ServerTools 2.0 and beyond (Still in development!)
+**This repository is for ServerTools 2.0 and beyond (Still in development!)**
 
 Servertools is a server-side minecraft mod that adds a variety of utilities and commands as well as a simple permission system.
 
