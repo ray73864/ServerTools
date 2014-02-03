@@ -30,7 +30,7 @@ import java.util.logging.Level;
 
 public class TeleportManager {
 
-    public static Map<String, Location> teleportMap = new HashMap<String, Location>();
+    public static Map<String, Location> teleportMap = new HashMap<>();
     private static File teleportSaveFile;
     private static Gson gson;
 

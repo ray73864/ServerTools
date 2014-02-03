@@ -83,9 +83,9 @@ class Backup extends TimerTask {
         BackupHandler.instance.checkNumberBackups();
     }
 
-    void zipDirectory(File directory, File zipfile) throws IOException {
+    static void zipDirectory(File directory, File zipfile) throws IOException {
         URI baseDir = directory.toURI();
-        Deque<File> queue = new LinkedList<File>();
+        Deque<File> queue = new LinkedList<>();
         queue.push(directory);
         OutputStream out = new FileOutputStream(zipfile);
         Closeable res = out;
@@ -131,11 +131,8 @@ class Backup extends TimerTask {
     }
 
     private static void copy(File file, OutputStream out) throws IOException {
-        InputStream in = new FileInputStream(file);
-        try {
+        try (InputStream in = new FileInputStream(file)) {
             copy(in, out);
-        } finally {
-            in.close();
         }
     }
 }

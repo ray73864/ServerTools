@@ -33,9 +33,9 @@ public class Group {
     public Group(String groupName) {
 
         this.groupName = groupName;
-        members = new HashSet<String>();
-        allowedCommands = new HashSet<String>();
-        childGroups = new HashSet<String>();
+        members = new HashSet<>();
+        allowedCommands = new HashSet<>();
+        childGroups = new HashSet<>();
         chatColor = 15;
     }
 
@@ -96,7 +96,7 @@ public class Group {
 
     public Set<String> getAllowedCommands() {
 
-        Set<String> set = new HashSet<String>();
+        Set<String> set = new HashSet<>();
 
         set.addAll(allowedCommands);
 

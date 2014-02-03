@@ -31,10 +31,10 @@ class BackupConfig {
     public static int backupLifespanDays;
     public static int backupDirMaxSize;
     public static int backupMaxNumber;
-    public static final Set<String> fileBlacklist = new HashSet<String>();
+    public static final Set<String> fileBlacklist = new HashSet<>();
     public static boolean sendBackupMessageToOps;
     public static boolean sendBackupMessageToUsers;
-    public static final Set<String> backupMessageWhitelist = new HashSet<String>();
+    public static final Set<String> backupMessageWhitelist = new HashSet<>();
 
     public static boolean enableAutoBackup;
     public static int autoBackupInterval;

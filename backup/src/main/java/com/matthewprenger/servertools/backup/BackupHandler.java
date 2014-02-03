@@ -47,8 +47,6 @@ public class BackupHandler {
 
     public BackupHandler() {
 
-        instance = this;
-
         ServerToolsBackup.log.info("Initializing ServerTools Backup Handler");
 
         if (Strings.isNullOrEmpty(BackupConfig.backupDirPath))
@@ -84,6 +82,8 @@ public class BackupHandler {
                 ServerToolsBackup.log.severe("Failed to initialize autobackup");
             }
         }
+
+        instance = this;
     }
 
     /**

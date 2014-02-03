@@ -43,12 +43,6 @@ public class ServerToolsTeleport {
 
     private static final File serverToolsTeleportDir = new File(ServerTools.serverToolsDir, "teleport");
 
-    static {
-        if (serverToolsTeleportDir.mkdirs()) {
-            ServerToolsTeleport.log.fine(String.format("Creating root ServerTools-Teleport dir: %s", serverToolsTeleportDir.getAbsolutePath()));
-        }
-    }
-
     public static final STLog log = new STLog(Reference.MOD_ID);
 
     @Mod.EventHandler

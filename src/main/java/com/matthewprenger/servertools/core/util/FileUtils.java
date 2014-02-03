@@ -44,11 +44,13 @@ public class FileUtils {
 
         long length = 0;
         if (directory.exists() && directory.isDirectory()) {
-            for (File file : directory.listFiles()) {
-                if (file.isFile())
-                    length += file.length();
-                else
-                    length += getFolderSize(file);
+            if (directory.listFiles() != null) {
+                for (File file : directory.listFiles()) {
+                    if (file.isFile())
+                        length += file.length();
+                    else
+                        length += getFolderSize(file);
+                }
             }
         }
 
@@ -63,7 +65,7 @@ public class FileUtils {
      */
     public static File getOldestFile(File directory) {
 
-        File[] files = directory.listFiles((FileFilter)FileFileFilter.FILE);
+        File[] files = directory.listFiles((FileFilter) FileFileFilter.FILE);
 
         Arrays.sort(files, LastModifiedFileComparator.LASTMODIFIED_REVERSE);
 

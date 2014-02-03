@@ -59,7 +59,7 @@ public class CommandTPS extends ServerToolsCommand{
         }
     }
 
-    private void calculateDimTps(ICommandSender sender, int dimId) {
+    private static void calculateDimTps(ICommandSender sender, int dimId) {
 
         World world = MinecraftServer.getServer().worldServerForDimension(dimId);
 
@@ -77,7 +77,7 @@ public class CommandTPS extends ServerToolsCommand{
         sendToChat(sender, String.format("   Players Online: %s", world.playerEntities.size()));
     }
 
-    private void calculateAllDimTps(ICommandSender sender) {
+    private static void calculateAllDimTps(ICommandSender sender) {
 
         sendToChat(sender, EnumChatFormatting.GREEN + "All Dimensions TPS Report" + EnumChatFormatting.RESET);
 
@@ -90,7 +90,7 @@ public class CommandTPS extends ServerToolsCommand{
         }
     }
 
-    private void calculateTpsSummary(ICommandSender sender) {
+    private static void calculateTpsSummary(ICommandSender sender) {
 
         sendToChat(sender, EnumChatFormatting.GREEN + "Overall TPS Report" + EnumChatFormatting.RESET);
 

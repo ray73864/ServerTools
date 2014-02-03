@@ -30,7 +30,7 @@ public class FlatBedrockHandler implements IWorldGenerator {
     public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider iChunkProvider, IChunkProvider iChunkProvider2) {
 
         BiomeGenBase biomeGenBase = world.getBiomeGenForCoords(chunkX, chunkZ);
-        boolean isNether = biomeGenBase.biomeName.toLowerCase().equals("hell");
+        boolean isNether = "hell".equals(biomeGenBase.biomeName.toLowerCase());
 
         for (int blockX = 0; blockX < 16; blockX++)
             for (int blockZ = 0; blockZ < 16; blockZ++) {

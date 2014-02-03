@@ -48,8 +48,8 @@ public class CommandSpawnMob extends ServerToolsCommand {
     }
 
     @SuppressWarnings("unchecked")
-    private List<?> getValidEntities() {
-        List<String> ret = new ArrayList<String>();
+    private static List<?> getValidEntities() {
+        List<String> ret = new ArrayList<>();
         for (String name : ((Map<String, Class<?>>) EntityList.stringToClassMapping).keySet()) {
             Class<?> clazz = (Class<?>) EntityList.stringToClassMapping.get(name);
             if (EntityLiving.class.isAssignableFrom(clazz)) ret.add(name);

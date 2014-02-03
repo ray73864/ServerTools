@@ -49,8 +49,8 @@ public class VoiceHandler {
 
     public VoiceHandler() {
 
-        voicedUsers = new HashSet<String>();
-        silencedUsers = new HashSet<String>();
+        voicedUsers = new HashSet<>();
+        silencedUsers = new HashSet<>();
 
         voiceFile = new File(ServerTools.serverToolsDir, "voice.json");
         silenceFile = new File(ServerTools.serverToolsDir, "silence.json");
@@ -201,7 +201,7 @@ public class VoiceHandler {
         }
     }
 
-    private void writeStringToFile(String string, File file) throws IOException {
+    private static void writeStringToFile(String string, File file) throws IOException {
 
         FileWriter writer = new FileWriter(file);
         writer.write(string);

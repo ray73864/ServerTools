@@ -43,7 +43,7 @@ public class CommandEditTeleport extends ServerToolsCommand {
     public List addTabCompletionOptions(ICommandSender par1ICommandSender, String[] par2ArrayOfStr) {
 
 
-        if (par2ArrayOfStr.length == 1 && par2ArrayOfStr[0].equalsIgnoreCase("delete")) {
+        if (par2ArrayOfStr.length == 1 && "delete".equalsIgnoreCase(par2ArrayOfStr[0])) {
             Set<String> var = TeleportManager.teleportMap.keySet();
             return getListOfStringsMatchingLastWord(par2ArrayOfStr, var.toArray(new String[var.size()]));
         }
@@ -68,12 +68,12 @@ public class CommandEditTeleport extends ServerToolsCommand {
 
         EntityPlayer player = (EntityPlayer) icommandsender;
 
-        if (astring[0].equalsIgnoreCase("set")) {
+        if ("set".equalsIgnoreCase(astring[0])) {
 
             TeleportManager.setTeleport(astring[1], new TeleportManager.Location(player.worldObj.provider.dimensionId, player.posX, player.posY, player.posZ));
             icommandsender.sendChatToPlayer(ChatMessageComponent.createFromText(String.format("Set teleport: %s", astring[1])).setColor(EnumChatFormatting.GREEN));
 
-        } else if (astring[0].equalsIgnoreCase("delete")) {
+        } else if ("delete".equalsIgnoreCase(astring[0])) {
 
             if (TeleportManager.removeTeleport(astring[1])) {
                 icommandsender.sendChatToPlayer(ChatMessageComponent.createFromText(String.format("Removed teleport: %s", astring[1])).setColor(EnumChatFormatting.GREEN));

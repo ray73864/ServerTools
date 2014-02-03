@@ -55,7 +55,7 @@ public class CommandSilence extends ServerToolsCommand {
         if (par2.length == 1) {
             return getListOfStringsMatchingLastWord(par2, "add", "remove", "reload");
         } else if (par2.length == 2) {
-            if (!par2[0].equalsIgnoreCase("reload"))
+            if (!"reload".equalsIgnoreCase(par2[0]))
                 return getListOfStringsMatchingLastWord(par2, MinecraftServer.getServer().getAllUsernames());
         }
 
@@ -68,7 +68,7 @@ public class CommandSilence extends ServerToolsCommand {
         if (args.length < 1)
             throw new WrongUsageException(getCommandUsage(sender));
 
-        if (args[0].equalsIgnoreCase("add")) {
+        if ("add".equalsIgnoreCase(args[0])) {
 
             if (args.length == 2) {
 
@@ -77,7 +77,7 @@ public class CommandSilence extends ServerToolsCommand {
             } else
                 throw new WrongUsageException(getCommandUsage(sender));
 
-        } else if (args[0].equalsIgnoreCase("remove")) {
+        } else if ("remove".equalsIgnoreCase(args[0])) {
 
             if (args.length == 2) {
 
@@ -90,7 +90,7 @@ public class CommandSilence extends ServerToolsCommand {
             } else
                 throw new WrongUsageException(getCommandUsage(sender));
 
-        } else if (args[0].equalsIgnoreCase("reload")) {
+        } else if ("reload".equalsIgnoreCase(args[0])) {
 
             ServerTools.instance.voiceHandler.loadSilenceList();
             notifyAdmins(sender, Strings.COMMAND_VOICE_RELOAD);

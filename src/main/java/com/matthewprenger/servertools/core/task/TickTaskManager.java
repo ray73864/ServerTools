@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class TickTaskManager implements ITickHandler {
 
-    protected final ConcurrentLinkedQueue<ITickTask> tickTasks = new ConcurrentLinkedQueue<ITickTask>();
+    protected final ConcurrentLinkedQueue<ITickTask> tickTasks = new ConcurrentLinkedQueue<>();
 
     @Override
     public void tickStart(EnumSet<TickType> tickTypes, Object... objects) {

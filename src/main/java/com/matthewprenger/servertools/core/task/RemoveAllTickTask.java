@@ -52,7 +52,7 @@ public class RemoveAllTickTask implements ITickTask {
         int centerY = (int) player.posY;
         int centerZ = (int) player.posZ;
 
-        blocksToRemove = new HashSet<TempBlock>();
+        blocksToRemove = new HashSet<>();
 
         for (int x = centerX - radius; x < centerX + radius; x++) {
             for (int y = centerY - radius; y < centerY + radius; y++) {

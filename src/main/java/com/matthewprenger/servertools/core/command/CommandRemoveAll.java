@@ -60,9 +60,9 @@ public class CommandRemoveAll extends ServerToolsCommand {
         if (strings.length >= 2)
             range = Integer.parseInt(strings[1]);
 
-        Set<Integer> blockIdsToClear = new HashSet<Integer>();
+        Set<Integer> blockIdsToClear = new HashSet<>();
 
-        if (strings[0].equalsIgnoreCase("liquid")) {
+        if ("liquid".equalsIgnoreCase(strings[0])) {
             for (Block block : Block.blocksList)
                 if (block instanceof BlockFluid)
                     blockIdsToClear.add(block.blockID);

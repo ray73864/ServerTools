@@ -36,8 +36,8 @@ import java.util.*;
 
 public class GroupManager {
 
-    private static final Map<String, Group> groups = new TreeMap<String, Group>(String.CASE_INSENSITIVE_ORDER);
-    private static final Map<String, File> groupFiles = new TreeMap<String, File>();
+    private static final Map<String, Group> groups = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private static final Map<String, File> groupFiles = new TreeMap<>();
     private static File groupDir;
 
     private static Gson gson;
@@ -389,7 +389,7 @@ public class GroupManager {
 
     public static List<Group> getPlayerGroups(String username) {
 
-        List<Group> playerGroups = new ArrayList<Group>();
+        List<Group> playerGroups = new ArrayList<>();
 
         for (Map.Entry<String, Group> entry : groups.entrySet()) {
             if (entry.getValue().isMember(username)) {

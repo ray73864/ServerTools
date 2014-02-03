@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class YesNoHandler {
 
-    public static Map<String, Deque<YesNoRequest>> yesNoMap = new HashMap<String, Deque<YesNoRequest>>();
+    public static final Map<String, Deque<YesNoRequest>> yesNoMap = new HashMap<>();
 
     public static void addYesNoRequest(String username, YesNoRequest request) {
 

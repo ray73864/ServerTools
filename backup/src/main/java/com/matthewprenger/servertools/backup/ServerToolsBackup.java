@@ -37,8 +37,6 @@ public class ServerToolsBackup implements ICommandSender {
 
     public static final STLog log = new STLog(Reference.MOD_ID);
 
-    private static File backupDir;
-
     @Mod.Instance
     public static ServerToolsBackup instance;
 
@@ -50,7 +48,7 @@ public class ServerToolsBackup implements ICommandSender {
 
         Util.checkModuleVersion("Backup", Reference.VERSION);
 
-        backupDir = new File(ServerTools.serverToolsDir, "backup");
+        File backupDir = new File(ServerTools.serverToolsDir, "backup");
         backupDir.mkdirs();
 
         BackupConfig.init(new File(backupDir, "backup.cfg"));

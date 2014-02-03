@@ -6,8 +6,8 @@ import net.minecraft.server.MinecraftServer;
 
 public class WarpToRequest extends YesNoRequest {
 
-    String sender;
-    String target;
+    final String sender;
+    final String target;
 
     public WarpToRequest(String sender, String target) {
 

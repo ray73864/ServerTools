@@ -6,6 +6,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /*
@@ -38,7 +39,7 @@ public class CommandKillPlayer extends ServerToolsCommand {
     @Override
     public List getCommandAliases() {
 
-        return Arrays.asList("kp");
+        return Collections.singletonList("kp");
     }
 
     @Override

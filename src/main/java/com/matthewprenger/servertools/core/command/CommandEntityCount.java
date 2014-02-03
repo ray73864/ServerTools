@@ -60,7 +60,7 @@ public class CommandEntityCount extends ServerToolsCommand {
 
         World world = ((EntityPlayer) sender).worldObj;
 
-        Map<String, Integer> entityCount = new HashMap<String, Integer>();
+        Map<String, Integer> entityCount = new HashMap<>();
 
         for (Object obj : world.loadedEntityList) {
             if (obj instanceof Entity) {
@@ -81,7 +81,7 @@ public class CommandEntityCount extends ServerToolsCommand {
             }
 
             sender.sendChatToPlayer(ChatMessageComponent.createFromText("Entity Count: " + count));
-        } else if (args[0].equalsIgnoreCase("all")) {
+        } else if ("all".equalsIgnoreCase(args[0])) {
 
             sender.sendChatToPlayer(ChatMessageComponent.createFromText("Entity Count:"));
 

@@ -31,7 +31,7 @@ import java.util.Map;
 
 public class STPClassTransformer implements IClassTransformer {
 
-    private static final List<PatchNotes> patches = new ArrayList<PatchNotes>();
+    private static final List<PatchNotes> patches = new ArrayList<>();
 
     static {
         PatchNotes commandHandlerPatch = new PatchNotes("net.minecraft.command.CommandHandler", "com.matthewprenger.servertools.permission.preloader.STCommandHandler");
@@ -66,7 +66,7 @@ public class STPClassTransformer implements IClassTransformer {
         System.out.println( "Patching Class: " + patchNotes.targetClass);
         System.out.println("Mapped Class Name: " + targetClassNode.name);
 
-        Map<MethodNode, MethodNode> replaceMap = new HashMap<MethodNode, MethodNode>();
+        Map<MethodNode, MethodNode> replaceMap = new HashMap<>();
 
         for (MethodNode targetMethod : targetClassNode.methods) {
             for (MethodNotes targetMethodNotes : patchNotes.methodsToPatch) {
@@ -82,12 +82,12 @@ public class STPClassTransformer implements IClassTransformer {
 
         if (patched) {
 
-            for (MethodNode method : replaceMap.keySet()) {
-                MethodNode replacement = replaceMap.get(method);
+            for (Map.Entry<MethodNode, MethodNode> methodNodeMethodNodeEntry : replaceMap.entrySet()) {
+                MethodNode replacement = methodNodeMethodNodeEntry.getValue();
 
-                System.out.println(String.format("Patching Method: %s, Desc: %s", method.name, method.desc));
+                System.out.println(String.format("Patching Method: %s, Desc: %s", methodNodeMethodNodeEntry.getKey().name, methodNodeMethodNodeEntry.getKey().desc));
 
-                targetClassNode.methods.remove(method);
+                targetClassNode.methods.remove(methodNodeMethodNodeEntry.getKey());
                 targetClassNode.methods.add(replacement);
             }
 
@@ -99,7 +99,7 @@ public class STPClassTransformer implements IClassTransformer {
         return transformedBytes;
     }
 
-    private PatchNotes getPatchInfo(String className) {
+    private static PatchNotes getPatchInfo(String className) {
 
         for (PatchNotes patchNotes : patches) {
             if (patchNotes.targetClass.equals(className))

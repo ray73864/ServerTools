@@ -40,7 +40,7 @@ public class CommandManager {
         if (commandConfig.hasChanged()) commandConfig.save();
     }
 
-    private static final Set<ServerToolsCommand> commandsToLoad = new HashSet<ServerToolsCommand>();
+    private static final Set<ServerToolsCommand> commandsToLoad = new HashSet<>();
 
     private static boolean commandsLoaded = false;
 

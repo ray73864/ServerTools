@@ -55,7 +55,7 @@ public class Motd implements IPlayerTracker {
             }
 
             BufferedReader reader = new BufferedReader(new FileReader(motdFile));
-            List<String> lines = new ArrayList<String>();
+            List<String> lines = new ArrayList<>();
             String line;
             while ((line = reader.readLine()) != null) {
                 lines.add(line);

@@ -52,12 +52,12 @@ public class CommandHome extends ServerToolsCommand {
             } else {
                 player.sendChatToPlayer(ChatMessageComponent.createFromText("Could not find your home").setColor(EnumChatFormatting.RED));
             }
-        } else if (args[0].equalsIgnoreCase("set")) {
+        } else if ("set".equalsIgnoreCase(args[0])) {
 
             HomeManager.setHome(player.username, player.worldObj.provider.dimensionId, player.posX, player.posY, player.posZ);
             player.sendChatToPlayer(ChatMessageComponent.createFromText("Set your home").setColor(EnumChatFormatting.GREEN));
 
-        } else if (args[0].equalsIgnoreCase("clear")) {
+        } else if ("clear".equalsIgnoreCase(args[0])) {
 
             if (HomeManager.clearHome(player.username, player.worldObj.provider.dimensionId)) {
                 player.sendChatToPlayer(ChatMessageComponent.createFromText("Cleared your home").setColor(EnumChatFormatting.GREEN));

@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /*
@@ -41,7 +42,7 @@ public class CommandInventory extends ServerToolsCommand {
     @Override
     public List getCommandAliases() {
 
-        return Arrays.asList("inv");
+        return Collections.singletonList("inv");
     }
 
     @Override

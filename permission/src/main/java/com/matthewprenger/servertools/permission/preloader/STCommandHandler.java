@@ -89,7 +89,7 @@ public class STCommandHandler extends CommandHandler {
         String commandName = args[0];
 
         if (args.length == 1) {
-            ArrayList<String> arraylist = new ArrayList<String>();
+            ArrayList<String> arraylist = new ArrayList<>();
 
             for (Object o : super.getCommands().keySet()) {
                 ICommand icommand = (ICommand) super.getCommands().get(o);
@@ -125,7 +125,7 @@ public class STCommandHandler extends CommandHandler {
     @Override
     public List getPossibleCommands(ICommandSender sender) {
 
-        ArrayList<ICommand> arraylist = new ArrayList<ICommand>();
+        ArrayList<ICommand> arraylist = new ArrayList<>();
 
         for (Object o : super.getCommands().keySet()) {
             ICommand icommand = (ICommand) super.getCommands().get(o);

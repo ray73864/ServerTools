@@ -29,7 +29,7 @@ import java.util.Map;
 
 public class HomeManager {
 
-    private static final Map<String, Map<Integer, Location>> userHomeMap = new HashMap<String, Map<Integer, Location>>();
+    private static final Map<String, Map<Integer, Location>> userHomeMap = new HashMap<>();
     private static File homeDir;
     private static Gson gson;
 

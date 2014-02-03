@@ -23,7 +23,7 @@ class PatchNotes {
 
     public final String targetClass;
     public final String replacementClass;
-    public final List<MethodNotes> methodsToPatch = new ArrayList<MethodNotes>();
+    public final List<MethodNotes> methodsToPatch = new ArrayList<>();
 
     public PatchNotes(String targetClass, String replacementClass) {
 
