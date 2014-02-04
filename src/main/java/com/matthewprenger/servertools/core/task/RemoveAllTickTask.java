@@ -6,9 +6,7 @@ import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 /*
  * Copyright 2014 matthewprenger
@@ -33,11 +31,11 @@ public class RemoveAllTickTask implements ITickTask {
 
     private boolean isComplete;
     private final EntityPlayer player;
-    private Set<TempBlock> blocksToRemove;
+    private Collection<TempBlock> blocksToRemove;
     private final World world;
     private int blockCounter;
 
-    public RemoveAllTickTask(EntityPlayer player, int radius, Set<Integer> blockIdsToClear) {
+    public RemoveAllTickTask(EntityPlayer player, int radius, Collection<Integer> blockIdsToClear) {
 
         this.player = player;
         world = player.worldObj;
@@ -52,7 +50,7 @@ public class RemoveAllTickTask implements ITickTask {
         int centerY = (int) player.posY;
         int centerZ = (int) player.posZ;
 
-        blocksToRemove = new HashSet<>();
+        blocksToRemove = new ArrayList<>();
 
         for (int x = centerX - radius; x < centerX + radius; x++) {
             for (int y = centerY - radius; y < centerY + radius; y++) {
@@ -79,7 +77,7 @@ public class RemoveAllTickTask implements ITickTask {
 
             if (iterator.hasNext()) {
                 TempBlock block = iterator.next();
-                world.setBlockToAir(block.x, block.y, block.z);
+                world.setBlock(block.x, block.y, block.z, 0, 0, 2);
                 iterator.remove();
             }
         }

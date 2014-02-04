@@ -1,11 +1,12 @@
 package com.matthewprenger.servertools.core;
 
-import com.matthewprenger.servertools.core.config.ConfigSettings;
-import com.matthewprenger.servertools.core.config.CoreConfig;
-import com.matthewprenger.servertools.core.handler.FlatBedrockHandler;
-import com.matthewprenger.servertools.core.handler.VoiceHandler;
+import com.matthewprenger.servertools.core.chat.Motd;
+import com.matthewprenger.servertools.core.command.CommandManager;
+import com.matthewprenger.servertools.core.chat.VoiceHandler;
 import com.matthewprenger.servertools.core.lib.Reference;
-import com.matthewprenger.servertools.core.task.TaskManager;
+import com.matthewprenger.servertools.core.task.TickHandler;
+import com.matthewprenger.servertools.core.util.FlatBedrockGenerator;
+import com.matthewprenger.servertools.core.util.Util;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -33,7 +34,9 @@ import java.io.File;
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, dependencies = Reference.DEPENDENCIES)
 public class ServerTools {
 
-    public static final File serverToolsDir = new File("com/matthewprenger/servertools");
+    public static String VERSION;
+
+    public static final File serverToolsDir = new File("servertools");
 
     public static final STLog log = new STLog(Reference.MOD_ID);
 
@@ -49,24 +52,26 @@ public class ServerTools {
 
     public VoiceHandler voiceHandler;
 
-    public TaskManager taskManager;
+    public TickHandler tickHandler;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
 
-        event.getModMetadata().version = Reference.VERSION;
+        VERSION = Util.getVersionFromJar(getClass());
+
+        event.getModMetadata().version = VERSION;
 
         CoreConfig.init(new File(serverToolsDir, "core.cfg"));
 
-        taskManager = new TaskManager();
+        tickHandler = new TickHandler();
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
 
         /* Register the Flat Bedrock Generator */
-        if (ConfigSettings.GENERATE_FLAT_BEDROCK) {
-            GameRegistry.registerWorldGenerator(new FlatBedrockHandler());
+        if (CoreConfig.GENERATE_FLAT_BEDROCK) {
+            GameRegistry.registerWorldGenerator(new FlatBedrockGenerator());
         }
     }
 

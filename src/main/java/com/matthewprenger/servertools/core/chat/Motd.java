@@ -1,7 +1,9 @@
-package com.matthewprenger.servertools.core;
+package com.matthewprenger.servertools.core.chat;
 
-import com.matthewprenger.servertools.core.config.ConfigSettings;
+import com.matthewprenger.servertools.core.ServerTools;
+import com.matthewprenger.servertools.core.CoreConfig;
 import com.matthewprenger.servertools.core.lib.Reference;
+import com.matthewprenger.servertools.core.lib.Strings;
 import cpw.mods.fml.common.IPlayerTracker;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.entity.player.EntityPlayer;
@@ -47,7 +49,7 @@ public class Motd implements IPlayerTracker {
             if (!motdFile.exists()) {
                 Writer out = new OutputStreamWriter(new FileOutputStream(motdFile), FILE_ENCODING);
 
-                for (String line : Reference.DEFAULT_MOTD) {
+                for (String line : Strings.MOTD_DEFAULT) {
                     out.write(line);
                     out.write(Reference.LINE_SEPARATOR);
                 }
@@ -81,7 +83,7 @@ public class Motd implements IPlayerTracker {
     @Override
     public void onPlayerLogin(EntityPlayer player) {
 
-        if (ConfigSettings.SEND_MOTD_ON_LOGIN) {
+        if (CoreConfig.SEND_MOTD_ON_LOGIN) {
             serveMotd(player);
         }
     }

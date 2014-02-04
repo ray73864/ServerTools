@@ -1,5 +1,6 @@
 package com.matthewprenger.servertools.core.command;
 
+import com.matthewprenger.servertools.core.lib.Strings;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,7 +9,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -67,7 +67,7 @@ public class CommandInventory extends ServerToolsCommand {
     public void processCommand(ICommandSender sender, String[] astring) {
 
         if (!(sender instanceof EntityPlayerMP))
-            throw new WrongUsageException("This command must be used by a player");
+            throw new WrongUsageException(Strings.COMMAND_ERROR_ONLYPLAYER);
 
         EntityPlayerMP player;
 

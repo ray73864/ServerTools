@@ -1,5 +1,6 @@
 package com.matthewprenger.servertools.core.command;
 
+import com.matthewprenger.servertools.core.lib.Strings;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.command.WrongUsageException;
@@ -56,7 +57,7 @@ public class CommandEntityCount extends ServerToolsCommand {
     public void processCommand(ICommandSender sender, String[] args) {
 
         if (!(sender instanceof EntityPlayer))
-            throw new WrongUsageException("Only players can use this command");
+            throw new WrongUsageException(Strings.COMMAND_ERROR_ONLYPLAYER);
 
         World world = ((EntityPlayer) sender).worldObj;
 
@@ -97,7 +98,7 @@ public class CommandEntityCount extends ServerToolsCommand {
                 if (obj.toString().equalsIgnoreCase(pname)) name = obj.toString();
             }
 
-            if (name == null) throw new PlayerNotFoundException("That entity doesn't exist");
+            if (name == null) throw new PlayerNotFoundException(Strings.COMMAND_ERROR_ENTITY_NOEXIST);
 
             for (Object obj : world.loadedEntityList) {
                 if (obj instanceof Entity) {

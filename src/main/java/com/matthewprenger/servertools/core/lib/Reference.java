@@ -16,36 +16,12 @@ package com.matthewprenger.servertools.core.lib;
  * limitations under the License.
  */
 
-import com.google.common.base.Throwables;
-
-import java.io.InputStream;
-import java.util.Properties;
-
 public class Reference {
 
-    static {
-        Properties prop = new Properties();
-
-        try {
-            InputStream stream = Reference.class.getClassLoader().getResourceAsStream("version.properties");
-            prop.load(stream);
-            stream.close();
-        } catch (Exception e) {
-            Throwables.propagate(e);
-        }
-
-        VERSION = prop.getProperty("version");
-    }
 
     public static final String MOD_ID = "ServerTools";
     public static final String MOD_NAME = MOD_ID;
-    public static final String VERSION;
     public static final String DEPENDENCIES = "required-after:Forge@[9.11.1.964,)";
-
-    public static final String[] DEFAULT_MOTD = new String[] {
-            "Hello, $PLAYER$!",
-            "This is the default MOTD. In order to change it,",
-            "edit the motd.txt in the com.matthewprenger.servertools directory"};
 
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");
 }

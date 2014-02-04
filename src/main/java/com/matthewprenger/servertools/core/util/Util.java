@@ -16,10 +16,8 @@ package com.matthewprenger.servertools.core.util;
  * limitations under the License.
  */
 
+import com.google.common.base.Strings;
 import com.matthewprenger.servertools.core.ServerTools;
-import com.matthewprenger.servertools.core.lib.Reference;
-
-import javax.swing.*;
 
 public class Util {
 
@@ -32,29 +30,30 @@ public class Util {
      */
     public static void checkModuleVersion(String moduleName, String moduleVersion) {
 
-        if (!(Reference.VERSION.equals(moduleVersion))) {
+        if (!(ServerTools.VERSION.equals(moduleVersion))) {
 
             String versionMismatch = "ServerTools is %s, %s is %s";
 
             ServerTools.log.severe("####################################");
-            ServerTools.log.severe("######### Version Mismatch #########");
-            ServerTools.log.severe(String.format(versionMismatch, Reference.VERSION, moduleName, moduleVersion));
+            ServerTools.log.severe("#         Version Mismatch         #");
+            ServerTools.log.severe(String.format(versionMismatch, ServerTools.VERSION, moduleName, moduleVersion));
             ServerTools.log.severe("Please download matching versions of ServerTools Modules!");
-            ServerTools.log.severe("The game will not load");
+            ServerTools.log.severe("#     The Game Will Not Load       #");
             ServerTools.log.severe("####################################");
-            ServerTools.log.severe("####################################");
 
-            JEditorPane editorPane = new JEditorPane("text/html",
-                    "<html>" + "Version Mismatch: " +
-                            String.format(versionMismatch, Reference.VERSION, moduleName, moduleVersion) +
-                            "<br>Please download matching ServerTools Module versions" +
-                            "</html>");
-
-            editorPane.setEditable(false);
-            editorPane.setOpaque(false);
-
-            JOptionPane.showMessageDialog(null, editorPane, "Version Mismatch", JOptionPane.ERROR_MESSAGE);
-            System.exit(1);
+            Runtime.getRuntime().exit(1);
         }
+    }
+
+    /**
+     * Get the Specification Version from the mod jar
+     *
+     * @param clazz A mod class
+     * @return The mod version
+     */
+    public static String getVersionFromJar(Class<?> clazz) {
+
+        String version = clazz.getPackage().getSpecificationVersion();
+        return Strings.isNullOrEmpty(version) ? "0.0.0.0" : version;
     }
 }

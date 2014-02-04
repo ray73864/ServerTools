@@ -1,7 +1,4 @@
-package com.matthewprenger.servertools.core.task;
-
-import cpw.mods.fml.common.registry.TickRegistry;
-import cpw.mods.fml.relauncher.Side;
+package com.matthewprenger.servertools.teleport;
 
 /*
  * Copyright 2014 matthewprenger
@@ -19,17 +16,9 @@ import cpw.mods.fml.relauncher.Side;
  * limitations under the License.
  */
 
-public class TaskManager {
+public class Reference {
 
-    private final TickTaskManager tickTaskManager;
-
-    public TaskManager() {
-        tickTaskManager = new TickTaskManager();
-        TickRegistry.registerTickHandler(tickTaskManager, Side.SERVER);
-    }
-
-    public void registerTickTask(ITickTask task) {
-
-        tickTaskManager.tickTasks.offer(task);
-    }
+    public static final String MOD_ID = "ServerTools|Teleport";
+    public static final String MOD_NAME = MOD_ID;
+    public static final String DEPENDENCIES = "required-after:ServerTools";
 }

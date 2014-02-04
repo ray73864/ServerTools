@@ -1,6 +1,7 @@
 package com.matthewprenger.servertools.core.command;
 
 import com.matthewprenger.servertools.core.ServerTools;
+import com.matthewprenger.servertools.core.lib.Strings;
 import net.minecraft.command.ICommandSender;
 
 /*
@@ -40,6 +41,6 @@ public class CommandReloadMotd extends ServerToolsCommand {
     public void processCommand(ICommandSender icommandsender, String[] astring) {
 
         ServerTools.instance.motd.loadMotd();
-        notifyAdmins(icommandsender, "Reloaded the MOTD from file");
+        notifyAdmins(icommandsender, Strings.MOTD_RELOAD);
     }
 }

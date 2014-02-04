@@ -93,7 +93,7 @@ public class CommandSilence extends ServerToolsCommand {
         } else if ("reload".equalsIgnoreCase(args[0])) {
 
             ServerTools.instance.voiceHandler.loadSilenceList();
-            notifyAdmins(sender, Strings.COMMAND_VOICE_RELOAD);
+            notifyAdmins(sender, Strings.COMMAND_SILENCE_RELOAD);
         }
     }
 }

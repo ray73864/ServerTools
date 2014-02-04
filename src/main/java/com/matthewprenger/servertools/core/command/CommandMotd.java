@@ -1,6 +1,7 @@
 package com.matthewprenger.servertools.core.command;
 
 import com.matthewprenger.servertools.core.ServerTools;
+import com.matthewprenger.servertools.core.lib.Strings;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
@@ -39,7 +40,7 @@ public class CommandMotd extends ServerToolsCommand {
 
             ServerTools.instance.motd.serveMotd((EntityPlayer) sender);
         } else
-            throw new WrongUsageException("This command must be used by a player");
+            throw new WrongUsageException(Strings.COMMAND_ERROR_ONLYPLAYER);
     }
 
     @Override

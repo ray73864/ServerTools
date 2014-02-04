@@ -1,13 +1,12 @@
 package com.matthewprenger.servertools.teleport;
 
-import com.matthewprenger.servertools.core.CommandManager;
+import com.matthewprenger.servertools.core.command.CommandManager;
 import com.matthewprenger.servertools.core.STLog;
 import com.matthewprenger.servertools.core.ServerTools;
 import com.matthewprenger.servertools.core.util.Util;
 import com.matthewprenger.servertools.teleport.command.CommandEditTeleport;
 import com.matthewprenger.servertools.teleport.command.CommandHome;
 import com.matthewprenger.servertools.teleport.command.CommandTeleport;
-import com.matthewprenger.servertools.teleport.lib.Reference;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
@@ -48,10 +47,12 @@ public class ServerToolsTeleport {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
 
-        event.getModMetadata().version = Reference.VERSION;
+        String VERSION = Util.getVersionFromJar(getClass());
+
+        event.getModMetadata().version = VERSION;
         event.getModMetadata().parent = "ServerTools";
 
-        Util.checkModuleVersion("Teleport", Reference.VERSION);
+        Util.checkModuleVersion("Teleport", VERSION);
 
         TeleportConfig.init(new File(serverToolsTeleportDir, "teleport.cfg"));
     }

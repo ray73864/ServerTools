@@ -1,12 +1,10 @@
 package com.matthewprenger.servertools.permission;
 
-import com.matthewprenger.servertools.core.CommandManager;
+import com.matthewprenger.servertools.core.command.CommandManager;
 import com.matthewprenger.servertools.core.STLog;
 import com.matthewprenger.servertools.core.ServerTools;
 import com.matthewprenger.servertools.core.util.Util;
 import com.matthewprenger.servertools.permission.command.*;
-import com.matthewprenger.servertools.permission.event.EventHandler;
-import com.matthewprenger.servertools.permission.lib.Reference;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
@@ -46,10 +44,12 @@ public class ServerToolsPermission {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
 
-        event.getModMetadata().version = Reference.VERSION;
+        String VERSION = Util.getVersionFromJar(getClass());
+
+        event.getModMetadata().version = VERSION;
         event.getModMetadata().parent = "ServerTools";
 
-        Util.checkModuleVersion("Permission", Reference.VERSION);
+        Util.checkModuleVersion("Permission", VERSION);
 
         permissionDir = new File(ServerTools.serverToolsDir, "permission");
         if (permissionDir.mkdirs()) ServerToolsPermission.log.fine("Creating Permission Directory at: " + permissionDir.getAbsolutePath());

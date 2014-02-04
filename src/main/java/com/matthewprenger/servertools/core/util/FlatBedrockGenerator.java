@@ -1,4 +1,4 @@
-package com.matthewprenger.servertools.core.handler;
+package com.matthewprenger.servertools.core.util;
 
 import cpw.mods.fml.common.IWorldGenerator;
 import net.minecraft.block.Block;
@@ -24,7 +24,7 @@ import java.util.Random;
  * limitations under the License.
  */
 
-public class FlatBedrockHandler implements IWorldGenerator {
+public class FlatBedrockGenerator implements IWorldGenerator {
 
     @Override
     public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider iChunkProvider, IChunkProvider iChunkProvider2) {

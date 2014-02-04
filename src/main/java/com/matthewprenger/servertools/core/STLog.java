@@ -1,6 +1,5 @@
 package com.matthewprenger.servertools.core;
 
-import com.matthewprenger.servertools.core.config.ConfigSettings;
 import cpw.mods.fml.common.FMLLog;
 
 import java.util.logging.Level;
@@ -41,7 +40,7 @@ public class STLog {
     }
 
     public void debug(Object object) {
-        if (ConfigSettings.DEBUG_MODE) log(Level.INFO, object);
+        if (CoreConfig.DEBUG_MODE) log(Level.INFO, object);
     }
 
     public void severe(Object object) {

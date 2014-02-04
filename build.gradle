@@ -19,13 +19,8 @@ if (System.getenv("BUILD_NUMBER") != null) {
 	version = mcversion + "-" + actualVersion + "." + System.getenv("BUILD_NUMBER");
 	actualVersion += "." + System.getenv("BUILD_NUMBER");
 } else {
-	version = mcversion + "-" + actualVersion + ".dev";
-	actualVersion += ".dev";
-}
-
-allprojects {	
-	sourceCompatibility = '1.7'
-	targetCompatibility = '1.7'
+	version = mcversion + "-" + actualVersion + ".devbuild";
+	actualVersion += ".devbuild";
 }
 
 apply plugin: 'forge'
@@ -60,23 +55,12 @@ subprojects {
 }
 
 allprojects{
+    sourceCompatibility = '1.7'
+    targetCompatibility = '1.7'
 
-    processResources {
-
-        from (sourceSets.main.resources.srcDirs) {
-            include '**/*.info'
-            include '**/*.properties'
-
-            expand ([
-                    'version': actualVersion,
-                    'minecraft_version': mcversion,
-					'forge_version': forgeversion
-            ])
-        }
-
-        from (sourceSets.main.resources.srcDirs) {
-            exclude '**/*.info'
-            exclude '**/*.properties'
+    jar {
+        manifest {
+            attributes 'Specification-Version': actualVersion
         }
     }
 }

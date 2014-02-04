@@ -1,9 +1,10 @@
-package com.matthewprenger.servertools.core.handler;
+package com.matthewprenger.servertools.core.chat;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.matthewprenger.servertools.core.ServerTools;
+import com.matthewprenger.servertools.core.CoreConfig;
 import com.matthewprenger.servertools.core.lib.Strings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandServerEmote;
@@ -123,7 +124,7 @@ public class VoiceHandler {
             writeStringToFile(gsonRepresentation, voiceFile);
         } catch (IOException e) {
             e.printStackTrace(System.err);
-            ServerTools.log.warning("Error saving voice file");
+            ServerTools.log.warning(Strings.VOICE_SAVE_ERROR);
         }
     }
 
@@ -138,7 +139,7 @@ public class VoiceHandler {
             voicedUsers = gson.fromJson(reader, HashSet.class);
         } catch (Exception e) {
             e.printStackTrace(System.err);
-            ServerTools.log.warning("Error loading voice file");
+            ServerTools.log.warning(Strings.VOICE_LOAD_ERROR);
         }
     }
 
@@ -150,7 +151,7 @@ public class VoiceHandler {
             writeStringToFile(gsonRepresentation, silenceFile);
         } catch (IOException e) {
             e.printStackTrace(System.err);
-            ServerTools.log.warning("Error saving silence file");
+            ServerTools.log.warning(Strings.SILENCE_SAVE_ERROR);
         }
     }
 
@@ -165,7 +166,7 @@ public class VoiceHandler {
             silencedUsers = gson.fromJson(reader, HashSet.class);
         } catch (Exception e) {
             e.printStackTrace(System.err);
-            ServerTools.log.warning("Error loading silence file");
+            ServerTools.log.warning(Strings.SILENCE_LOAD_ERROR);
         }
     }
 
@@ -174,12 +175,12 @@ public class VoiceHandler {
 
         if (isUserVoiced(event.username)) {
             ChatMessageComponent component = event.component;
-            event.component = ChatMessageComponent.createFromText(EnumChatFormatting.AQUA + "[+]" + EnumChatFormatting.RESET);
+            event.component = ChatMessageComponent.createFromText(EnumChatFormatting.AQUA + "[" + CoreConfig.VOICE_CHAT_PREFIX + "]" + EnumChatFormatting.RESET);
             event.component.appendComponent(component);
         }
         if (MinecraftServer.getServer().getConfigurationManager().isPlayerOpped(event.username) && !Minecraft.getMinecraft().isSingleplayer()) {
             ChatMessageComponent component = event.component;
-            event.component = ChatMessageComponent.createFromText(EnumChatFormatting.RED + "[OP]" + EnumChatFormatting.RESET);
+            event.component = ChatMessageComponent.createFromText(EnumChatFormatting.RED + "[" + CoreConfig.OP_CHAT_PREFIX + "]" + EnumChatFormatting.RESET);
             event.component.appendComponent(component);
         }
         if (isUserSilenced(event.username)) {

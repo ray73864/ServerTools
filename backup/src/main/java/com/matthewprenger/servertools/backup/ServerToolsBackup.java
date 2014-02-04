@@ -16,7 +16,7 @@ package com.matthewprenger.servertools.backup;
  * limitations under the License.
  */
 
-import com.matthewprenger.servertools.core.CommandManager;
+import com.matthewprenger.servertools.core.command.CommandManager;
 import com.matthewprenger.servertools.core.STLog;
 import com.matthewprenger.servertools.core.ServerTools;
 import com.matthewprenger.servertools.core.util.Util;
@@ -43,10 +43,12 @@ public class ServerToolsBackup implements ICommandSender {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
 
-        event.getModMetadata().version = Reference.VERSION;
+        String VERSION = Util.getVersionFromJar(getClass());
+
+        event.getModMetadata().version = VERSION;
         event.getModMetadata().parent = "ServerTools";
 
-        Util.checkModuleVersion("Backup", Reference.VERSION);
+        Util.checkModuleVersion("Backup", VERSION);
 
         File backupDir = new File(ServerTools.serverToolsDir, "backup");
         backupDir.mkdirs();

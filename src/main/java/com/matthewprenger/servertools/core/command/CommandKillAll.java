@@ -1,5 +1,6 @@
 package com.matthewprenger.servertools.core.command;
 
+import com.matthewprenger.servertools.core.lib.Strings;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.command.WrongUsageException;
@@ -9,8 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /*
  * Copyright 2014 matthewprenger
@@ -40,10 +40,9 @@ public class CommandKillAll extends ServerToolsCommand {
     }
 
     @Override
-    public List<?> addTabCompletionOptions(ICommandSender var1, String[] var2) {
+    public List addTabCompletionOptions(ICommandSender sender, String[] args) {
 
-        Collection var = EntityList.classToStringMapping.values();
-        return var2.length >= 1 ? getListOfStringsMatchingLastWord(var2, (String[]) var.toArray(new String[var.size()])) : null;
+        return args.length >= 1 ? getListOfStringsFromIterableMatchingLastWord(args, EntityList.stringToClassMapping.keySet()) : null;
     }
 
     @Override
@@ -53,37 +52,38 @@ public class CommandKillAll extends ServerToolsCommand {
     }
 
     @Override
-    public void processCommand(ICommandSender icommandsender, String[] astring) {
+    public void processCommand(ICommandSender sender, String[] args) {
 
-        if (astring.length < 1)
-            throw new WrongUsageException(getCommandUsage(icommandsender));
+        if (args.length != 1)
+            throw new WrongUsageException(getCommandUsage(sender));
 
-        String name = null;
-        String pname = func_82360_a(icommandsender, astring, 0);
-        for (Object obj : EntityList.stringToClassMapping.keySet()) {
-            if (obj instanceof String) {
-                String ename = obj.toString();
-                if (ename.equalsIgnoreCase(pname)) name = ename;
+        String target = null;
+
+        for (Object o : EntityList.stringToClassMapping.keySet()) {
+            if (o.toString().equalsIgnoreCase(args[0])) {
+                target = o.toString();
+                break;
             }
-
         }
 
-        if (name == null) throw new PlayerNotFoundException("That entity type is unknown");
+        if (com.google.common.base.Strings.isNullOrEmpty(target))
+            throw new PlayerNotFoundException(Strings.COMMAND_ERROR_ENTITY_NOEXIST);
+
 
         int removed = 0;
         for (World world : MinecraftServer.getServer().worldServers) {
             for (Object obj : world.loadedEntityList) {
-                if (obj instanceof Entity) {
-                    Entity ent = (Entity) obj;
-                    String string = EntityList.getEntityString(ent);
-                    if (string != null && string.equalsIgnoreCase(name) && !(ent instanceof EntityPlayer)) {
-                        world.removeEntity(ent);
+                if (obj instanceof Entity && (!(obj instanceof EntityPlayer))) {
+                    Entity entity = (Entity) obj;
+                    String entityName = EntityList.getEntityString(entity);
+                    if (entityName != null && entityName.equalsIgnoreCase(target)) {
+                        world.removeEntity(entity);
                         removed++;
                     }
                 }
             }
         }
 
-        notifyAdmins(icommandsender, "Removed " + removed + " entities of type " + name);
+        notifyAdmins(sender, "Removed " + removed + " entities");
     }
 }

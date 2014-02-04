@@ -1,5 +1,6 @@
 package com.matthewprenger.servertools.core.command;
 
+import com.matthewprenger.servertools.core.lib.Strings;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.command.WrongUsageException;
@@ -68,7 +69,7 @@ public class CommandSpawnMob extends ServerToolsCommand {
     public void processCommand(ICommandSender sender, String[] args) {
 
         if (!(sender instanceof EntityPlayer))
-            throw new WrongUsageException("This command must be used by a player");
+            throw new WrongUsageException(Strings.COMMAND_ERROR_ONLYPLAYER);
 
         EntityPlayer player = (EntityPlayer) sender;
 
@@ -87,7 +88,7 @@ public class CommandSpawnMob extends ServerToolsCommand {
             }
         }
         if (clazz == null || !EntityLiving.class.isAssignableFrom(clazz))
-            throw new PlayerNotFoundException("That entity type is unknown");
+            throw new PlayerNotFoundException(Strings.COMMAND_ERROR_ENTITY_NOEXIST);
 
         try {
             Constructor<?> ctor = clazz.getConstructor(World.class);
@@ -97,7 +98,7 @@ public class CommandSpawnMob extends ServerToolsCommand {
                 player.worldObj.spawnEntityInWorld(ent);
             }
         } catch (Throwable e) {
-            throw new PlayerNotFoundException("That entity type is unknown");
+            throw new PlayerNotFoundException(Strings.COMMAND_ERROR_ENTITY_NOEXIST);
         }
 
         notifyAdmins(sender, "Spawned " + amount + " " + type);

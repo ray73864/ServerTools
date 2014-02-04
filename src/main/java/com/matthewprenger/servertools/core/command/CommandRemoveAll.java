@@ -1,7 +1,8 @@
 package com.matthewprenger.servertools.core.command;
 
 import com.matthewprenger.servertools.core.ServerTools;
-import com.matthewprenger.servertools.core.config.ConfigSettings;
+import com.matthewprenger.servertools.core.CoreConfig;
+import com.matthewprenger.servertools.core.lib.Strings;
 import com.matthewprenger.servertools.core.task.RemoveAllTickTask;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFluid;
@@ -49,13 +50,13 @@ public class CommandRemoveAll extends ServerToolsCommand {
     public void processCommand(ICommandSender sender, String[] strings) {
 
         if (!(sender instanceof EntityPlayerMP))
-            throw new WrongUsageException("This command must be used by a player");
+            throw new WrongUsageException(Strings.COMMAND_ERROR_ONLYPLAYER);
 
         if (strings.length < 1)
             throw new WrongUsageException(getCommandUsage(sender));
 
         EntityPlayerMP player = (EntityPlayerMP) sender;
-        int range = ConfigSettings.DEFAULT_REMOVE_ALL_RANGE;
+        int range = CoreConfig.DEFAULT_REMOVE_ALL_RANGE;
 
         if (strings.length >= 2)
             range = Integer.parseInt(strings[1]);
@@ -69,6 +70,6 @@ public class CommandRemoveAll extends ServerToolsCommand {
         } else
             blockIdsToClear.add(parseIntBounded(sender, strings[0], 1, 4096));
 
-        ServerTools.instance.taskManager.registerTickTask(new RemoveAllTickTask(player, range, blockIdsToClear));
+        ServerTools.instance.tickHandler.registerTask(new RemoveAllTickTask(player, range, blockIdsToClear));
     }
 }

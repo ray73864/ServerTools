@@ -1,4 +1,4 @@
-package com.matthewprenger.servertools.permission.event;
+package com.matthewprenger.servertools.permission;
 
 /*
  * Copyright 2014 matthewprenger
@@ -16,8 +16,6 @@ package com.matthewprenger.servertools.permission.event;
  * limitations under the License.
  */
 
-import com.matthewprenger.servertools.permission.GroupManager;
-import com.matthewprenger.servertools.permission.PermissionConfig;
 import com.matthewprenger.servertools.permission.elements.Group;
 import cpw.mods.fml.common.IPlayerTracker;
 import cpw.mods.fml.common.registry.GameRegistry;

@@ -3,14 +3,9 @@
   "modid": "ServerTools",
   "name": "ServerTools",
   "description": "Server administration and utilities mod",
-  "version": "${version}",
-  "mcversion": "${minecraft_version}",
   "url": "https://github.com/matthewprenger/ServerTools",
-  "updateUrl": "",
   "authors": ["matthewprenger"],
   "credits": "Forge, FML, and MCP for making this project possible",
-  "logoFile": "",
-  "screenshots": [],
   "dependencies": []
 }
 ]

@@ -1,6 +1,6 @@
-package com.matthewprenger.servertools.core;
+package com.matthewprenger.servertools.core.command;
 
-import com.matthewprenger.servertools.core.command.*;
+import com.matthewprenger.servertools.core.ServerTools;
 import net.minecraft.command.CommandHandler;
 import net.minecraftforge.common.Configuration;
 
@@ -68,7 +68,7 @@ public class CommandManager {
 
     }
 
-    static void registerCommands(CommandHandler commandHandler) {
+    public static void registerCommands(CommandHandler commandHandler) {
 
         for (ServerToolsCommand command : commandsToLoad) {
             ServerTools.log.fine(String.format("Command: %s , has name: %s", command.getClass(), command.name));

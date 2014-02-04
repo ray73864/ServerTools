@@ -5,7 +5,6 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

@@ -16,29 +16,9 @@ package com.matthewprenger.servertools.backup;
  * limitations under the License.
  */
 
-import com.google.common.base.Throwables;
-
-import java.io.InputStream;
-import java.util.Properties;
-
 class Reference {
-
-    static {
-        Properties prop = new Properties();
-
-        try {
-            InputStream stream = Reference.class.getClassLoader().getResourceAsStream("backup.properties");
-            prop.load(stream);
-            stream.close();
-        } catch (Exception e) {
-            Throwables.propagate(e);
-        }
-
-        VERSION = prop.getProperty("version");
-    }
 
     public static final String MOD_ID = "ServerTools|Backup";
     public static final String MOD_NAME = MOD_ID;
-    public static final String VERSION;
     public static final String DEPENDENCIES = "required-after:ServerTools";
 }
