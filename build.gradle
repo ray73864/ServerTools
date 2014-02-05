@@ -11,17 +11,19 @@ buildscript {
     }
 }
 
-def actualVersion = "2.0.0"
+def actualVersion = "2.0-SNAPSHOT"
 def mcversion = "1.6.4"
 def forgeversion = "9.11.1.964"
 
-if (System.getenv("BUILD_NUMBER") != null) {
-	version = mcversion + "-" + actualVersion + "." + System.getenv("BUILD_NUMBER");
-	actualVersion += "." + System.getenv("BUILD_NUMBER");
-} else {
-	version = mcversion + "-" + actualVersion + ".devbuild";
-	actualVersion += ".devbuild";
-}
+version = mcversion + "-" + actualVersion
+
+//if (System.getenv("BUILD_NUMBER") != null) {
+//	version = mcversion + "-" + actualVersion + "." + System.getenv("BUILD_NUMBER");
+//	actualVersion += "." + System.getenv("BUILD_NUMBER");
+//} else {
+//	version = mcversion + "-" + actualVersion + ".devbuild";
+//	actualVersion += ".devbuild";
+//}
 
 apply plugin: 'forge'
 group = "com.matthewprenger.servertools.core"
