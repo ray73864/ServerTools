@@ -2,7 +2,7 @@ package com.matthewprenger.servertools.core.command;
 
 import com.matthewprenger.servertools.core.ServerTools;
 import net.minecraft.command.CommandHandler;
-import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
 import java.util.HashSet;
@@ -71,7 +71,7 @@ public class CommandManager {
     public static void registerCommands(CommandHandler commandHandler) {
 
         for (ServerToolsCommand command : commandsToLoad) {
-            ServerTools.log.fine(String.format("Command: %s , has name: %s", command.getClass(), command.name));
+            ServerTools.log.trace(String.format("Command: %s , has name: %s", command.getClass(), command.name));
             ServerTools.log.info("Registering Command: " + command.name);
             commandHandler.registerCommand(command);
         }

@@ -1,9 +1,5 @@
 package com.matthewprenger.servertools.permission;
 
-import net.minecraftforge.common.Configuration;
-
-import java.io.File;
-
 /*
  * Copyright 2014 matthewprenger
  *
@@ -19,6 +15,10 @@ import java.io.File;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import net.minecraftforge.common.config.Configuration;
+
+import java.io.File;
 
 public class PermissionConfig {
 
@@ -42,7 +42,7 @@ public class PermissionConfig {
 
         } catch (Exception e) {
             e.printStackTrace();
-            ServerToolsPermission.log.severe("Failed to load permission configuration");
+            ServerToolsPermission.log.fatal("Failed to load permission configuration");
         }
     }
 }

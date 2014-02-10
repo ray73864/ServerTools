@@ -1,13 +1,13 @@
 package com.matthewprenger.servertools.permission.command;
 
 import com.matthewprenger.servertools.core.command.ServerToolsCommand;
+import com.matthewprenger.servertools.core.util.Util;
 import com.matthewprenger.servertools.permission.GroupManager;
 import com.matthewprenger.servertools.permission.elements.GroupException;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 
 import java.util.List;
@@ -29,7 +29,7 @@ import java.util.Set;
  * limitations under the License.
  */
 
-public class CommandRemoveCommand extends ServerToolsCommand{
+public class CommandRemoveCommand extends ServerToolsCommand {
 
     public CommandRemoveCommand(String defaultName) {
         super(defaultName);
@@ -69,7 +69,7 @@ public class CommandRemoveCommand extends ServerToolsCommand{
         try {
             GroupManager.removeAllowedCommand(strings[0], strings[1]);
         } catch (GroupException e) {
-            sender.sendChatToPlayer(ChatMessageComponent.createFromText(e.toString()).setColor(EnumChatFormatting.RED));
+            sender.addChatMessage(Util.getChatComponent(e.toString(), EnumChatFormatting.RED));
             return;
         }
 

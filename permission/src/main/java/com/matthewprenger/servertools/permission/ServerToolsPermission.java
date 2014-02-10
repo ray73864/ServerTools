@@ -1,8 +1,8 @@
 package com.matthewprenger.servertools.permission;
 
-import com.matthewprenger.servertools.core.command.CommandManager;
 import com.matthewprenger.servertools.core.STLog;
 import com.matthewprenger.servertools.core.ServerTools;
+import com.matthewprenger.servertools.core.command.CommandManager;
 import com.matthewprenger.servertools.core.util.Util;
 import com.matthewprenger.servertools.permission.command.*;
 import cpw.mods.fml.common.Mod;
@@ -52,7 +52,8 @@ public class ServerToolsPermission {
         Util.checkModuleVersion("Permission", VERSION);
 
         permissionDir = new File(ServerTools.serverToolsDir, "permission");
-        if (permissionDir.mkdirs()) ServerToolsPermission.log.fine("Creating Permission Directory at: " + permissionDir.getAbsolutePath());
+        if (permissionDir.mkdirs())
+            ServerToolsPermission.log.trace("Creating Permission Directory at: " + permissionDir.getAbsolutePath());
 
         /* Initialize the Permission Configuration */
         PermissionConfig.init(new File(permissionDir, "permission.cfg"));

@@ -19,7 +19,7 @@ package com.matthewprenger.servertools.core.lib;
 public class Strings {
 
     /* MOTD */
-    public static final String[] MOTD_DEFAULT = new String[] {
+    public static final String[] MOTD_DEFAULT = new String[]{
             "Hello, $PLAYER$!",
             "This is the default MOTD. In order to change it,",
             "edit the motd.txt in the servertools directory"

@@ -16,21 +16,19 @@ package com.matthewprenger.servertools.core.task;
  *    limitations under the License.
  */
 
-import cpw.mods.fml.common.ITickHandler;
-import cpw.mods.fml.common.TickType;
-import cpw.mods.fml.common.registry.TickRegistry;
-import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 
-import java.util.EnumSet;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class TickHandler implements ITickHandler {
+public class TickHandler {
 
     private final ConcurrentLinkedQueue<ITickTask> tasks = new ConcurrentLinkedQueue<>();
 
     public TickHandler() {
 
-        TickRegistry.registerTickHandler(this, Side.SERVER);
+        FMLCommonHandler.instance().bus().register(this);
     }
 
     public void registerTask(ITickTask task) {
@@ -38,8 +36,11 @@ public class TickHandler implements ITickHandler {
         tasks.offer(task);
     }
 
-    @Override
-    public void tickStart(EnumSet<TickType> type, Object... tickData) {
+    @SubscribeEvent
+    public void tickStart(TickEvent.ServerTickEvent event) {
+
+        if (event.phase != TickEvent.Phase.START)
+            return;
 
         for (ITickTask task : tasks) {
 
@@ -50,20 +51,5 @@ public class TickHandler implements ITickHandler {
 
             task.tick();
         }
-    }
-
-    @Override
-    public void tickEnd(EnumSet<TickType> type, Object... tickData) {}
-
-    @Override
-    public EnumSet<TickType> ticks() {
-
-        return EnumSet.of(TickType.SERVER);
-    }
-
-    @Override
-    public String getLabel() {
-
-        return "ServerTools-TickHandler";
     }
 }

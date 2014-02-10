@@ -1,9 +1,8 @@
 package com.matthewprenger.servertools.core;
 
-import cpw.mods.fml.common.FMLLog;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /*
  * Copyright 2014 matthewprenger
@@ -26,8 +25,7 @@ public class STLog {
     private final Logger stLogger;
 
     public STLog(String logName) {
-        stLogger = Logger.getLogger(logName);
-        stLogger.setParent(FMLLog.getLogger());
+        stLogger = LogManager.getLogger(logName);
     }
 
     public void log(Level level, Object object) {
@@ -40,35 +38,27 @@ public class STLog {
     }
 
     public void debug(Object object) {
-        if (CoreConfig.DEBUG_MODE) log(Level.INFO, object);
+        if (CoreConfig.DEBUG_MODE) log(Level.DEBUG, object);
     }
 
-    public void severe(Object object) {
-        log(Level.SEVERE, object);
+    public void fatal(Object object) {
+        log(Level.FATAL, object);
     }
 
-    public void warning(Object object) {
-        log(Level.WARNING, object);
+    public void error(Object object) {
+        log(Level.ERROR, object);
+    }
+
+    public void warn(Object object) {
+        log(Level.WARN, object);
     }
 
     public void info(Object object) {
         log(Level.INFO, object);
     }
 
-    public void config(Object object) {
-        log(Level.CONFIG, object);
-    }
-
-    public void fine(Object object) {
-        log(Level.FINE, object);
-    }
-
-    public void finer(Object object) {
-        log(Level.FINER, object);
-    }
-
-    public void finest(Object object) {
-        log(Level.FINEST, object);
+    public void trace(Object object) {
+        log(Level.TRACE, object);
     }
 
     public Logger getLogger() {

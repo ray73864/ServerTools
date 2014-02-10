@@ -1,12 +1,12 @@
 package com.matthewprenger.servertools.teleport.command;
 
 import com.matthewprenger.servertools.core.command.ServerToolsCommand;
+import com.matthewprenger.servertools.core.util.Util;
 import com.matthewprenger.servertools.teleport.TeleportManager;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 
 import java.util.List;
@@ -71,12 +71,12 @@ public class CommandEditTeleport extends ServerToolsCommand {
         if ("set".equalsIgnoreCase(astring[0])) {
 
             TeleportManager.setTeleport(astring[1], new TeleportManager.Location(player.worldObj.provider.dimensionId, player.posX, player.posY, player.posZ));
-            icommandsender.sendChatToPlayer(ChatMessageComponent.createFromText(String.format("Set teleport: %s", astring[1])).setColor(EnumChatFormatting.GREEN));
+            icommandsender.addChatMessage(Util.getChatComponent(String.format("Set teleport: %s", astring[1]), EnumChatFormatting.GREEN));
 
         } else if ("delete".equalsIgnoreCase(astring[0])) {
 
             if (TeleportManager.removeTeleport(astring[1])) {
-                icommandsender.sendChatToPlayer(ChatMessageComponent.createFromText(String.format("Removed teleport: %s", astring[1])).setColor(EnumChatFormatting.GREEN));
+                icommandsender.addChatMessage(Util.getChatComponent(String.format("Removed teleport: %s", astring[1]), EnumChatFormatting.GREEN));
             } else
                 throw new PlayerNotFoundException("That teleport doesn't exist");
 

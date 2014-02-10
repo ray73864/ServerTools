@@ -35,7 +35,7 @@ public class STPClassTransformer implements IClassTransformer {
 
     static {
         PatchNotes commandHandlerPatch = new PatchNotes("net.minecraft.command.CommandHandler", "com.matthewprenger.servertools.permission.preloader.STCommandHandler");
-        commandHandlerPatch.addMethodToPatch(new MethodNotes("executeCommand","a","(Lnet/minecraft/command/ICommandSender;Ljava/lang/String;)I","(Lab;Ljava/lang/String;)I"));
+        commandHandlerPatch.addMethodToPatch(new MethodNotes("executeCommand", "a", "(Lnet/minecraft/command/ICommandSender;Ljava/lang/String;)I", "(Lab;Ljava/lang/String;)I"));
         commandHandlerPatch.addMethodToPatch(new MethodNotes("getPossibleCommands", "a", "(Lnet/minecraft/command/ICommandSender;Ljava/lang/String;)Ljava/util/List;", "(Lab;Ljava/util/List;)"));
         commandHandlerPatch.addMethodToPatch(new MethodNotes("getPossibleCommands", "b", "(Lnet/minecraft/command/ICommandSender;)Ljava/util/List;", "(Lab;Ljava/lang/String;)Ljava/util/List;"));
         patches.add(commandHandlerPatch);
@@ -63,7 +63,7 @@ public class STPClassTransformer implements IClassTransformer {
         ClassReader targetClassReader = new ClassReader(transformedBytes);
         targetClassReader.accept(targetClassNode, 0);
 
-        System.out.println( "Patching Class: " + patchNotes.targetClass);
+        System.out.println("Patching Class: " + patchNotes.targetClass);
         System.out.println("Mapped Class Name: " + targetClassNode.name);
 
         Map<MethodNode, MethodNode> replaceMap = new HashMap<>();

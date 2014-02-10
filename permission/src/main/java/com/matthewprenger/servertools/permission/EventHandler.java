@@ -17,35 +17,33 @@ package com.matthewprenger.servertools.permission;
  */
 
 import com.matthewprenger.servertools.permission.elements.Group;
-import cpw.mods.fml.common.IPlayerTracker;
-import cpw.mods.fml.common.registry.GameRegistry;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatMessageComponent;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.ServerChatEvent;
 
 import java.util.List;
 
-public class EventHandler implements IPlayerTracker {
+public class EventHandler {
 
     public EventHandler() {
 
-        GameRegistry.registerPlayerTracker(this);
-        MinecraftForge.EVENT_BUS.register(this);
+        FMLCommonHandler.instance().bus().register(this);
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     public void onServerChat(ServerChatEvent event) {
 
         if (PermissionConfig.prefixChatGroupName) {
 
-            ChatMessageComponent component = event.component;
+            ChatComponentTranslation component = event.component;
             List<Group> groups = GroupManager.getPlayerGroups(event.username);
 
             if (!groups.isEmpty()) {
-                event.component = ChatMessageComponent.createFromText("");
+                event.component = new ChatComponentTranslation("");
                 for (Group group : groups) {
                     if (group.groupName.equals(PermissionConfig.defaultGroup))
                         continue;
@@ -53,38 +51,25 @@ public class EventHandler implements IPlayerTracker {
                     int chatColor = group.getChatColor();
                     EnumChatFormatting color = EnumChatFormatting.WHITE;
 
-                    if (chatColor >=0 && chatColor < EnumChatFormatting.values().length) {
+                    if (chatColor >= 0 && chatColor < EnumChatFormatting.values().length) {
                         color = EnumChatFormatting.values()[chatColor];
                     }
-                    event.component.appendComponent(ChatMessageComponent.createFromText(color + String.format("[%s] ", group.groupName) + EnumChatFormatting.RESET));
+                    event.component.appendSibling(new ChatComponentText(color + String.format("[%s] ", group.groupName) + EnumChatFormatting.RESET));
                 }
-                event.component.appendComponent(component);
+                event.component.appendSibling(component);
             }
         }
     }
 
-    @Override
-    public void onPlayerLogin(EntityPlayer entityPlayer) {
+    @SubscribeEvent
+    public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
 
-        if (GroupManager.getPlayerGroups(entityPlayer.username).isEmpty()) {
+        if (GroupManager.getPlayerGroups(event.player.getCommandSenderName()).isEmpty()) {
 
-            GroupManager.assignDefaultGroup(entityPlayer.username);
-            entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText(String.format("You have been added to the default group: %s", PermissionConfig.defaultGroup)).setItalic(true).setColor(EnumChatFormatting.GOLD));
+            GroupManager.assignDefaultGroup(event.player.getCommandSenderName());
+            ChatComponentText componentText = new ChatComponentText(String.format("You have been added to the default group %s", PermissionConfig.defaultGroup));
+            componentText.getChatStyle().setItalic(true).setColor(EnumChatFormatting.GOLD);
+            event.player.addChatMessage(componentText);
         }
-    }
-
-    @Override
-    public void onPlayerLogout(EntityPlayer entityPlayer) {
-
-    }
-
-    @Override
-    public void onPlayerChangedDimension(EntityPlayer entityPlayer) {
-
-    }
-
-    @Override
-    public void onPlayerRespawn(EntityPlayer entityPlayer) {
-
     }
 }

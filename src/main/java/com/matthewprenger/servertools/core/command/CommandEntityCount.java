@@ -1,13 +1,14 @@
 package com.matthewprenger.servertools.core.command;
 
 import com.matthewprenger.servertools.core.lib.Strings;
+import com.matthewprenger.servertools.core.util.Util;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
 import java.util.HashMap;
@@ -81,13 +82,13 @@ public class CommandEntityCount extends ServerToolsCommand {
                 count += entry.getValue();
             }
 
-            sender.sendChatToPlayer(ChatMessageComponent.createFromText("Entity Count: " + count));
+            sender.addChatMessage(Util.getChatComponent("Entity Count: " + count, EnumChatFormatting.WHITE));
         } else if ("all".equalsIgnoreCase(args[0])) {
 
-            sender.sendChatToPlayer(ChatMessageComponent.createFromText("Entity Count:"));
+            sender.addChatMessage(Util.getChatComponent("Entity Count:", EnumChatFormatting.WHITE));
 
             for (Map.Entry<String, Integer> entry : entityCount.entrySet()) {
-                sender.sendChatToPlayer(ChatMessageComponent.createFromText(String.format("  %s: %s", entry.getKey(), entry.getValue())));
+                sender.addChatMessage(Util.getChatComponent(String.format("  %s: %s", entry.getKey(), entry.getValue()), EnumChatFormatting.WHITE));
             }
         } else {
 
@@ -111,7 +112,7 @@ public class CommandEntityCount extends ServerToolsCommand {
                 }
             }
 
-            sender.sendChatToPlayer(ChatMessageComponent.createFromText(String.format("Entity: %s, Count: %s", name, count)));
+            sender.addChatMessage(Util.getChatComponent(String.format("Entity: %s, Count: %s", name, count), EnumChatFormatting.WHITE));
         }
 
     }

@@ -1,12 +1,12 @@
 package com.matthewprenger.servertools.teleport.command;
 
 import com.matthewprenger.servertools.core.command.ServerToolsCommand;
+import com.matthewprenger.servertools.core.util.Util;
 import com.matthewprenger.servertools.teleport.TeleportConfig;
 import com.matthewprenger.servertools.teleport.TeleportManager;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 
 import java.util.List;
@@ -69,7 +69,7 @@ public class CommandTeleport extends ServerToolsCommand {
 
             if (teleport.dimension != player.worldObj.provider.dimensionId) {
                 if (!TeleportConfig.ENABLE_TELEPORT_ACROSS_DIMENSION) {
-                    icommandsender.sendChatToPlayer(ChatMessageComponent.createFromText("Teleporting across dimensions isn't allowed").setColor(EnumChatFormatting.RED));
+                    icommandsender.addChatMessage(Util.getChatComponent("Teleporting across dimensions isn't allowed", EnumChatFormatting.RED));
                     return;
                 }
 
@@ -77,10 +77,10 @@ public class CommandTeleport extends ServerToolsCommand {
             }
 
             player.setPositionAndUpdate(teleport.x, teleport.y, teleport.z);
-            icommandsender.sendChatToPlayer(ChatMessageComponent.createFromText(String.format("Teleported to: %s", astring[0])).setColor(EnumChatFormatting.GREEN));
+            icommandsender.addChatMessage(Util.getChatComponent(String.format("Teleported to: %s", astring[0]), EnumChatFormatting.GREEN));
 
         } else {
-            icommandsender.sendChatToPlayer(ChatMessageComponent.createFromText("That teleport doesn't exist").setColor(EnumChatFormatting.RED));
+            icommandsender.addChatMessage(Util.getChatComponent("That teleport doesn't exist", EnumChatFormatting.RED));
         }
     }
 }

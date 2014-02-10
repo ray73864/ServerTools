@@ -1,8 +1,8 @@
 package com.matthewprenger.servertools.core;
 
 import com.matthewprenger.servertools.core.chat.Motd;
-import com.matthewprenger.servertools.core.command.CommandManager;
 import com.matthewprenger.servertools.core.chat.VoiceHandler;
+import com.matthewprenger.servertools.core.command.CommandManager;
 import com.matthewprenger.servertools.core.lib.Reference;
 import com.matthewprenger.servertools.core.task.TickHandler;
 import com.matthewprenger.servertools.core.util.FlatBedrockGenerator;
@@ -42,7 +42,7 @@ public class ServerTools {
 
     static {
         if (serverToolsDir.mkdirs())
-            log.fine(String.format("Creating ServerTools root dir at: %s", ServerTools.serverToolsDir.getAbsolutePath()));
+            log.trace(String.format("Creating ServerTools root dir at: %s", ServerTools.serverToolsDir.getAbsolutePath()));
     }
 
     @Mod.Instance(Reference.MOD_ID)
@@ -71,7 +71,7 @@ public class ServerTools {
 
         /* Register the Flat Bedrock Generator */
         if (CoreConfig.GENERATE_FLAT_BEDROCK) {
-            GameRegistry.registerWorldGenerator(new FlatBedrockGenerator());
+            GameRegistry.registerWorldGenerator(new FlatBedrockGenerator(), 1);
         }
     }
 

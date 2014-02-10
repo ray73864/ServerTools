@@ -1,10 +1,11 @@
 package com.matthewprenger.servertools.core.command;
 
+import com.matthewprenger.servertools.core.util.Util;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -64,10 +65,10 @@ public class CommandWhereIs extends ServerToolsCommand {
         EntityPlayerMP player = getPlayer(icommandsender, astring[0]);
         NumberFormat f = new DecimalFormat("#");
 
-        String str = String.format("Player: %s is at X:%s Y:%s Z:%s in Dim:%s", player.username,
+        String str = String.format("Player: %s is at X:%s Y:%s Z:%s in Dim:%s", player.getDisplayName(),
                 f.format(player.posX), f.format(player.posY), f.format(player.posZ),
                 player.worldObj.provider.dimensionId + "-" + player.worldObj.provider.getDimensionName());
 
-        icommandsender.sendChatToPlayer(ChatMessageComponent.createFromText(str));
+        icommandsender.addChatMessage(Util.getChatComponent(str, EnumChatFormatting.WHITE));
     }
 }

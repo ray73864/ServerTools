@@ -1,9 +1,9 @@
 package com.matthewprenger.servertools.teleport;
 
-import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.config.Configuration;
+import org.apache.logging.log4j.Level;
 
 import java.io.File;
-import java.util.logging.Level;
 
 /*
  * Copyright 2014 matthewprenger
@@ -38,7 +38,7 @@ public class TeleportConfig {
 
         } catch (Exception e) {
             e.printStackTrace();
-            ServerToolsTeleport.log.log(Level.SEVERE, "Failed to load Teleport config");
+            ServerToolsTeleport.log.log(Level.FATAL, "Failed to load Teleport config");
         } finally {
             if (teleportConfig.hasChanged()) {
                 teleportConfig.save();

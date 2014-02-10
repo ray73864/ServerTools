@@ -10,7 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 
-import java.util.*;
+import java.util.List;
 
 /*
  * Copyright 2014 matthewprenger

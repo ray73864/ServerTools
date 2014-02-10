@@ -16,7 +16,8 @@ package com.matthewprenger.servertools.backup;
  * limitations under the License.
  */
 
-import net.minecraft.util.ChatMessageComponent;
+import com.matthewprenger.servertools.core.util.Util;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
 import java.io.*;
@@ -55,7 +56,7 @@ class Backup extends TimerTask {
         String backupFileName = BackupHandler.getBackupName();
 
         ServerToolsBackup.log.info(String.format("Starting backup %s", backupFileName));
-        BackupHandler.sendBackupMessage(ChatMessageComponent.createFromText("Starting Server Backup").setColor(EnumChatFormatting.AQUA));
+        BackupHandler.sendBackupMessage(new ChatComponentText("Starting Server Backup"));
 
         BackupHandler.forceSaveWorld();
         BackupHandler.setWorldCanSave(false);
@@ -71,11 +72,11 @@ class Backup extends TimerTask {
         BackupHandler.setWorldCanSave(true);
 
         if (completedSuccessfully) {
-            BackupHandler.sendBackupMessage(ChatMessageComponent.createFromText("Server Backup Finished").setColor(EnumChatFormatting.GREEN));
+            BackupHandler.sendBackupMessage(Util.getChatComponent("Server Backup Finished", EnumChatFormatting.GREEN));
             ServerToolsBackup.log.info("Backup completed successfully");
         } else {
-            BackupHandler.sendBackupMessage(ChatMessageComponent.createFromText("Server Backup Error - Check Server Logs").setColor(EnumChatFormatting.RED));
-            ServerToolsBackup.log.severe("Backup didn't complete successfully");
+            BackupHandler.sendBackupMessage(Util.getChatComponent("Server Backup Error - Check Server Logs", EnumChatFormatting.RED));
+            ServerToolsBackup.log.fatal("Backup didn't complete successfully");
         }
 
         BackupHandler.instance.checkBackupDirSize();

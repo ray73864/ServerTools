@@ -113,27 +113,28 @@ public class CommandInventory extends ServerToolsCommand {
             } else return null;
         }
 
-        @SuppressWarnings("UnusedAssignment")
         @Override
-        public ItemStack decrStackSize(int var1, int var2) {
+        public ItemStack decrStackSize(int i, int j) {
             if (player == null || player.isDead) {
                 viewer.closeScreen();
                 return null;
             }
 
-            ItemStack stack = getStackInSlot(var1);
+            ItemStack stack = getStackInSlot(i);
             if (stack != null) {
-                if (stack.stackSize <= var2) {
-                    setInventorySlotContents(var1, null);
-                    onInventoryChanged();
+                if (stack.stackSize <= j) {
+                    setInventorySlotContents(i, null);
+                    markDirty();
                     return stack;
-                } else {
-                    ItemStack ret = stack.splitStack(var2);
-                    if (stack.stackSize == 0) stack = null;
-                    onInventoryChanged();
-                    return ret;
                 }
-            } else return null;
+                ItemStack stack1 = stack.splitStack(j);
+                if (stack.stackSize == 0) {
+                    setInventorySlotContents(i, null);
+                }
+                markDirty();
+                return stack1;
+            } else
+                return null;
         }
 
         @Override
@@ -153,7 +154,7 @@ public class CommandInventory extends ServerToolsCommand {
         @Override
         public void setInventorySlotContents(int var1, ItemStack var2) {
             if (player == null || player.isDead) {
-                viewer.dropPlayerItem(var2);
+                viewer.entityDropItem(var2, 0.5F);
                 viewer.closeScreen();
                 return;
             }
@@ -165,18 +166,20 @@ public class CommandInventory extends ServerToolsCommand {
             } else if (var1 >= 36 && var1 < 40) {
                 player.inventory.armorInventory[39 - var1] = var2;
             } else {
-                viewer.dropPlayerItem(var2);
+                viewer.entityDropItem(var2, 0.5F);
             }
         }
 
         @Override
-        public String getInvName() {
-            if (player == null || player.isDead) {
-                viewer.closeScreen();
-                return "Unknown";
-            }
+        public String getInventoryName() {
 
-            return player.username;
+            return player.getDisplayName();
+        }
+
+        @Override
+        public boolean hasCustomInventoryName() {
+
+            return false;
         }
 
         @Override
@@ -190,14 +193,7 @@ public class CommandInventory extends ServerToolsCommand {
         }
 
         @Override
-        public void onInventoryChanged() {
-            if (player == null || player.isDead) {
-                viewer.closeScreen();
-            }
-
-            if (player != null) {
-                player.inventory.onInventoryChanged();
-            }
+        public void markDirty() {
         }
 
         @Override
@@ -210,26 +206,17 @@ public class CommandInventory extends ServerToolsCommand {
             return true;
         }
 
-
         @Override
-        public void openChest() {
-            if (player == null || player.isDead) {
-                viewer.closeScreen();
-            }
+        public void openInventory() {
         }
 
         @Override
-        public void closeChest() {
-        }
-
-        @Override
-        public boolean isInvNameLocalized() {
-            return false;
+        public void closeInventory() {
         }
 
         @Override
         public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-            return false;
+            return true;
         }
     }
 }

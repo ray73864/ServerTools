@@ -1,11 +1,11 @@
 package com.matthewprenger.servertools.permission.command;
 
 import com.matthewprenger.servertools.core.command.ServerToolsCommand;
+import com.matthewprenger.servertools.core.util.Util;
 import com.matthewprenger.servertools.permission.GroupManager;
 import com.matthewprenger.servertools.permission.elements.GroupException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 
 /*
@@ -49,7 +49,7 @@ public class CommandAddGroup extends ServerToolsCommand {
         try {
             GroupManager.createGroup(args[0]);
         } catch (GroupException e) {
-            sender.sendChatToPlayer(ChatMessageComponent.createFromText(e.toString()).setColor(EnumChatFormatting.RED));
+            sender.addChatMessage(Util.getChatComponent((e.toString()), EnumChatFormatting.RED));
             return;
         }
 
