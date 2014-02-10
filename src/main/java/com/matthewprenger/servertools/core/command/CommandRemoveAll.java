@@ -1,17 +1,20 @@
 package com.matthewprenger.servertools.core.command;
 
+import com.google.common.collect.Lists;
 import com.matthewprenger.servertools.core.CoreConfig;
 import com.matthewprenger.servertools.core.ServerTools;
 import com.matthewprenger.servertools.core.lib.Strings;
 import com.matthewprenger.servertools.core.task.RemoveAllTickTask;
 import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.block.Block;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /*
@@ -48,6 +51,13 @@ public class CommandRemoveAll extends ServerToolsCommand {
     }
 
     @Override
+    public List addTabCompletionOptions(ICommandSender sender, String[] args) {
+
+        List<String> blockNames = getBlockNames();
+        return args.length == 1 ? getListOfStringsMatchingLastWord(args, blockNames.toArray(new String[blockNames.size()])) : null;
+    }
+
+    @Override
     public void processCommand(ICommandSender sender, String[] strings) {
 
         if (!(sender instanceof EntityPlayerMP))
@@ -77,6 +87,26 @@ public class CommandRemoveAll extends ServerToolsCommand {
             }
         }
 
+        if (blocksToClear.isEmpty())
+            throw new CommandException("That block can't be found. Try using tab-completion");
+
         ServerTools.instance.tickHandler.registerTask(new RemoveAllTickTask(player, range, blocksToClear));
+    }
+
+    static List<String> getBlockNames() {
+
+        List<String> list = Lists.newArrayList();
+
+        for (Object obj : GameData.blockRegistry) {
+            if (obj instanceof Block) {
+                String blockName = ((Block) obj).getUnlocalizedName();
+                if (blockName.startsWith("tile."))
+                    blockName = blockName.substring(5, blockName.length());
+
+                list.add(blockName);
+            }
+        }
+
+        return list;
     }
 }

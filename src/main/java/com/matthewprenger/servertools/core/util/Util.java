@@ -18,6 +18,7 @@ package com.matthewprenger.servertools.core.util;
 
 import com.google.common.base.Strings;
 import com.matthewprenger.servertools.core.ServerTools;
+import net.minecraft.util.ChatComponentStyle;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -66,7 +67,7 @@ public class Util {
      * @param formatting any formatting to add
      * @return the component
      */
-    public static ChatComponentText getChatComponent(String message, EnumChatFormatting formatting) {
+    public static ChatComponentStyle getChatComponent(String message, EnumChatFormatting formatting) {
 
         ChatComponentText componentText = new ChatComponentText(message);
         componentText.getChatStyle().setColor(formatting);

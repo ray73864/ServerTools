@@ -52,7 +52,7 @@ public class CommandManager {
     public static void registerSTCommand(ServerToolsCommand command) {
 
         if (commandsLoaded) {
-            throw new IllegalStateException("Only call this method before FMLServerStarting");
+            throw new IllegalStateException("Tried to register ServerTools Command after FMLServerStarting Event");
         }
 
         boolean enableCommand = commandConfig.get("enableCommand", command.getClass().getName(), true).getBoolean(true);
@@ -71,7 +71,7 @@ public class CommandManager {
     public static void registerCommands(CommandHandler commandHandler) {
 
         for (ServerToolsCommand command : commandsToLoad) {
-            ServerTools.log.trace(String.format("Command: %s , has name: %s", command.getClass(), command.name));
+            ServerTools.log.debug(String.format("Command: %s , has name: %s", command.getClass(), command.name));
             ServerTools.log.info("Registering Command: " + command.name);
             commandHandler.registerCommand(command);
         }
@@ -82,6 +82,7 @@ public class CommandManager {
     public static void onServerStopped() {
 
         commandsLoaded = false;
+        commandsToLoad.clear();
     }
 
     public static void initCoreCommands() {

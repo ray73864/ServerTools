@@ -6,12 +6,14 @@ import com.google.gson.GsonBuilder;
 import com.matthewprenger.servertools.core.CoreConfig;
 import com.matthewprenger.servertools.core.ServerTools;
 import com.matthewprenger.servertools.core.lib.Strings;
+import com.matthewprenger.servertools.core.util.FileUtils;
 import com.matthewprenger.servertools.core.util.Util;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.server.CommandBroadcast;
 import net.minecraft.command.server.CommandEmote;
 import net.minecraft.command.server.CommandMessage;
+import net.minecraft.command.server.CommandMessageRaw;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
@@ -19,7 +21,10 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -122,7 +127,7 @@ public class VoiceHandler {
         String gsonRepresentation = gson.toJson(voicedUsers);
 
         try {
-            writeStringToFile(gsonRepresentation, voiceFile);
+            FileUtils.writeStringToFile(gsonRepresentation, voiceFile);
         } catch (IOException e) {
             e.printStackTrace(System.err);
             ServerTools.log.warn(Strings.VOICE_SAVE_ERROR);
@@ -149,7 +154,7 @@ public class VoiceHandler {
         String gsonRepresentation = gson.toJson(silencedUsers);
 
         try {
-            writeStringToFile(gsonRepresentation, silenceFile);
+            FileUtils.writeStringToFile(gsonRepresentation, silenceFile);
         } catch (IOException e) {
             e.printStackTrace(System.err);
             ServerTools.log.warn(Strings.SILENCE_SAVE_ERROR);
@@ -195,19 +200,11 @@ public class VoiceHandler {
     public void command(CommandEvent event) {
 
         if (isUserSilenced(event.sender.getCommandSenderName())) {
-            if (event.command instanceof CommandBroadcast || event.command instanceof CommandMessage || event.command instanceof CommandEmote) {
+            if (event.command instanceof CommandBroadcast || event.command instanceof CommandMessage || event.command instanceof CommandEmote || event.command instanceof CommandMessageRaw) {
 
                 event.setCanceled(true);
                 event.sender.addChatMessage(Util.getChatComponent(Strings.ERROR_SILENCED, EnumChatFormatting.RED));
             }
         }
-    }
-
-    private static void writeStringToFile(String string, File file) throws IOException {
-
-        FileWriter writer = new FileWriter(file);
-        writer.write(string);
-        writer.flush();
-        writer.close();
     }
 }
