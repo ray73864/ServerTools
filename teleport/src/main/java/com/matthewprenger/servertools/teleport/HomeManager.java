@@ -38,7 +38,7 @@ public class HomeManager {
         gson = new GsonBuilder().setPrettyPrinting().create();
         homeDir = homeDirectory;
         if (homeDir.mkdirs()) {
-            ServerToolsTeleport.log.fine(String.format("Creating home directory: %s", homeDir.getAbsolutePath()));
+            ServerToolsTeleport.log.trace(String.format("Creating home directory: %s", homeDir.getAbsolutePath()));
         }
 
         loadHomes();
@@ -53,7 +53,7 @@ public class HomeManager {
                 try {
                     FileUtils.writeStringToFile(gsonRepresentation, new File(homeDir, username + ".json"));
                 } catch (IOException e) {
-                    ServerToolsTeleport.log.warning(String.format("Failed to save %s's homes to file", username));
+                    ServerToolsTeleport.log.warn(String.format("Failed to save %s's homes to file", username));
                     e.printStackTrace();
                 }
             }
@@ -123,15 +123,15 @@ public class HomeManager {
 
                     bufferedReader.close();
 
-                }catch (JsonParseException e) {
+                } catch (JsonParseException e) {
                     e.printStackTrace();
-                    ServerToolsTeleport.log.warning(String.format("The home file for %s could not be parsed as json, it will not be loaded", username));
+                    ServerToolsTeleport.log.warn(String.format("The home file for %s could not be parsed as json, it will not be loaded", username));
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
-                    ServerToolsTeleport.log.warning(String.format("Tried to load home file for %s, but it didn't exist", username));
+                    ServerToolsTeleport.log.warn(String.format("Tried to load home file for %s, but it didn't exist", username));
                 } catch (IOException e) {
                     e.printStackTrace();
-                    ServerToolsTeleport.log.warning(String.format("Failed to close buffered reader stream for: %s", file.getAbsolutePath()));
+                    ServerToolsTeleport.log.warn(String.format("Failed to close buffered reader stream for: %s", file.getAbsolutePath()));
                 }
             }
         }

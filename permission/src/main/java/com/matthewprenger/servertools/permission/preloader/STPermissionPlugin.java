@@ -33,7 +33,7 @@ public class STPermissionPlugin implements IFMLLoadingPlugin, IFMLCallHook {
 
     @Override
     public String[] getASMTransformerClass() {
-        return new String[] {"com.matthewprenger.servertools.permission.preloader.STPClassTransformer"};
+        return new String[]{"com.matthewprenger.servertools.permission.preloader.STPClassTransformer"};
     }
 
     @Override
@@ -50,5 +50,10 @@ public class STPermissionPlugin implements IFMLLoadingPlugin, IFMLCallHook {
     @Override
     public void injectData(Map<String, Object> data) {
 
+    }
+
+    @Override
+    public String getAccessTransformerClass() {
+        return null;
     }
 }

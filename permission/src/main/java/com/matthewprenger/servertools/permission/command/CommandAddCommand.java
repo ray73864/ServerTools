@@ -1,13 +1,13 @@
 package com.matthewprenger.servertools.permission.command;
 
 import com.matthewprenger.servertools.core.command.ServerToolsCommand;
+import com.matthewprenger.servertools.core.util.Util;
 import com.matthewprenger.servertools.permission.GroupManager;
 import com.matthewprenger.servertools.permission.elements.GroupException;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 
 import java.util.List;
@@ -48,7 +48,7 @@ public class CommandAddCommand extends ServerToolsCommand {
             return ch.getPossibleCommands(sender, strings[0]);
         } else if (strings.length == 2) {
             Set<String> groupKeys = GroupManager.getGroups().keySet();
-        return getListOfStringsMatchingLastWord(strings, groupKeys.toArray(new String[groupKeys.size()]));
+            return getListOfStringsMatchingLastWord(strings, groupKeys.toArray(new String[groupKeys.size()]));
         } else
             return null;
 
@@ -69,7 +69,7 @@ public class CommandAddCommand extends ServerToolsCommand {
         try {
             GroupManager.addAllowedCommand(strings[0], strings[1]);
         } catch (GroupException e) {
-            sender.sendChatToPlayer(ChatMessageComponent.createFromText(e.toString()).setColor(EnumChatFormatting.RED));
+            sender.addChatMessage(Util.getChatComponent(e.toString(), EnumChatFormatting.RED));
             return;
         }
 

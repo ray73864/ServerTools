@@ -16,9 +16,9 @@ package com.matthewprenger.servertools.backup;
  * limitations under the License.
  */
 
-import com.matthewprenger.servertools.core.command.CommandManager;
 import com.matthewprenger.servertools.core.STLog;
 import com.matthewprenger.servertools.core.ServerTools;
+import com.matthewprenger.servertools.core.command.CommandManager;
 import com.matthewprenger.servertools.core.util.Util;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -26,8 +26,9 @@ import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 
 import java.io.File;
@@ -75,9 +76,15 @@ public class ServerToolsBackup implements ICommandSender {
     }
 
     @Override
-    public void sendChatToPlayer(ChatMessageComponent chatmessagecomponent) {
+    public IChatComponent func_145748_c_() {
 
-        log.info(chatmessagecomponent.toString());
+        return new ChatComponentText(this.getCommandSenderName());
+    }
+
+    @Override
+    public void addChatMessage(IChatComponent var1) {
+
+        log.info(var1.getUnformattedText());
     }
 
     @Override

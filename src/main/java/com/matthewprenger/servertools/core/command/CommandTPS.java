@@ -1,10 +1,10 @@
 package com.matthewprenger.servertools.core.command;
 
+import com.matthewprenger.servertools.core.util.Util;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
@@ -27,7 +27,7 @@ import java.text.DecimalFormat;
  * limitations under the License.
  */
 
-public class CommandTPS extends ServerToolsCommand{
+public class CommandTPS extends ServerToolsCommand {
 
     private static final DecimalFormat timeFormatter = new DecimalFormat("########0.000");
 
@@ -118,6 +118,6 @@ public class CommandTPS extends ServerToolsCommand{
 
     private static void sendToChat(ICommandSender sender, String string) {
 
-        sender.sendChatToPlayer(ChatMessageComponent.createFromText(string));
+        sender.addChatMessage(Util.getChatComponent(string, EnumChatFormatting.WHITE));
     }
 }

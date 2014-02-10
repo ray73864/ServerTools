@@ -50,7 +50,7 @@ public class GroupManager {
 
         groupDir = groupDirectory;
         if (groupDir.mkdirs()) {
-            ServerToolsPermission.log.fine(String.format("Creating Group directory at: %s", groupDir.getAbsolutePath()));
+            ServerToolsPermission.log.trace(String.format("Creating Group directory at: %s", groupDir.getAbsolutePath()));
         }
 
         loadGroupsFromFile();
@@ -60,7 +60,7 @@ public class GroupManager {
                 createGroup(PermissionConfig.defaultGroup);
             } catch (GroupException e) {
                 e.printStackTrace();
-                ServerToolsPermission.log.warning("Tried to create the default group, but it already existed....This shouldn't happen");
+                ServerToolsPermission.log.warn("Tried to create the default group, but it already existed....This shouldn't happen");
             }
     }
 
@@ -241,7 +241,7 @@ public class GroupManager {
     /**
      * See if an {@link net.minecraft.command.ICommandSender} can use an {@link net.minecraft.command.ICommand}
      *
-     * @param sender the command sender
+     * @param sender   the command sender
      * @param iCommand the command
      * @return if the sender can use the command
      */
@@ -258,10 +258,10 @@ public class GroupManager {
      * Set the chat prefix color for a group
      *
      * @param groupName the group name
-     * @param color the index of the {@link net.minecraft.util.EnumChatFormatting} color
+     * @param color     the index of the {@link net.minecraft.util.EnumChatFormatting} color
      * @throws GroupException
      */
-    public static void setGroupChatColor(String groupName, int color) throws GroupException{
+    public static void setGroupChatColor(String groupName, int color) throws GroupException {
 
         if (groups.containsKey(groupName)) {
             groups.get(groupName).setChatColor(color);
@@ -280,7 +280,7 @@ public class GroupManager {
                 FileUtils.writeStringToFile(gson.toJson(group), groupFile);
             } catch (IOException e) {
                 e.printStackTrace();
-                ServerToolsPermission.log.warning(String.format("Failed to save group file: %s", groupFile.getAbsolutePath()));
+                ServerToolsPermission.log.warn(String.format("Failed to save group file: %s", groupFile.getAbsolutePath()));
             }
         }
     }
@@ -313,7 +313,7 @@ public class GroupManager {
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    ServerToolsPermission.log.warning(String.format("Failed to load group %s from file", file.getName()));
+                    ServerToolsPermission.log.warn(String.format("Failed to load group %s from file", file.getName()));
                 }
             }
         }
@@ -321,7 +321,7 @@ public class GroupManager {
 
     public static void loadDefaultGroups() {
 
-        ServerToolsPermission.log.warning("Loading default groups, you should review the groups and make changes as necessary");
+        ServerToolsPermission.log.warn("Loading default groups, you should review the groups and make changes as necessary");
 
         String ADMIN = "Admin";
         String MODERATOR = "Moderator";
@@ -383,7 +383,7 @@ public class GroupManager {
 
         } catch (GroupException e) {
             e.printStackTrace();
-            ServerToolsPermission.log.warning("Failed to load default groups");
+            ServerToolsPermission.log.warn("Failed to load default groups");
         }
     }
 
@@ -406,7 +406,7 @@ public class GroupManager {
             addUserToGroup(username, PermissionConfig.defaultGroup);
         } catch (GroupException e) {
             e.printStackTrace();
-            ServerToolsPermission.log.warning("This should't ever happen... congratulations");
+            ServerToolsPermission.log.warn("This should't ever happen... congratulations");
         }
     }
 

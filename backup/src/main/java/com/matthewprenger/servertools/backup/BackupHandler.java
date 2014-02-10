@@ -20,8 +20,9 @@ import com.google.common.base.Strings;
 import com.matthewprenger.servertools.core.util.FileUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.MinecraftException;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
@@ -58,7 +59,7 @@ public class BackupHandler {
         if (backupDir.exists() && backupDir.isFile())
             throw new IllegalArgumentException("File exists with name of configured backup path, can't create backup directory");
 
-        ServerToolsBackup.log.config(String.format("Backup Directory: %s", backupDir.getAbsolutePath()));
+        ServerToolsBackup.log.trace(String.format("Backup Directory: %s", backupDir.getAbsolutePath()));
 
         backupDir.mkdirs();
 
@@ -79,7 +80,7 @@ public class BackupHandler {
                 );
             } catch (IOException e) {
                 e.printStackTrace();
-                ServerToolsBackup.log.severe("Failed to initialize autobackup");
+                ServerToolsBackup.log.fatal("Failed to initialize autobackup");
             }
         }
 
@@ -137,14 +138,14 @@ public class BackupHandler {
             if (file.isFile()) {
                 int age = (int) ((new Date().getTime() - file.lastModified()) / 24 / 60 / 60 / 1000);
 
-                ServerToolsBackup.log.fine(String.format("Found backup file %s; %s days old", file.getName(), age));
+                ServerToolsBackup.log.trace(String.format("Found backup file %s; %s days old", file.getName(), age));
 
                 if (age > BackupConfig.backupLifespanDays) {
                     ServerToolsBackup.log.info(String.format("Deleting old backup file: %s", file.getName()));
                     if (file.delete())
-                        ServerToolsBackup.log.fine(String.format("Successfully deleted file %s", file.getName()));
+                        ServerToolsBackup.log.trace(String.format("Successfully deleted file %s", file.getName()));
                     else
-                        ServerToolsBackup.log.warning(String.format("Failed to delete file %s", file.getName()));
+                        ServerToolsBackup.log.warn(String.format("Failed to delete file %s", file.getName()));
                 }
             }
         }
@@ -159,16 +160,16 @@ public class BackupHandler {
         if (BackupConfig.backupDirMaxSize == -1)
             return;
 
-        ServerToolsBackup.log.fine("Checking size of the backup directory");
+        ServerToolsBackup.log.trace("Checking size of the backup directory");
 
-        ServerToolsBackup.log.fine(String.format("Backup directory size: %s MB", FileUtils.getFolderSize(backupDir) / org.apache.commons.io.FileUtils.ONE_MB));
+        ServerToolsBackup.log.trace(String.format("Backup directory size: %s MB", FileUtils.getFolderSize(backupDir) / org.apache.commons.io.FileUtils.ONE_MB));
 
         while (FileUtils.getFolderSize(backupDir) / org.apache.commons.io.FileUtils.ONE_MB > BackupConfig.backupDirMaxSize) {
 
             File oldestFile = FileUtils.getOldestFile(backupDir);
 
             if (oldestFile != null) {
-                ServerToolsBackup.log.fine(String.format("Deleting oldest file: %s", oldestFile.getName()));
+                ServerToolsBackup.log.trace(String.format("Deleting oldest file: %s", oldestFile.getName()));
                 oldestFile.delete();
             }
         }
@@ -182,9 +183,9 @@ public class BackupHandler {
         if (BackupConfig.backupMaxNumber == -1)
             return;
 
-        ServerToolsBackup.log.fine("Checking number of backups in backup directory");
+        ServerToolsBackup.log.trace("Checking number of backups in backup directory");
 
-        ServerToolsBackup.log.fine(String.format("%s backups exist", getNumberBackups()));
+        ServerToolsBackup.log.trace(String.format("%s backups exist", getNumberBackups()));
 
         while (getNumberBackups() > BackupConfig.backupMaxNumber) {
             File oldestFile = FileUtils.getOldestFile(backupDir);
@@ -219,24 +220,24 @@ public class BackupHandler {
     /**
      * Send a backup related message to all users that should get backup messages
      *
-     * @param component a {@link net.minecraft.util.ChatMessageComponent} to send
+     * @param component a {@link net.minecraft.util.ChatComponentText} to send
      */
-    public static void sendBackupMessage(ChatMessageComponent component) {
+    public static void sendBackupMessage(IChatComponent component) {
 
         for (Object obj : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
             EntityPlayerMP playerMP = (EntityPlayerMP) obj;
 
             if (playerMP != null) {
                 if (BackupConfig.sendBackupMessageToOps && MinecraftServer.getServer().getConfigurationManager().isPlayerOpped(playerMP.getCommandSenderName()))
-                    playerMP.sendChatToPlayer(component);
+                    playerMP.addChatComponentMessage(component);
                 else if (BackupConfig.sendBackupMessageToUsers)
-                    playerMP.sendChatToPlayer(component);
+                    playerMP.addChatComponentMessage(component);
                 else if (BackupConfig.backupMessageWhitelist.contains(playerMP.getCommandSenderName()))
-                    playerMP.sendChatToPlayer(component);
+                    playerMP.addChatComponentMessage(component);
             }
         }
 
-        MinecraftServer.getServer().sendChatToPlayer(component);
+        MinecraftServer.getServer().addChatMessage(component);
     }
 
     /**
@@ -251,16 +252,16 @@ public class BackupHandler {
         for (WorldServer worldServer : server.worldServers) {
 
             if (worldServer != null) {
-                worldServer.canNotSave = !canSave;
+                worldServer.levelSaving = !canSave;
             }
         }
 
         if (canSave)
-            sendBackupMessage(ChatMessageComponent.createFromTranslationWithSubstitutions("chat.type.admin", ServerToolsBackup.instance.getCommandSenderName(),
-                    ChatMessageComponent.createFromTranslationKey("commands.save.enabled")).setColor(EnumChatFormatting.GRAY));
+            sendBackupMessage(new ChatComponentTranslation("chat.type.admin", ServerToolsBackup.instance.getCommandSenderName(),
+                    new ChatComponentTranslation("commands.save.enabled").getChatStyle().setColor(EnumChatFormatting.GRAY)));
         else
-            sendBackupMessage(ChatMessageComponent.createFromTranslationWithSubstitutions("chat.type.admin", ServerToolsBackup.instance.getCommandSenderName(),
-                    ChatMessageComponent.createFromTranslationKey("commands.save.disabled")).setColor(EnumChatFormatting.GRAY));
+            sendBackupMessage(new ChatComponentTranslation("chat.type.admin", ServerToolsBackup.instance.getCommandSenderName(),
+                    new ChatComponentTranslation("commands.save.disabled").getChatStyle().setColor(EnumChatFormatting.GRAY)));
     }
 
     /**
@@ -278,20 +279,20 @@ public class BackupHandler {
             boolean flag;
             for (WorldServer worldServer : server.worldServers) {
                 if (worldServer != null) {
-                    flag = worldServer.canNotSave;
-                    worldServer.canNotSave = false;
+                    flag = worldServer.levelSaving;
+                    worldServer.levelSaving = false;
                     worldServer.saveAllChunks(true, null);
-                    worldServer.canNotSave = flag;
+                    worldServer.levelSaving = flag;
                 }
             }
         } catch (MinecraftException e) {
-            sendBackupMessage(ChatMessageComponent.createFromTranslationWithSubstitutions("chat.type.admin", ServerToolsBackup.instance.getCommandSenderName(),
-                    ChatMessageComponent.createFromTranslationWithSubstitutions("commands.save.failed", e.getMessage())).setColor(EnumChatFormatting.GRAY));
+            sendBackupMessage(new ChatComponentTranslation("chat.type.admin", ServerToolsBackup.instance.getCommandSenderName(),
+                    new ChatComponentTranslation("commands.save.failed", e.getMessage()).getChatStyle().setColor(EnumChatFormatting.GRAY)));
             return;
         }
 
-        sendBackupMessage(ChatMessageComponent.createFromTranslationWithSubstitutions("chat.type.admin", ServerToolsBackup.instance.getCommandSenderName(),
-                ChatMessageComponent.createFromTranslationKey("commands.save.success")).setColor(EnumChatFormatting.GRAY));
+        sendBackupMessage(new ChatComponentTranslation("chat.type.admin", ServerToolsBackup.instance.getCommandSenderName(),
+                new ChatComponentTranslation("commands.save.success").getChatStyle().setColor(EnumChatFormatting.GRAY)));
     }
 
     private static class BackupFileNameFilter implements FilenameFilter {

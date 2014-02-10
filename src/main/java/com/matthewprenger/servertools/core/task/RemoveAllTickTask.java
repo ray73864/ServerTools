@@ -1,12 +1,16 @@
 package com.matthewprenger.servertools.core.task;
 
 import com.matthewprenger.servertools.core.ServerTools;
+import com.matthewprenger.servertools.core.util.Util;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 
 /*
  * Copyright 2014 matthewprenger
@@ -35,13 +39,13 @@ public class RemoveAllTickTask implements ITickTask {
     private final World world;
     private int blockCounter;
 
-    public RemoveAllTickTask(EntityPlayer player, int radius, Collection<Integer> blockIdsToClear) {
+    public RemoveAllTickTask(EntityPlayer player, int radius, Collection<Block> blocksToClear) {
 
         this.player = player;
         world = player.worldObj;
 
         if (world == null) {
-            ServerTools.log.warning(String.format("Player: %s tried to start a removeall task, but their worldObj was null", player.username));
+            ServerTools.log.warn(String.format("Player: %s tried to start a removeall task, but their worldObj was null", player.getDisplayName()));
             isComplete = true;
             return;
         }
@@ -55,17 +59,17 @@ public class RemoveAllTickTask implements ITickTask {
         for (int x = centerX - radius; x < centerX + radius; x++) {
             for (int y = centerY - radius; y < centerY + radius; y++) {
                 for (int z = centerZ - radius; z < centerZ + radius; z++)
-                    if (blockIdsToClear.contains(world.getBlockId(x, y, z))) {
+                    if (blocksToClear.contains(world.getBlock(x, y, z))) {
                         blocksToRemove.add(new TempBlock(x, y, z));
                         blockCounter++;
                     }
             }
         }
 
-        player.sendChatToPlayer(ChatMessageComponent.createFromText(String.format("Removing %s blocks", blockCounter)).setColor(EnumChatFormatting.DARK_GREEN));
+        player.addChatComponentMessage(Util.getChatComponent(String.format("Removing %s blocks", blockCounter), EnumChatFormatting.GOLD));
 
         if (blockCounter > LAG_THREASHOLD)
-            player.sendChatToPlayer(ChatMessageComponent.createFromText("Removing a large ammount of blocks, This is going to cause some lag").setColor(EnumChatFormatting.DARK_RED));
+            player.addChatComponentMessage(Util.getChatComponent("Removing a lot of blocks, Incomming lag", EnumChatFormatting.RED));
     }
 
     @Override
@@ -77,7 +81,7 @@ public class RemoveAllTickTask implements ITickTask {
 
             if (iterator.hasNext()) {
                 TempBlock block = iterator.next();
-                world.setBlock(block.x, block.y, block.z, 0, 0, 2);
+                world.setBlock(block.x, block.y, block.z, Blocks.air, 0, 2);
                 iterator.remove();
             }
         }
@@ -90,7 +94,7 @@ public class RemoveAllTickTask implements ITickTask {
     @Override
     public void onComplete() {
 
-        player.sendChatToPlayer(ChatMessageComponent.createFromText("Finished removing blocks").setColor(EnumChatFormatting.GREEN));
+        player.addChatComponentMessage(Util.getChatComponent("Finished removing blocks", EnumChatFormatting.GREEN));
     }
 
     @Override

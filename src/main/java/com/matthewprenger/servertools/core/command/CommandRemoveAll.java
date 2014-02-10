@@ -1,16 +1,20 @@
 package com.matthewprenger.servertools.core.command;
 
-import com.matthewprenger.servertools.core.ServerTools;
+import com.google.common.collect.Lists;
 import com.matthewprenger.servertools.core.CoreConfig;
+import com.matthewprenger.servertools.core.ServerTools;
 import com.matthewprenger.servertools.core.lib.Strings;
 import com.matthewprenger.servertools.core.task.RemoveAllTickTask;
+import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockFluid;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /*
@@ -43,7 +47,14 @@ public class CommandRemoveAll extends ServerToolsCommand {
     @Override
     public String getCommandUsage(ICommandSender sender) {
 
-        return "/" + name + " [blockID | \"liquid\"] {radius}";
+        return "/" + name + " [blockName] {radius}";
+    }
+
+    @Override
+    public List addTabCompletionOptions(ICommandSender sender, String[] args) {
+
+        List<String> blockNames = getBlockNames();
+        return args.length == 1 ? getListOfStringsMatchingLastWord(args, blockNames.toArray(new String[blockNames.size()])) : null;
     }
 
     @Override
@@ -61,15 +72,41 @@ public class CommandRemoveAll extends ServerToolsCommand {
         if (strings.length >= 2)
             range = Integer.parseInt(strings[1]);
 
-        Set<Integer> blockIdsToClear = new HashSet<>();
+        Set<Block> blocksToClear = new HashSet<>();
 
-        if ("liquid".equalsIgnoreCase(strings[0])) {
-            for (Block block : Block.blocksList)
-                if (block instanceof BlockFluid)
-                    blockIdsToClear.add(block.blockID);
-        } else
-            blockIdsToClear.add(parseIntBounded(sender, strings[0], 1, 4096));
+        for (Object obj : GameData.blockRegistry) {
+            if (obj instanceof Block) {
 
-        ServerTools.instance.tickHandler.registerTask(new RemoveAllTickTask(player, range, blockIdsToClear));
+                String blockName = ((Block) obj).getUnlocalizedName();
+                if (blockName.startsWith("tile."))
+                    blockName = blockName.substring(5, blockName.length());
+
+                if (blockName.equalsIgnoreCase(strings[0]) && !(obj == Blocks.air)) {
+                    blocksToClear.add((Block) obj);
+                }
+            }
+        }
+
+        if (blocksToClear.isEmpty())
+            throw new CommandException("That block can't be found. Try using tab-completion");
+
+        ServerTools.instance.tickHandler.registerTask(new RemoveAllTickTask(player, range, blocksToClear));
+    }
+
+    static List<String> getBlockNames() {
+
+        List<String> list = Lists.newArrayList();
+
+        for (Object obj : GameData.blockRegistry) {
+            if (obj instanceof Block) {
+                String blockName = ((Block) obj).getUnlocalizedName();
+                if (blockName.startsWith("tile."))
+                    blockName = blockName.substring(5, blockName.length());
+
+                list.add(blockName);
+            }
+        }
+
+        return list;
     }
 }

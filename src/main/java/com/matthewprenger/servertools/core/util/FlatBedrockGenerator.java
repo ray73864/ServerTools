@@ -1,7 +1,7 @@
 package com.matthewprenger.servertools.core.util;
 
 import cpw.mods.fml.common.IWorldGenerator;
-import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
@@ -37,15 +37,15 @@ public class FlatBedrockGenerator implements IWorldGenerator {
 
                 if (isNether)
                     for (int blockY = 126; blockY > 121; blockY--)
-                        if (world.getBlockId(chunkX * 16 + blockX, blockY, chunkZ * 16 + blockZ) == Block.bedrock.blockID)
-                            world.setBlock(chunkX * 16 + blockX, blockY, chunkZ * 16 + blockZ, Block.netherrack.blockID, 0, 2);
+                        if (world.getBlock(chunkX * 16 + blockX, blockY, chunkZ * 16 + blockZ) == Blocks.bedrock)
+                            world.setBlock(chunkX * 16 + blockX, blockY, chunkZ * 16 + blockZ, Blocks.netherrack, 0, 2);
 
                 for (int blockY = 5; blockY > 0; blockY--)
-                    if (world.getBlockId(chunkX * 16 + blockX, blockY, chunkZ * 16 + blockZ) == Block.bedrock.blockID)
+                    if (world.getBlock(chunkX * 16 + blockX, blockY, chunkZ * 16 + blockZ) == Blocks.bedrock)
                         if (isNether)
-                            world.setBlock(chunkX * 16 + blockX, blockY, chunkZ * 16 + blockZ, Block.netherrack.blockID, 0, 2);
+                            world.setBlock(chunkX * 16 + blockX, blockY, chunkZ * 16 + blockZ, Blocks.netherrack, 0, 2);
                         else
-                            world.setBlock(chunkX * 16 + blockX, blockY, chunkZ * 16 + blockZ, Block.stone.blockID, 0, 2);
+                            world.setBlock(chunkX * 16 + blockX, blockY, chunkZ * 16 + blockZ, Blocks.stone, 0, 2);
 
             }
     }

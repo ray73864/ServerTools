@@ -1,8 +1,8 @@
 package com.matthewprenger.servertools.teleport;
 
-import com.matthewprenger.servertools.core.command.CommandManager;
 import com.matthewprenger.servertools.core.STLog;
 import com.matthewprenger.servertools.core.ServerTools;
+import com.matthewprenger.servertools.core.command.CommandManager;
 import com.matthewprenger.servertools.core.util.Util;
 import com.matthewprenger.servertools.teleport.command.CommandEditTeleport;
 import com.matthewprenger.servertools.teleport.command.CommandHome;

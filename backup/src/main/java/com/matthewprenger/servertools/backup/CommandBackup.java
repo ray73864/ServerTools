@@ -17,8 +17,8 @@ package com.matthewprenger.servertools.backup;
  */
 
 import com.matthewprenger.servertools.core.command.ServerToolsCommand;
+import com.matthewprenger.servertools.core.util.Util;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 
 import java.io.IOException;
@@ -46,9 +46,9 @@ public class CommandBackup extends ServerToolsCommand {
             BackupHandler.instance.doBackup();
         } catch (IOException e) {
             e.printStackTrace();
-            sender.sendChatToPlayer(ChatMessageComponent.createFromText("Backup Failed").setColor(EnumChatFormatting.RED));
+            sender.addChatMessage(Util.getChatComponent("Backup Failed", EnumChatFormatting.RED));
         }
 
-        sender.sendChatToPlayer(ChatMessageComponent.createFromText("Started Backup").setColor(EnumChatFormatting.GREEN));
+        sender.addChatMessage(Util.getChatComponent("Started Backup", EnumChatFormatting.GREEN));
     }
 }

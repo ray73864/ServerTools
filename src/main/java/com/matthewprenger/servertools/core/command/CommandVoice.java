@@ -2,10 +2,10 @@ package com.matthewprenger.servertools.core.command;
 
 import com.matthewprenger.servertools.core.ServerTools;
 import com.matthewprenger.servertools.core.lib.Strings;
+import com.matthewprenger.servertools.core.util.Util;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 
 import java.util.List;
@@ -79,7 +79,7 @@ public class CommandVoice extends ServerToolsCommand {
                     if (ServerTools.instance.voiceHandler.removeVoice(args[1])) {
                         notifyAdmins(sender, String.format(Strings.COMMAND_VOICE_REMOVE, args[1]));
                     } else {
-                        sender.sendChatToPlayer(ChatMessageComponent.createFromText(Strings.COMMAND_VOICE_REMOVE_NOUSER).setColor(EnumChatFormatting.RED));
+                        sender.addChatMessage(Util.getChatComponent(Strings.COMMAND_VOICE_REMOVE_NOUSER, EnumChatFormatting.RED));
                     }
                 } else
                     throw new WrongUsageException(getCommandUsage(sender));

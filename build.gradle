@@ -5,15 +5,19 @@ buildscript {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.0-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.1-SNAPSHOT'
     }
 }
 
 String actualVersion = "2.0.0"
-String mcversion = "1.6.4"
-String forgeversion = "9.11.1.964"
+String mcversion = "1.7.2"
+String forgeversion = "10.12.0.1025"
 
 boolean beta = true
 
@@ -30,33 +34,33 @@ group = "com.matthewprenger.servertools.core"
 archivesBaseName = "ServerTools-CORE"
 
 minecraft {
-	version = mcversion + "-" + forgeversion
-	assetDir = "run/assets"
+    version = mcversion + "-" + forgeversion
+    assetDir = "run/assets"
 }
 
 subprojects {
-	apply plugin: 'java'
+    apply plugin: 'java'
 
-	group = "com.matthewprenger.servertools." + name.toLowerCase()
-	archivesBaseName = "ServerTools-" + name.toUpperCase()
-	version = rootProject.version
+    group = "com.matthewprenger.servertools." + name.toLowerCase()
+    archivesBaseName = "ServerTools-" + name.toUpperCase()
+    version = rootProject.version
 
-	dependencies {
-		compile rootProject
-	}
+    dependencies {
+        compile rootProject
+    }
 
-	rootProject.reobf {
-		reobf(jar) { spec ->
-			spec.classpath = sourceSets.main.compileClasspath
-		}
-	}
-	
-	jar {
-		destinationDir = new File(rootProject.getBuildDir(), 'libs')
-	}
+    rootProject.reobf {
+        reobf(jar) { spec ->
+            spec.classpath = sourceSets.main.compileClasspath
+        }
+    }
+
+    jar {
+        destinationDir = new File(rootProject.getBuildDir(), 'libs')
+    }
 }
 
-allprojects{
+allprojects {
     sourceCompatibility = '1.7'
     targetCompatibility = '1.7'
 

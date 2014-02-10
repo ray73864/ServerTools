@@ -3,22 +3,28 @@ package com.matthewprenger.servertools.core.chat;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.matthewprenger.servertools.core.ServerTools;
 import com.matthewprenger.servertools.core.CoreConfig;
+import com.matthewprenger.servertools.core.ServerTools;
 import com.matthewprenger.servertools.core.lib.Strings;
+import com.matthewprenger.servertools.core.util.FileUtils;
+import com.matthewprenger.servertools.core.util.Util;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
-import net.minecraft.command.CommandServerEmote;
-import net.minecraft.command.CommandServerMessage;
-import net.minecraft.command.CommandServerSay;
+import net.minecraft.command.server.CommandBroadcast;
+import net.minecraft.command.server.CommandEmote;
+import net.minecraft.command.server.CommandMessage;
+import net.minecraft.command.server.CommandMessageRaw;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.CommandEvent;
-import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.ServerChatEvent;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -121,10 +127,10 @@ public class VoiceHandler {
         String gsonRepresentation = gson.toJson(voicedUsers);
 
         try {
-            writeStringToFile(gsonRepresentation, voiceFile);
+            FileUtils.writeStringToFile(gsonRepresentation, voiceFile);
         } catch (IOException e) {
             e.printStackTrace(System.err);
-            ServerTools.log.warning(Strings.VOICE_SAVE_ERROR);
+            ServerTools.log.warn(Strings.VOICE_SAVE_ERROR);
         }
     }
 
@@ -139,7 +145,7 @@ public class VoiceHandler {
             voicedUsers = gson.fromJson(reader, HashSet.class);
         } catch (Exception e) {
             e.printStackTrace(System.err);
-            ServerTools.log.warning(Strings.VOICE_LOAD_ERROR);
+            ServerTools.log.warn(Strings.VOICE_LOAD_ERROR);
         }
     }
 
@@ -148,10 +154,10 @@ public class VoiceHandler {
         String gsonRepresentation = gson.toJson(silencedUsers);
 
         try {
-            writeStringToFile(gsonRepresentation, silenceFile);
+            FileUtils.writeStringToFile(gsonRepresentation, silenceFile);
         } catch (IOException e) {
             e.printStackTrace(System.err);
-            ServerTools.log.warning(Strings.SILENCE_SAVE_ERROR);
+            ServerTools.log.warn(Strings.SILENCE_SAVE_ERROR);
         }
     }
 
@@ -166,47 +172,39 @@ public class VoiceHandler {
             silencedUsers = gson.fromJson(reader, HashSet.class);
         } catch (Exception e) {
             e.printStackTrace(System.err);
-            ServerTools.log.warning(Strings.SILENCE_LOAD_ERROR);
+            ServerTools.log.warn(Strings.SILENCE_LOAD_ERROR);
         }
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     public void serverChat(ServerChatEvent event) {
 
         if (isUserVoiced(event.username)) {
-            ChatMessageComponent component = event.component;
-            event.component = ChatMessageComponent.createFromText(EnumChatFormatting.AQUA + "[" + CoreConfig.VOICE_CHAT_PREFIX + "]" + EnumChatFormatting.RESET);
-            event.component.appendComponent(component);
+            ChatComponentTranslation component = event.component;
+            event.component = new ChatComponentTranslation(EnumChatFormatting.AQUA + "[" + CoreConfig.VOICE_CHAT_PREFIX + "]" + EnumChatFormatting.RESET);
+            event.component.appendSibling(component);
         }
         if (MinecraftServer.getServer().getConfigurationManager().isPlayerOpped(event.username) && !Minecraft.getMinecraft().isSingleplayer()) {
-            ChatMessageComponent component = event.component;
-            event.component = ChatMessageComponent.createFromText(EnumChatFormatting.RED + "[" + CoreConfig.OP_CHAT_PREFIX + "]" + EnumChatFormatting.RESET);
-            event.component.appendComponent(component);
+            ChatComponentTranslation component = event.component;
+            event.component = new ChatComponentTranslation(EnumChatFormatting.RED + "[" + CoreConfig.OP_CHAT_PREFIX + "]" + EnumChatFormatting.RESET);
+            event.component.appendSibling(component);
         }
         if (isUserSilenced(event.username)) {
             event.setCanceled(true);
-            event.player.sendChatToPlayer(ChatMessageComponent.createFromText(Strings.ERROR_SILENCED).setColor(EnumChatFormatting.RED));
+            event.player.addChatComponentMessage(Util.getChatComponent(Strings.ERROR_SILENCED, EnumChatFormatting.RED));
         }
 
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     public void command(CommandEvent event) {
 
         if (isUserSilenced(event.sender.getCommandSenderName())) {
-            if (event.command instanceof CommandServerSay || event.command instanceof CommandServerMessage || event.command instanceof CommandServerEmote) {
+            if (event.command instanceof CommandBroadcast || event.command instanceof CommandMessage || event.command instanceof CommandEmote || event.command instanceof CommandMessageRaw) {
 
                 event.setCanceled(true);
-                event.sender.sendChatToPlayer(ChatMessageComponent.createFromText(Strings.ERROR_SILENCED).setColor(EnumChatFormatting.RED));
+                event.sender.addChatMessage(Util.getChatComponent(Strings.ERROR_SILENCED, EnumChatFormatting.RED));
             }
         }
-    }
-
-    private static void writeStringToFile(String string, File file) throws IOException {
-
-        FileWriter writer = new FileWriter(file);
-        writer.write(string);
-        writer.flush();
-        writer.close();
     }
 }

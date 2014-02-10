@@ -1,8 +1,8 @@
 package com.matthewprenger.servertools.core;
 
 import com.matthewprenger.servertools.core.chat.Motd;
-import com.matthewprenger.servertools.core.command.CommandManager;
 import com.matthewprenger.servertools.core.chat.VoiceHandler;
+import com.matthewprenger.servertools.core.command.CommandManager;
 import com.matthewprenger.servertools.core.lib.Reference;
 import com.matthewprenger.servertools.core.task.TickHandler;
 import com.matthewprenger.servertools.core.util.FlatBedrockGenerator;
@@ -40,10 +40,7 @@ public class ServerTools {
 
     public static final STLog log = new STLog(Reference.MOD_ID);
 
-    static {
-        if (serverToolsDir.mkdirs())
-            log.fine(String.format("Creating ServerTools root dir at: %s", ServerTools.serverToolsDir.getAbsolutePath()));
-    }
+    static {serverToolsDir.mkdirs();}
 
     @Mod.Instance(Reference.MOD_ID)
     public static ServerTools instance;
@@ -57,10 +54,14 @@ public class ServerTools {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
 
+        /* Get the Mod Version from the Jar */
         VERSION = Util.getVersionFromJar(getClass());
-
         event.getModMetadata().version = VERSION;
 
+        log.info(String.format("Initializing ServerTools %s", VERSION));
+        log.debug(String.format("Root ServerTools Directory: %s", serverToolsDir.getAbsolutePath()));
+
+        /* Initialize the Core Configuration */
         CoreConfig.init(new File(serverToolsDir, "core.cfg"));
 
         tickHandler = new TickHandler();
@@ -71,14 +72,9 @@ public class ServerTools {
 
         /* Register the Flat Bedrock Generator */
         if (CoreConfig.GENERATE_FLAT_BEDROCK) {
-            GameRegistry.registerWorldGenerator(new FlatBedrockGenerator());
+            log.debug("Registering Flat Bedrock Generator");
+            GameRegistry.registerWorldGenerator(new FlatBedrockGenerator(), 1);
         }
-    }
-
-    @Mod.EventHandler
-    public void serverAboutToStart(FMLServerAboutToStartEvent event) {
-
-        CommandManager.initCoreCommands();
     }
 
     @Mod.EventHandler
@@ -90,7 +86,14 @@ public class ServerTools {
         /* Initialize the Voice Handler */
         if (voiceHandler == null) voiceHandler = new VoiceHandler();
 
-        /* Register Commands with the Server */
+        /* Initialize the Core Commands to be Registered */
+        CommandManager.initCoreCommands();
+    }
+
+    @Mod.EventHandler
+    public void serverStarted(FMLServerStartedEvent event) {
+
+        /* Register All Commands In Queue */
         CommandHandler ch = (CommandHandler) MinecraftServer.getServer().getCommandManager();
         CommandManager.registerCommands(ch);
     }

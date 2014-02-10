@@ -1,6 +1,6 @@
 package com.matthewprenger.servertools.core;
 
-import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
 
@@ -49,7 +49,7 @@ public class CoreConfig {
 
         } catch (Exception e) {
             e.printStackTrace(System.err);
-            ServerTools.log.severe("Failed to load core configuration");
+            ServerTools.log.fatal("Failed to load core configuration");
         } finally {
             if (configuration.hasChanged()) {
                 configuration.save();

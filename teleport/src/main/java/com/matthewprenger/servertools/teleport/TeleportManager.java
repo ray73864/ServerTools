@@ -5,12 +5,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 import com.matthewprenger.servertools.core.util.FileUtils;
+import org.apache.logging.log4j.Level;
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 
 /*
  * Copyright 2014 matthewprenger
@@ -72,17 +72,17 @@ public class TeleportManager {
     private static void saveTeleportFile() {
 
         try {
-        FileUtils.writeStringToFile(gson.toJson(teleportMap), teleportSaveFile);
+            FileUtils.writeStringToFile(gson.toJson(teleportMap), teleportSaveFile);
         } catch (IOException e) {
             e.printStackTrace();
-            ServerToolsTeleport.log.log(Level.WARNING, "Failed to save teleport file");
+            ServerToolsTeleport.log.log(Level.WARN, "Failed to save teleport file");
         }
     }
 
     private static void loadTeleportFile() {
 
         if (!teleportSaveFile.exists()) {
-            ServerToolsTeleport.log.log(Level.FINE, "Teleport save file doesn't exist, skipping it");
+            ServerToolsTeleport.log.log(Level.TRACE, "Teleport save file doesn't exist, skipping it");
             return;
         }
 
@@ -93,7 +93,8 @@ public class TeleportManager {
             FileReader fileReader = new FileReader(teleportSaveFile);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-            Type type = new TypeToken<Map<String, Location>>(){}.getType();
+            Type type = new TypeToken<Map<String, Location>>() {
+            }.getType();
 
             Map<String, Location> map = gson.fromJson(bufferedReader, type);
 
@@ -104,13 +105,13 @@ public class TeleportManager {
 
         } catch (JsonParseException e) {
             e.printStackTrace();
-            ServerToolsTeleport.log.log(Level.WARNING, String.format("The teleport file %s could not be parsed as valid JSON, it will not be loaded", teleportSaveFile.getAbsolutePath()));
+            ServerToolsTeleport.log.log(Level.WARN, String.format("The teleport file %s could not be parsed as valid JSON, it will not be loaded", teleportSaveFile.getAbsolutePath()));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            ServerToolsTeleport.log.log(Level.WARNING, String.format("Tried to load non-existant file: %s", teleportSaveFile.getAbsolutePath()));
+            ServerToolsTeleport.log.log(Level.WARN, String.format("Tried to load non-existant file: %s", teleportSaveFile.getAbsolutePath()));
         } catch (IOException e) {
             e.printStackTrace();
-            ServerToolsTeleport.log.log(Level.WARNING, String.format("Failed to close buffered reader stream for: %s", teleportSaveFile.getAbsolutePath()));
+            ServerToolsTeleport.log.log(Level.WARN, String.format("Failed to close buffered reader stream for: %s", teleportSaveFile.getAbsolutePath()));
         }
     }
 

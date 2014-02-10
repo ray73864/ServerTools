@@ -1,13 +1,15 @@
 package com.matthewprenger.servertools.core.chat;
 
-import com.matthewprenger.servertools.core.ServerTools;
 import com.matthewprenger.servertools.core.CoreConfig;
+import com.matthewprenger.servertools.core.ServerTools;
 import com.matthewprenger.servertools.core.lib.Reference;
 import com.matthewprenger.servertools.core.lib.Strings;
-import cpw.mods.fml.common.IPlayerTracker;
-import cpw.mods.fml.common.registry.GameRegistry;
+import com.matthewprenger.servertools.core.util.Util;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -29,7 +31,7 @@ import java.util.List;
  * limitations under the License.
  */
 
-public class Motd implements IPlayerTracker {
+public class Motd {
 
     private static final String FILE_ENCODING = "UTF-8";
 
@@ -40,7 +42,7 @@ public class Motd implements IPlayerTracker {
 
         this.motdFile = motdFile;
         loadMotd();
-        GameRegistry.registerPlayerTracker(this);
+        FMLCommonHandler.instance().bus().register(this);
     }
 
     public void loadMotd() {
@@ -67,7 +69,7 @@ public class Motd implements IPlayerTracker {
 
         } catch (Exception e) {
             e.printStackTrace(System.err);
-            ServerTools.log.warning("Unable to read the MOTD from file");
+            ServerTools.log.warn("Unable to read the MOTD from file");
         }
     }
 
@@ -75,31 +77,15 @@ public class Motd implements IPlayerTracker {
 
         for (String line : motd) {
             line = line.replace("$PLAYER$", player.getDisplayName());
-            ChatMessageComponent component = ChatMessageComponent.createFromText(line);
-            player.sendChatToPlayer(component);
+            player.addChatComponentMessage(Util.getChatComponent(line, EnumChatFormatting.WHITE));
         }
     }
 
-    @Override
-    public void onPlayerLogin(EntityPlayer player) {
+    @SubscribeEvent
+    public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
 
         if (CoreConfig.SEND_MOTD_ON_LOGIN) {
-            serveMotd(player);
+            serveMotd(event.player);
         }
-    }
-
-    @Override
-    public void onPlayerLogout(EntityPlayer player) {
-
-    }
-
-    @Override
-    public void onPlayerChangedDimension(EntityPlayer player) {
-
-    }
-
-    @Override
-    public void onPlayerRespawn(EntityPlayer player) {
-
     }
 }
