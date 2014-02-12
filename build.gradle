@@ -25,6 +25,8 @@ apply plugin: 'forge'
 group = "com.matthewprenger.servertools.core"
 archivesBaseName = "ServerTools-CORE"
 
+reobf.setUseRetroGuard(true)
+
 minecraft {
     version = mcversion + "-" + forgeversion
     assetDir = "run/assets"
