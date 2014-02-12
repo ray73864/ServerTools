@@ -17,7 +17,6 @@ package com.matthewprenger.servertools.core.util;
  */
 
 import com.google.common.base.Strings;
-import com.matthewprenger.servertools.core.ServerTools;
 import net.minecraft.util.ChatComponentStyle;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
@@ -32,20 +31,20 @@ public class Util {
      * @param moduleVersion the version of the module
      */
     public static void checkModuleVersion(String moduleName, String moduleVersion) {
-
-        if (!(ServerTools.VERSION.equals(moduleVersion))) {
-
-            String versionMismatch = "ServerTools is %s, %s is %s";
-
-            ServerTools.log.fatal("####################################");
-            ServerTools.log.fatal("#         Version Mismatch         #");
-            ServerTools.log.fatal(String.format(versionMismatch, ServerTools.VERSION, moduleName, moduleVersion));
-            ServerTools.log.fatal("Please download matching versions of ServerTools Modules!");
-            ServerTools.log.fatal("#     The Game Will Not Load       #");
-            ServerTools.log.fatal("####################################");
-
-            Runtime.getRuntime().exit(1);
-        }
+//
+//        if (!(ServerTools.VERSION.equals(moduleVersion))) {
+//
+//            String versionMismatch = "ServerTools is %s, %s is %s";
+//
+//            ServerTools.log.fatal("####################################");
+//            ServerTools.log.fatal("#         Version Mismatch         #");
+////            ServerTools.log.fatal(String.format(versionMismatch, FMLMod, moduleName, moduleVersion));
+//            ServerTools.log.fatal("Please download matching versions of ServerTools Modules!");
+//            ServerTools.log.fatal("#     The Game Will Not Load       #");
+//            ServerTools.log.fatal("####################################");
+//
+//            Runtime.getRuntime().exit(1);
+//        }
     }
 
     /**
@@ -56,8 +55,8 @@ public class Util {
      */
     public static String getVersionFromJar(Class<?> clazz) {
 
-        String version = clazz.getPackage().getSpecificationVersion();
-        return Strings.isNullOrEmpty(version) ? "0.0.0.0" : version;
+        String version = clazz.getPackage().getImplementationVersion();
+        return Strings.isNullOrEmpty(version) ? "UNKNOWN" : version;
     }
 
     /**

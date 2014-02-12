@@ -22,7 +22,7 @@ import java.util.Map;
  */
 
 @IFMLLoadingPlugin.TransformerExclusions({"com.matthewprenger.servertools.permission.preloader"})
-@IFMLLoadingPlugin.MCVersion("1.6.4")
+@IFMLLoadingPlugin.MCVersion("1.7.2")
 public class STPermissionPlugin implements IFMLLoadingPlugin, IFMLCallHook {
 
     @Override
@@ -38,7 +38,8 @@ public class STPermissionPlugin implements IFMLLoadingPlugin, IFMLCallHook {
 
     @Override
     public String getModContainerClass() {
-        return null;
+
+        return "com.matthewprenger.servertools.permission.preloader.STCoreModContainer";
     }
 
     @Override

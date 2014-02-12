@@ -3,7 +3,6 @@ package com.matthewprenger.servertools.permission;
 import com.matthewprenger.servertools.core.STLog;
 import com.matthewprenger.servertools.core.ServerTools;
 import com.matthewprenger.servertools.core.command.CommandManager;
-import com.matthewprenger.servertools.core.util.Util;
 import com.matthewprenger.servertools.permission.command.*;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -43,13 +42,6 @@ public class ServerToolsPermission {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-
-        String VERSION = Util.getVersionFromJar(getClass());
-
-        event.getModMetadata().version = VERSION;
-        event.getModMetadata().parent = "ServerTools";
-
-        Util.checkModuleVersion("Permission", VERSION);
 
         permissionDir = new File(ServerTools.serverToolsDir, "permission");
         if (permissionDir.mkdirs())

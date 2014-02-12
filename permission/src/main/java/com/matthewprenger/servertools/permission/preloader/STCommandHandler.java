@@ -3,6 +3,7 @@ package com.matthewprenger.servertools.permission.preloader;
 import com.matthewprenger.servertools.permission.GroupManager;
 import com.matthewprenger.servertools.permission.ServerToolsPermission;
 import net.minecraft.command.*;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.MinecraftForge;
@@ -71,9 +72,9 @@ public class STCommandHandler extends CommandHandler {
                 ++j;
 
             } else {
-                ChatComponentTranslation chatcomponenttranslation2 = new ChatComponentTranslation("commands.generic.permission");
-                chatcomponenttranslation2.getChatStyle().setColor(EnumChatFormatting.RED);
-                sender.addChatMessage(chatcomponenttranslation2);
+                ChatComponentText chatcomponenttext = new ChatComponentText("[ServerTools] You don't have permission to use that command");
+                chatcomponenttext.getChatStyle().setColor(EnumChatFormatting.RED);
+                sender.addChatMessage(chatcomponenttext);
             }
         } catch (WrongUsageException wrongusageexception) {
             chatcomponenttranslation = new ChatComponentTranslation("commands.generic.usage", new ChatComponentTranslation(wrongusageexception.getMessage(), wrongusageexception.getErrorOjbects()));

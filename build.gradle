@@ -15,19 +15,11 @@ buildscript {
     }
 }
 
-String actualVersion = "2.0.0"
+String actualVersion = "2.0.0-alpha"
 String mcversion = "1.7.2"
 String forgeversion = "10.12.0.1027"
 
-boolean beta = true
-
-version = mcversion + "-" + actualVersion + "." + System.getenv("BUILD_NUMBER");
-actualVersion += "." + System.getenv("BUILD_NUMBER");
-
-if (beta) {
-    version += "-beta"
-    actualVersion += "-beta"
-}
+version = mcversion + "-" + actualVersion;
 
 apply plugin: 'forge'
 group = "com.matthewprenger.servertools.core"
@@ -64,9 +56,23 @@ allprojects {
     sourceCompatibility = '1.7'
     targetCompatibility = '1.7'
 
-    jar {
-        manifest {
-            attributes 'Specification-Version': actualVersion
+    processResources {
+        // replace stuff in the files we want.
+        from(sourceSets.main.resources.srcDirs) {
+            include '**/*.info'
+            include '**/*.properties'
+
+            // replaces
+            expand ([
+                'version': actualVersion,
+                'mcversion': mcversion
+            ])
+        }
+
+        // copy everything else, thats we didnt do before
+        from(sourceSets.main.resources.srcDirs) {
+            exclude 'mcmod.info'
+            exclude 'version.properties'
         }
     }
 }

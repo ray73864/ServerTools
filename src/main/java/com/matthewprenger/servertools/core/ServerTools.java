@@ -6,7 +6,6 @@ import com.matthewprenger.servertools.core.command.CommandManager;
 import com.matthewprenger.servertools.core.lib.Reference;
 import com.matthewprenger.servertools.core.task.TickHandler;
 import com.matthewprenger.servertools.core.util.FlatBedrockGenerator;
-import com.matthewprenger.servertools.core.util.Util;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -34,8 +33,6 @@ import java.io.File;
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, dependencies = Reference.DEPENDENCIES)
 public class ServerTools {
 
-    public static String VERSION;
-
     public static final File serverToolsDir = new File("servertools");
 
     public static final STLog log = new STLog(Reference.MOD_ID);
@@ -54,11 +51,7 @@ public class ServerTools {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
 
-        /* Get the Mod Version from the Jar */
-        VERSION = Util.getVersionFromJar(getClass());
-        event.getModMetadata().version = VERSION;
-
-        log.info(String.format("Initializing ServerTools %s", VERSION));
+        log.info(String.format("Initializing ServerTools %s", event.getModMetadata().version));
         log.debug(String.format("Root ServerTools Directory: %s", serverToolsDir.getAbsolutePath()));
 
         /* Initialize the Core Configuration */
