@@ -12,24 +12,39 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.1-SNAPSHOT'
+        classpath 'org.ajoberstar:gradle-git:0.7.0-SNAPSHOT'
     }
 }
 
-String actualVersion = "2.0.0-alpha"
 String mcversion = "1.7.2"
 String forgeversion = "10.12.0.1027"
+version = '2.0.0'
 
-version = mcversion + "-" + actualVersion;
-
-apply plugin: 'forge'
 group = "com.matthewprenger.servertools.core"
 archivesBaseName = "ServerTools-CORE"
+
+apply plugin: 'forge'
+apply plugin: 'grgit'
 
 reobf.setUseRetroGuard(true)
 
 minecraft {
     version = mcversion + "-" + forgeversion
     assetDir = "run/assets"
+}
+
+def actualVersion = version
+
+if (System.getenv("BUILD_NUMBER") != null) {
+    version = "${minecraft.version}-$version." + System.getenv("BUILD_NUMBER")
+    actualVersion += "." + System.getenv("BUILD_NUMBER")
+} else if (new File(projectDir, '.git').exists()) {
+    def repo = grgit.repo('.')
+    version = "${minecraft.version}-$version-${repo.history.log().find().abbreviatedId}"
+    actualVersion += "-${repo.history.log().find().abbreviatedId}"
+} else {
+    version = "${minecraft.version}-$version-DEV"
+    actualVersion += "-DEV"
 }
 
 subprojects {
