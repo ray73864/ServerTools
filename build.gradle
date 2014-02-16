@@ -20,13 +20,13 @@ String mcversion = "1.7.2"
 String forgeversion = "10.12.0.1027"
 version = '2.0.0'
 
-group = "com.matthewprenger.servertools.core"
-archivesBaseName = "ServerTools-CORE"
-
 apply plugin: 'forge'
 apply plugin: 'grgit'
 
 reobf.setUseRetroGuard(true)
+
+group = "com.matthewprenger.servertools.core"
+archivesBaseName = "ServerTools-CORE"
 
 minecraft {
     version = mcversion + "-" + forgeversion
