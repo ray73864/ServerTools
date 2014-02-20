@@ -1,6 +1,7 @@
-package com.matthewprenger.servertools.core.command;
+package com.matthewprenger.servertools.core.command.corecommands;
 
 import com.matthewprenger.servertools.core.ServerTools;
+import com.matthewprenger.servertools.core.command.ServerToolsCommand;
 import com.matthewprenger.servertools.core.lib.Strings;
 import com.matthewprenger.servertools.core.util.Util;
 import net.minecraft.command.ICommandSender;
@@ -26,21 +27,15 @@ import java.util.List;
  * limitations under the License.
  */
 
-public class CommandSilence extends ServerToolsCommand {
+public class CommandVoice extends ServerToolsCommand {
 
-    public CommandSilence(String defaultName) {
+    public CommandVoice(String defaultName) {
         super(defaultName);
     }
 
     @Override
     public int getRequiredPermissionLevel() {
-        return 2;
-    }
-
-    @Override
-    public boolean isUsernameIndex(String[] par1ArrayOfStr, int par2) {
-
-        return par2 == 1;
+        return 3;
     }
 
     @Override
@@ -63,37 +58,40 @@ public class CommandSilence extends ServerToolsCommand {
     }
 
     @Override
+    public boolean isUsernameIndex(String[] par1ArrayOfStr, int index) {
+
+        return index == 1;
+    }
+
+    @Override
     public void processCommand(ICommandSender sender, String[] args) {
 
-        if (args.length < 1)
+        if (args.length >= 1) {
+
+            if ("add".equalsIgnoreCase(args[0])) {
+                if (args.length == 2) {
+                    ServerTools.instance.voiceHandler.giveVoice(args[1]);
+                    notifyAdmins(sender, String.format(Strings.COMMAND_VOICE_ADD, args[1]));
+                } else
+                    throw new WrongUsageException(getCommandUsage(sender));
+
+            } else if ("remove".equalsIgnoreCase(args[0])) {
+                if (args.length == 2) {
+                    if (ServerTools.instance.voiceHandler.removeVoice(args[1])) {
+                        notifyAdmins(sender, String.format(Strings.COMMAND_VOICE_REMOVE, args[1]));
+                    } else {
+                        sender.addChatMessage(Util.getChatComponent(Strings.COMMAND_VOICE_REMOVE_NOUSER, EnumChatFormatting.RED));
+                    }
+                } else
+                    throw new WrongUsageException(getCommandUsage(sender));
+
+            } else if ("reload".equalsIgnoreCase(args[0])) {
+
+                ServerTools.instance.voiceHandler.loadVoiceList();
+                notifyAdmins(sender, Strings.COMMAND_VOICE_RELOAD);
+            } else
+                throw new WrongUsageException(getCommandUsage(sender));
+        } else
             throw new WrongUsageException(getCommandUsage(sender));
-
-        if ("add".equalsIgnoreCase(args[0])) {
-
-            if (args.length == 2) {
-
-                ServerTools.instance.voiceHandler.silence(args[1].toLowerCase());
-                notifyAdmins(sender, String.format(Strings.COMMAND_SILENCE_ADD, args[1]));
-            } else
-                throw new WrongUsageException(getCommandUsage(sender));
-
-        } else if ("remove".equalsIgnoreCase(args[0])) {
-
-            if (args.length == 2) {
-
-                boolean result = ServerTools.instance.voiceHandler.removeSilence(args[1].toLowerCase());
-
-                if (result)
-                    notifyAdmins(sender, String.format(Strings.COMMAND_SILENCE_REMOVE, args[1]));
-                else
-                    sender.addChatMessage(Util.getChatComponent(Strings.COMMAND_SILENCE_REMOVE_NOUSER, EnumChatFormatting.RED));
-            } else
-                throw new WrongUsageException(getCommandUsage(sender));
-
-        } else if ("reload".equalsIgnoreCase(args[0])) {
-
-            ServerTools.instance.voiceHandler.loadSilenceList();
-            notifyAdmins(sender, Strings.COMMAND_SILENCE_RELOAD);
-        }
     }
 }

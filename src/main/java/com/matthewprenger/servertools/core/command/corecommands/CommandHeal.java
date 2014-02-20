@@ -1,5 +1,6 @@
-package com.matthewprenger.servertools.core.command;
+package com.matthewprenger.servertools.core.command.corecommands;
 
+import com.matthewprenger.servertools.core.command.ServerToolsCommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 
@@ -21,9 +22,9 @@ import java.util.List;
  * limitations under the License.
  */
 
-public class CommandDisarm extends ServerToolsCommand {
+public class CommandHeal extends ServerToolsCommand {
 
-    public CommandDisarm(String defaultName) {
+    public CommandHeal(String defaultName) {
         super(defaultName);
     }
 
@@ -33,13 +34,7 @@ public class CommandDisarm extends ServerToolsCommand {
     }
 
     @Override
-    public String getCommandUsage(ICommandSender icommandsender) {
-
-        return "/" + name + " {username}";
-    }
-
-    @Override
-    public List addTabCompletionOptions(ICommandSender sender, String[] par2ArrayOfStr) {
+    public List addTabCompletionOptions(ICommandSender par1ICommandSender, String[] par2ArrayOfStr) {
 
         return par2ArrayOfStr.length >= 1 ? getListOfStringsMatchingLastWord(par2ArrayOfStr, MinecraftServer.getServer().getAllUsernames()) : null;
     }
@@ -51,12 +46,18 @@ public class CommandDisarm extends ServerToolsCommand {
     }
 
     @Override
+    public String getCommandUsage(ICommandSender icommandsender) {
+
+        return "/" + name + " {username}";
+    }
+
+    @Override
     public void processCommand(ICommandSender sender, String[] astring) {
 
         if (astring.length < 1) {
-            getCommandSenderAsPlayer(sender).inventory.dropAllItems();
+            getCommandSenderAsPlayer(sender).heal(Integer.MAX_VALUE);
         } else {
-            getPlayer(sender, astring[0]).inventory.dropAllItems();
+            getPlayer(sender, astring[0]).heal(Integer.MAX_VALUE);
         }
     }
 }

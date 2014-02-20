@@ -184,7 +184,7 @@ public class VoiceHandler {
             event.component = new ChatComponentTranslation(EnumChatFormatting.AQUA + "[" + CoreConfig.VOICE_CHAT_PREFIX + "]" + EnumChatFormatting.RESET);
             event.component.appendSibling(component);
         }
-        if (MinecraftServer.getServer().getConfigurationManager().isPlayerOpped(event.username) && !Minecraft.getMinecraft().isSingleplayer()) {
+        if (CoreConfig.COLOR_OP_CHAT_MESSAGE && MinecraftServer.getServer().getConfigurationManager().isPlayerOpped(event.username) && !Minecraft.getMinecraft().isSingleplayer()) {
             ChatComponentTranslation component = event.component;
             event.component = new ChatComponentTranslation(EnumChatFormatting.RED + "[" + CoreConfig.OP_CHAT_PREFIX + "]" + EnumChatFormatting.RESET);
             event.component.appendSibling(component);

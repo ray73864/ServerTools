@@ -1,8 +1,9 @@
-package com.matthewprenger.servertools.core.command;
+package com.matthewprenger.servertools.core.command.corecommands;
 
 import com.google.common.collect.Lists;
 import com.matthewprenger.servertools.core.CoreConfig;
 import com.matthewprenger.servertools.core.ServerTools;
+import com.matthewprenger.servertools.core.command.ServerToolsCommand;
 import com.matthewprenger.servertools.core.lib.Strings;
 import com.matthewprenger.servertools.core.task.RemoveAllTickTask;
 import cpw.mods.fml.common.registry.GameData;
@@ -93,7 +94,7 @@ public class CommandRemoveAll extends ServerToolsCommand {
         ServerTools.instance.tickHandler.registerTask(new RemoveAllTickTask(player, range, blocksToClear));
     }
 
-    static List<String> getBlockNames() {
+    private static List<String> getBlockNames() {
 
         List<String> list = Lists.newArrayList();
 

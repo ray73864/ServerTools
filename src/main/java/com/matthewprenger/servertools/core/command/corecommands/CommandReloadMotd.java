@@ -1,10 +1,9 @@
-package com.matthewprenger.servertools.core.command;
+package com.matthewprenger.servertools.core.command.corecommands;
 
 import com.matthewprenger.servertools.core.ServerTools;
+import com.matthewprenger.servertools.core.command.ServerToolsCommand;
 import com.matthewprenger.servertools.core.lib.Strings;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
-import net.minecraft.entity.player.EntityPlayer;
 
 /*
  * Copyright 2014 matthewprenger
@@ -22,29 +21,27 @@ import net.minecraft.entity.player.EntityPlayer;
  * limitations under the License.
  */
 
-public class CommandMotd extends ServerToolsCommand {
+public class CommandReloadMotd extends ServerToolsCommand {
 
-    public CommandMotd(String defaultName) {
+    public CommandReloadMotd(String defaultName) {
         super(defaultName);
     }
 
     @Override
     public int getRequiredPermissionLevel() {
-        return 0;
+        return 3;
     }
 
     @Override
-    public void processCommand(ICommandSender sender, String[] args) {
+    public String getCommandUsage(ICommandSender icommandsender) {
 
-        if (sender instanceof EntityPlayer) {
-
-            ServerTools.instance.motd.serveMotd((EntityPlayer) sender);
-        } else
-            throw new WrongUsageException(Strings.COMMAND_ERROR_ONLYPLAYER);
-    }
-
-    @Override
-    public String getCommandUsage(ICommandSender var1) {
         return "/" + name;
+    }
+
+    @Override
+    public void processCommand(ICommandSender icommandsender, String[] astring) {
+
+        ServerTools.instance.motd.loadMotd();
+        notifyAdmins(icommandsender, Strings.MOTD_RELOAD);
     }
 }
