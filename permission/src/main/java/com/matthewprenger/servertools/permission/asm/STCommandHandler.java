@@ -1,4 +1,4 @@
-package com.matthewprenger.servertools.permission.preloader;
+package com.matthewprenger.servertools.permission.asm;
 
 import com.matthewprenger.servertools.permission.GroupManager;
 import com.matthewprenger.servertools.permission.ServerToolsPermission;
@@ -32,6 +32,15 @@ public class STCommandHandler extends CommandHandler {
 
     @Override
     public int executeCommand(ICommandSender sender, String input) {
+
+        System.out.println("###########################");
+        System.out.println("###########################");
+        System.out.println("#                         #");
+        System.out.println("#      execute            #");
+        System.out.println("#                         #");
+        System.out.println("#                         #");
+        System.out.println("###########################");
+        System.out.println("###########################");
 
         input = input.trim();
 

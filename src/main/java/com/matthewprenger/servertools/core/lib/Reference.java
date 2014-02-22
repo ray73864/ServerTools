@@ -21,7 +21,8 @@ public class Reference {
 
     public static final String MOD_ID = "ServerTools";
     public static final String MOD_NAME = MOD_ID;
-    public static final String DEPENDENCIES = "required-after:Forge@[9.11.1.964,)";
+    public static final String DEPENDENCIES = "required-after:Forge@[10.12.0.1024,)";
+    public static final String MC_VERSION = "1.7.2";
 
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");
 }
