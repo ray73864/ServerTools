@@ -1,5 +1,6 @@
 package com.matthewprenger.servertools.permission.asm;
 
+import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import org.objectweb.asm.ClassReader;
@@ -8,20 +9,14 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 public class STPClassTransformer implements IClassTransformer {
 
-    public static final Set<ClassPatch> classesToPatch = new HashSet<>();
+    private static final String commandHandler = "net.minecraft.command.CommandHandler";
+    private static final String stCommandHandler = "com.matthewprenger.servertools.permission.asm.STCommandHandler";
+    private static final String srgExecuteCommand = "func_71556_a";
 
-    static {
-        ClassPatch chPatch = new ClassPatch("net.minecraft.command.CommandHandler", "com.matthewprenger.servertools.permission.asm.STCommandHandler");
-        chPatch.addMethodToPatch(new MethodInfo("executeCommand", "a", "(Lnet/minecraft/command/ICommandSender;Ljava/lang/String;)I", "(Lac;Ljava/lang/String;)I"));
-        classesToPatch.add(chPatch);
-    }
+    private static final FMLDeobfuscatingRemapper remapper = FMLDeobfuscatingRemapper.INSTANCE;
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] bytes) {
@@ -29,72 +24,34 @@ public class STPClassTransformer implements IClassTransformer {
         if (bytes == null)
             return null;
 
-        byte[] newBytes = bytes;
+        if (commandHandler.equals(transformedName))
+            return patchCommandHandler(name, bytes);
 
-        for (ClassPatch patch : classesToPatch) {
-            if (patch.name.equals(transformedName))
-                newBytes = transform(patch, bytes);
-        }
-
-        return newBytes;
+        return bytes;
     }
 
-    private byte[] transform(ClassPatch classPatch, byte[] bytes) {
-
-        boolean patched = false;
-        byte[] newBytes = bytes;
+    private static byte[] patchCommandHandler(String obfName, byte[] bytes) {
 
         ClassNode classNode = new ClassNode();
-        ClassReader classReader = new ClassReader(newBytes);
+        ClassReader classReader = new ClassReader(bytes);
         classReader.accept(classNode, 0);
 
-        System.out.println("ServerTools is patching class: " + classPatch.name);
-        System.out.println("  Mapped Class Name: " + classNode.name);
+        MethodNode source = null;
+        MethodNode replacement = null;
 
-        HashMap<MethodNode, MethodNode> patchMap = new HashMap<>();
-
-        for (MethodNode methodNode : classNode.methods) {
-            for (MethodInfo methodInfo : classPatch.methodsToPatch) {
-                if ((methodNode.name.equals(methodInfo.name) && methodNode.desc.equals(methodInfo.desc)) ||
-                        methodNode.name.equals(methodInfo.obfName) && methodNode.desc.equals(methodInfo.obfDesc)) {
-                    MethodNode replacementMethod = getReplacementMethod(classPatch, methodInfo);
-                    patchMap.put(methodNode, replacementMethod);
-                    System.out.println("## Patched: " + methodNode.name + "@" + methodNode.desc + "  ##"); //TODO Logging Debug
-                    patched = true;
-                }
+        for (MethodNode node : classNode.methods) {
+            if (srgExecuteCommand.equals(remapper.mapMethodName(obfName, node.name, node.desc))) {
+                System.out.println("Found It"); //TODO
+                source = node;
             }
         }
 
         try {
-        if (patched) {
-            for (Map.Entry<MethodNode, MethodNode> entry : patchMap.entrySet()) {
-                classNode.methods.remove(entry.getKey());
-                classNode.methods.add(entry.getValue());
-            }
+            ClassNode replacementCH = loadClass(stCommandHandler);
 
-            ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-            classNode.accept(classWriter);
-            newBytes = classWriter.toByteArray();
-        }
-        } catch (Throwable t) {
-            t.printStackTrace(System.err);
-        }
-
-        return newBytes;
-    }
-
-    private MethodNode getReplacementMethod(ClassPatch ci, MethodInfo mi) {
-
-        try {
-            LaunchClassLoader loader = (LaunchClassLoader) this.getClass().getClassLoader();
-            ClassNode cn = new ClassNode();
-            ClassReader cr = new ClassReader(loader.getClassBytes(ci.replacement));
-            cr.accept(cn, 0);
-
-            for (MethodNode method : cn.methods) {
-                if ((method.name.equals(mi.name) && method.desc.equals(mi.desc))
-                        || (method.name.equals(mi.obfName) && method.desc.equals(mi.obfDesc))) {
-                    return method;
+            for (MethodNode methodNode : replacementCH.methods) {
+                if (srgExecuteCommand.equals(remapper.mapMethodName(stCommandHandler, methodNode.name, methodNode.desc))) {
+                    replacement = methodNode;
                 }
             }
 
@@ -102,6 +59,25 @@ public class STPClassTransformer implements IClassTransformer {
             e.printStackTrace();
         }
 
-        return null;
+        if (source != null && replacement != null) {
+            System.out.println("** Replacing **"); //TODO
+            classNode.methods.remove(source);
+            classNode.methods.add(replacement);
+
+            ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+            classNode.accept(classWriter);
+            return classWriter.toByteArray();
+        }
+
+        return bytes;
+    }
+
+    private static ClassNode loadClass(String className) throws IOException {
+
+        LaunchClassLoader loader = (LaunchClassLoader) STPClassTransformer.class.getClassLoader();
+        ClassNode classNode = new ClassNode();
+        ClassReader classReader = new ClassReader(loader.getClassBytes(className));
+        classReader.accept(classNode, 0);
+        return classNode;
     }
 }
