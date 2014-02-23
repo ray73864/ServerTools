@@ -1,19 +1,5 @@
-package com.matthewprenger.servertools.core.task;
-
-import com.matthewprenger.servertools.core.ServerTools;
-import com.matthewprenger.servertools.core.util.Util;
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.world.World;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-
 /*
- * Copyright 2014 matthewprenger
+ * Copyright 2014 Matthew Prenger
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +13,20 @@ import java.util.Iterator;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package com.matthewprenger.servertools.core.task;
+
+import com.matthewprenger.servertools.core.ServerTools;
+import com.matthewprenger.servertools.core.util.Util;
+import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.world.World;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 
 public class RemoveAllTickTask implements ITickTask {
 

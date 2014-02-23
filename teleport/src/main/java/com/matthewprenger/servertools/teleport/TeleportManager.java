@@ -1,19 +1,5 @@
-package com.matthewprenger.servertools.teleport;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParseException;
-import com.google.gson.reflect.TypeToken;
-import com.matthewprenger.servertools.core.util.FileUtils;
-import org.apache.logging.log4j.Level;
-
-import java.io.*;
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.Map;
-
 /*
- * Copyright 2014 matthewprenger
+ * Copyright 2014 Matthew Prenger
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +13,20 @@ import java.util.Map;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package com.matthewprenger.servertools.teleport;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
+import com.matthewprenger.servertools.core.util.FileUtils;
+import org.apache.logging.log4j.Level;
+
+import java.io.*;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TeleportManager {
 

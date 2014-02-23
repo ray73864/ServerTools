@@ -1,16 +1,5 @@
-package com.matthewprenger.servertools.core.util;
-
-import org.apache.commons.io.comparator.LastModifiedFileComparator;
-import org.apache.commons.io.filefilter.FileFileFilter;
-
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Arrays;
-
 /*
- * Copyright 2014 matthewprenger
+ * Copyright 2014 Matthew Prenger
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +13,17 @@ import java.util.Arrays;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package com.matthewprenger.servertools.core.util;
+
+import org.apache.commons.io.comparator.LastModifiedFileComparator;
+import org.apache.commons.io.filefilter.FileFileFilter;
+
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Arrays;
 
 public class FileUtils {
     public static void writeStringToFile(String string, File file) throws IOException {

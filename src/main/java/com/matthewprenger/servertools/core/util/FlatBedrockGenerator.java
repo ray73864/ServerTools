@@ -1,15 +1,5 @@
-package com.matthewprenger.servertools.core.util;
-
-import cpw.mods.fml.common.IWorldGenerator;
-import net.minecraft.init.Blocks;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.chunk.IChunkProvider;
-
-import java.util.Random;
-
 /*
- * Copyright 2014 matthewprenger
+ * Copyright 2014 Matthew Prenger
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +13,16 @@ import java.util.Random;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package com.matthewprenger.servertools.core.util;
+
+import cpw.mods.fml.common.IWorldGenerator;
+import net.minecraft.init.Blocks;
+import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.chunk.IChunkProvider;
+
+import java.util.Random;
 
 public class FlatBedrockGenerator implements IWorldGenerator {
 

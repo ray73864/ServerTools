@@ -1,13 +1,5 @@
-package com.matthewprenger.servertools.permission.elements;
-
-import com.google.common.collect.ImmutableSet;
-import com.matthewprenger.servertools.permission.GroupManager;
-
-import java.util.HashSet;
-import java.util.Set;
-
 /*
- * Copyright 2014 matthewprenger
+ * Copyright 2014 Matthew Prenger
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +13,14 @@ import java.util.Set;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package com.matthewprenger.servertools.permission.elements;
+
+import com.google.common.collect.ImmutableSet;
+import com.matthewprenger.servertools.permission.GroupManager;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class Group {
 

@@ -1,15 +1,5 @@
-package com.matthewprenger.servertools.permission.asm;
-
-import com.matthewprenger.servertools.core.lib.Reference;
-import cpw.mods.fml.relauncher.IFMLCallHook;
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.Map;
-
 /*
- * Copyright 2014 matthewprenger
+ * Copyright 2014 Matthew Prenger
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +13,16 @@ import java.util.Map;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package com.matthewprenger.servertools.permission.asm;
+
+import com.matthewprenger.servertools.core.lib.Reference;
+import cpw.mods.fml.relauncher.IFMLCallHook;
+import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Map;
 
 @IFMLLoadingPlugin.TransformerExclusions({"com.matthewprenger.servertools.permission.preloader"})
 @IFMLLoadingPlugin.MCVersion(Reference.MC_VERSION)

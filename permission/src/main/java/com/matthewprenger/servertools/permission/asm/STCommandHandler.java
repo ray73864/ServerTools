@@ -1,19 +1,5 @@
-package com.matthewprenger.servertools.permission.asm;
-
-import com.matthewprenger.servertools.permission.GroupManager;
-import com.matthewprenger.servertools.permission.ServerToolsPermission;
-import net.minecraft.command.*;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.CommandEvent;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /*
- * Copyright 2014 matthewprenger
+ * Copyright 2014 Matthew Prenger
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +13,20 @@ import java.util.List;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package com.matthewprenger.servertools.permission.asm;
+
+import com.matthewprenger.servertools.permission.GroupManager;
+import com.matthewprenger.servertools.permission.ServerToolsPermission;
+import net.minecraft.command.*;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.CommandEvent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class STCommandHandler extends CommandHandler {
 

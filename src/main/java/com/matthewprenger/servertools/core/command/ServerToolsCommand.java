@@ -1,10 +1,5 @@
-package com.matthewprenger.servertools.core.command;
-
-import net.minecraft.command.CommandBase;
-import net.minecraft.command.ICommand;
-
 /*
- * Copyright 2014 matthewprenger
+ * Copyright 2014 Matthew Prenger
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +13,11 @@ import net.minecraft.command.ICommand;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package com.matthewprenger.servertools.core.command;
+
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.ICommand;
 
 public abstract class ServerToolsCommand extends CommandBase {
 
