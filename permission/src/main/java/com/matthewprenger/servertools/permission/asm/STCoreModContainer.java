@@ -1,4 +1,4 @@
-package com.matthewprenger.servertools.permission.preloader;
+package com.matthewprenger.servertools.permission.asm;
 
 import com.google.common.eventbus.EventBus;
 import com.matthewprenger.servertools.permission.Reference;
@@ -12,9 +12,9 @@ public class STCoreModContainer extends DummyModContainer {
 
         super(new ModMetadata());
         ModMetadata meta = super.getMetadata();
-        meta.modId = "ST|Permission|Preloader";
-        meta.name = "ServerTools|Permission Preloader";
-        meta.description = "Sets up stuff for ServerTools Permissions";
+        meta.modId = "STPermission-Plugin";
+        meta.name = "ServerTools|Permission Plugin";
+        meta.description = "Patches vamilla for ServerTools Permission System";
         meta.parent = Reference.MOD_ID;
     }
 

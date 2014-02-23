@@ -33,14 +33,7 @@ public class STCommandHandler extends CommandHandler {
     @Override
     public int executeCommand(ICommandSender sender, String input) {
 
-        System.out.println("###########################");
-        System.out.println("###########################");
-        System.out.println("#                         #");
-        System.out.println("#      execute            #");
-        System.out.println("#                         #");
-        System.out.println("#                         #");
-        System.out.println("###########################");
-        System.out.println("###########################");
+        ServerToolsPermission.log.debug(String.format("Execute Command: %s@%s", sender.getCommandSenderName(), input));
 
         input = input.trim();
 

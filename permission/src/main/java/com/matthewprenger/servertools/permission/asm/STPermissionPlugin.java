@@ -1,8 +1,10 @@
-package com.matthewprenger.servertools.permission.preloader;
+package com.matthewprenger.servertools.permission.asm;
 
 import com.matthewprenger.servertools.core.lib.Reference;
 import cpw.mods.fml.relauncher.IFMLCallHook;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 
@@ -26,15 +28,17 @@ import java.util.Map;
 @IFMLLoadingPlugin.MCVersion(Reference.MC_VERSION)
 public class STPermissionPlugin implements IFMLLoadingPlugin, IFMLCallHook {
 
+    public static final Logger log = LogManager.getLogger("STPermission-Plugin");
+
     @Override
     public Void call() throws Exception {
-        System.out.println("** Initializing ServerTools Permission CoreMod **");
+        log.info("Initializing ServerTools Permission CoreMod");
         return null;
     }
 
     @Override
     public String[] getASMTransformerClass() {
-        return new String[]{com.matthewprenger.servertools.permission.asm.STPClassTransformer.class.getName()};
+        return new String[]{STPClassTransformer.class.getName()};
     }
 
     @Override

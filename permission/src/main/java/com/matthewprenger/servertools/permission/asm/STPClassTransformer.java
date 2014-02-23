@@ -9,14 +9,22 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 public class STPClassTransformer implements IClassTransformer {
 
-    private static final String commandHandler = "net.minecraft.command.CommandHandler";
-    private static final String stCommandHandler = "com.matthewprenger.servertools.permission.asm.STCommandHandler";
-    private static final String srgExecuteCommand = "func_71556_a";
-
     private static final FMLDeobfuscatingRemapper remapper = FMLDeobfuscatingRemapper.INSTANCE;
+    private static final Set<PatchNote> patches = new HashSet<>();
+
+    static {
+
+        PatchNote chPatch = new PatchNote("net.minecraft.command.CommandHandler", "com.matthewprenger.servertools.permission.asm.STCommandHandler");
+        chPatch.addMethodToPatch(new MethodNote("executeCommand", "func_71556_a", "(Lnet/minecraft/command/ICommandSender;Ljava/lang/String;)I"));
+        chPatch.addMethodToPatch(new MethodNote("getPossibleCommands", "func_71558_b", "(Lnet/minecraft/command/ICommandSender;Ljava/lang/String;)Ljava/util/List;"));
+        chPatch.addMethodToPatch(new MethodNote("getPossibleCommands", "func_71557_a", "(Lnet/minecraft/command/ICommandSender;)Ljava/util/List;"));
+        patches.add(chPatch);
+    }
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] bytes) {
@@ -24,52 +32,77 @@ public class STPClassTransformer implements IClassTransformer {
         if (bytes == null)
             return null;
 
-        if (commandHandler.equals(transformedName))
-            return patchCommandHandler(name, bytes);
+
+        for (PatchNote patchNote : patches) {
+            if (patchNote.sourceClass.equals(transformedName)) {
+                STPermissionPlugin.log.info("Found Class To Patch, Name:{}, TransformedName:{}", name, transformedName);
+                return transform(name, patchNote, bytes);
+            }
+        }
 
         return bytes;
     }
 
-    private static byte[] patchCommandHandler(String obfName, byte[] bytes) {
+    private static byte[] transform(String obfName, PatchNote patchNote, byte[] bytes) {
 
         ClassNode classNode = new ClassNode();
         ClassReader classReader = new ClassReader(bytes);
         classReader.accept(classNode, 0);
 
-        MethodNode source = null;
-        MethodNode replacement = null;
+        if (patchNote.methodsToPatch.isEmpty())
+            return bytes;
 
-        for (MethodNode node : classNode.methods) {
-            if (srgExecuteCommand.equals(remapper.mapMethodName(obfName, node.name, node.desc))) {
-                System.out.println("Found It"); //TODO
-                source = node;
-            }
-        }
+        for (MethodNote methodNote : patchNote.methodsToPatch) {
 
-        try {
-            ClassNode replacementCH = loadClass(stCommandHandler);
+            MethodNode sourceMethod = null;
+            MethodNode replacementMethod = null;
 
-            for (MethodNode methodNode : replacementCH.methods) {
-                if (srgExecuteCommand.equals(remapper.mapMethodName(stCommandHandler, methodNode.name, methodNode.desc))) {
-                    replacement = methodNode;
+            try {
+
+                for (MethodNode method : classNode.methods) {
+                    if (methodNote.srgMethodName.equals(remapper.mapMethodName(obfName, method.name, method.desc))) {
+                    STPermissionPlugin.log.trace("Found Method to Patch: {}@{}", method.name, method.desc);
+                        sourceMethod = method;
+                        break;
+                    } else if (methodNote.methodName.equals(method.name) && methodNote.deobfDesc.equals(method.desc)) {
+                    STPermissionPlugin.log.trace("Found Deobfuscated Method to Patch: {}@{}", method.name, method.desc);
+                        sourceMethod = method;
+                    }
                 }
+
+
+                ClassNode replacementClass = loadClass(patchNote.replacementClass);
+                for (MethodNode method : replacementClass.methods) {
+                    if (methodNote.srgMethodName.equals(remapper.mapMethodName(patchNote.replacementClass, method.name, method.desc))) {
+                    STPermissionPlugin.log.trace("Found Replacement Method: {}@{}", method.name, method.desc);
+                        replacementMethod = method;
+                        break;
+                    } else if (methodNote.methodName.equals(method.name) && methodNote.deobfDesc.equals(method.desc)) {
+                    STPermissionPlugin.log.trace("Found Deobfuscated Replacement Method: {}@{}", method.name, method.desc);
+                        replacementMethod = method;
+                        break;
+                    }
+                }
+            } catch (Throwable t) {
+                t.printStackTrace(System.err);
+                STPermissionPlugin.log.warn("Failed to Map Replacement Method: {}", methodNote.methodName, t);
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            if (sourceMethod != null && replacementMethod != null) {
+                STPermissionPlugin.log.info("Successfully Mapped Method to be Replaced");
+                STPermissionPlugin.log.debug("  Source: {}@{} Replacement: {}@{}", sourceMethod.name, sourceMethod.desc, replacementMethod.name, replacementMethod.desc);
+                classNode.methods.remove(sourceMethod);
+                classNode.methods.add(replacementMethod);
+
+            } else {
+                STPermissionPlugin.log.info("Couldn't match methods to patch, skipping");
+                return bytes;
+            }
         }
 
-        if (source != null && replacement != null) {
-            System.out.println("** Replacing **"); //TODO
-            classNode.methods.remove(source);
-            classNode.methods.add(replacement);
-
-            ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-            classNode.accept(classWriter);
-            return classWriter.toByteArray();
-        }
-
-        return bytes;
+        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+        classNode.accept(classWriter);
+        return classWriter.toByteArray();
     }
 
     private static ClassNode loadClass(String className) throws IOException {
@@ -80,4 +113,37 @@ public class STPClassTransformer implements IClassTransformer {
         classReader.accept(classNode, 0);
         return classNode;
     }
+
+    private static class PatchNote {
+
+        public final String sourceClass;
+        public final String replacementClass;
+
+        public final Set<MethodNote> methodsToPatch = new HashSet<>();
+
+        public PatchNote(String sourceClass, String replacementClass) {
+            this.sourceClass = sourceClass;
+            this.replacementClass = replacementClass;
+        }
+
+        public void addMethodToPatch(MethodNote methodNote) {
+
+            methodsToPatch.add(methodNote);
+        }
+    }
+
+    private static class MethodNote {
+
+        public final String methodName;
+        public final String srgMethodName;
+        public final String deobfDesc;
+
+        public MethodNote(String methodName, String srgMethodName, String deobfDesc) {
+
+            this.methodName = methodName;
+            this.srgMethodName = srgMethodName;
+            this.deobfDesc = deobfDesc;
+        }
+    }
+
 }
