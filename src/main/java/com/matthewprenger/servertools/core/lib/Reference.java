@@ -24,5 +24,7 @@ public class Reference {
     public static final String DEPENDENCIES = "required-after:Forge@[10.12.0.1024,)";
     public static final String MC_VERSION = "1.7.2";
 
+    public static final String[] AUTHORS = new String[] {"matthewprenger"};
+
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");
 }

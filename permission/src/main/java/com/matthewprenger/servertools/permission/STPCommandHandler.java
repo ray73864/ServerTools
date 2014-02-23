@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package com.matthewprenger.servertools.permission.asm;
+package com.matthewprenger.servertools.permission;
 
-import com.matthewprenger.servertools.permission.GroupManager;
-import com.matthewprenger.servertools.permission.ServerToolsPermission;
 import net.minecraft.command.*;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
@@ -28,7 +26,7 @@ import net.minecraftforge.event.CommandEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class STCommandHandler extends CommandHandler {
+public class STPCommandHandler extends CommandHandler {
 
     @Override
     public int executeCommand(ICommandSender sender, String input) {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.matthewprenger.servertools.permission.asm;
+package com.matthewprenger.servertools.core.asm;
 
 import com.matthewprenger.servertools.core.lib.Reference;
 import cpw.mods.fml.relauncher.IFMLCallHook;
@@ -24,27 +24,26 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 
-@IFMLLoadingPlugin.TransformerExclusions({"com.matthewprenger.servertools.permission.preloader"})
+@IFMLLoadingPlugin.TransformerExclusions("com.matthewprenger.servertools.core.asm")
 @IFMLLoadingPlugin.MCVersion(Reference.MC_VERSION)
-public class STPermissionPlugin implements IFMLLoadingPlugin, IFMLCallHook {
+public class STPlugin implements IFMLLoadingPlugin, IFMLCallHook {
 
-    public static final Logger log = LogManager.getLogger("STPermission-Plugin");
+    public static final Logger log = LogManager.getLogger(STPlugin.class.getSimpleName());
 
     @Override
     public Void call() throws Exception {
-        log.info("Initializing ServerTools Permission CoreMod");
         return null;
     }
 
     @Override
     public String[] getASMTransformerClass() {
-        return new String[]{STPClassTransformer.class.getName()};
+        return new String[] {STClassTransformer.class.getName()};
     }
 
     @Override
     public String getModContainerClass() {
 
-        return STCoreModContainer.class.getName();
+        return STPluginModContainer.class.getName();
     }
 
     @Override

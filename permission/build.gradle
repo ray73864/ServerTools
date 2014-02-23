@@ -1,6 +1,0 @@
-jar {
-    manifest {
-        attributes 'FMLCorePlugin': 'com.matthewprenger.servertools.permission.asm.STPermissionPlugin'
-        attributes 'FMLCorePluginContainsFMLMod': 'true'
-    }
-}

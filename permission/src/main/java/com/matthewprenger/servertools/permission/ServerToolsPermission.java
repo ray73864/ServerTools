@@ -18,6 +18,7 @@ package com.matthewprenger.servertools.permission;
 
 import com.matthewprenger.servertools.core.STLog;
 import com.matthewprenger.servertools.core.ServerTools;
+import com.matthewprenger.servertools.core.asm.STClassTransformer;
 import com.matthewprenger.servertools.core.command.CommandManager;
 import com.matthewprenger.servertools.permission.command.*;
 import cpw.mods.fml.common.Mod;
@@ -27,6 +28,8 @@ import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
 import java.io.File;
+
+import static com.matthewprenger.servertools.core.asm.STClassTransformer.MethodNote;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, dependencies = Reference.DEPENDENCIES)
 public class ServerToolsPermission {
@@ -42,6 +45,12 @@ public class ServerToolsPermission {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+
+        STClassTransformer.PatchNote chPatch = new STClassTransformer.PatchNote("net.minecraft.command.CommandHandler", "com.matthewprenger.servertools.permission.STPCommandHandler");
+        chPatch.addMethodToPatch(new MethodNote("executeCommand", "func_71556_a", "(Lnet/minecraft/command/ICommandSender;Ljava/lang/String;)I"));
+        chPatch.addMethodToPatch(new MethodNote("getPossibleCommands", "func_71558_b", "(Lnet/minecraft/command/ICommandSender;Ljava/lang/String;)Ljava/util/List;"));
+        chPatch.addMethodToPatch(new MethodNote("getPossibleCommands", "func_71557_a", "(Lnet/minecraft/command/ICommandSender;)Ljava/util/List;"));
+        STClassTransformer.addPatch(chPatch);
 
         permissionDir = new File(ServerTools.serverToolsDir, "permission");
         if (permissionDir.mkdirs())

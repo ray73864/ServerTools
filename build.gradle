@@ -47,6 +47,13 @@ if (System.getenv("BUILD_NUMBER") != null) {
     actualVersion += "-DEV"
 }
 
+jar {
+    manifest {
+        attributes 'FMLCorePlugin': 'com.matthewprenger.servertools.core.asm.STPlugin'
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
+    }
+}
+
 subprojects {
     apply plugin: 'java'
 

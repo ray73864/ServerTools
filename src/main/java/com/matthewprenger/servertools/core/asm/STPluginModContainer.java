@@ -14,23 +14,25 @@
  * limitations under the License.
  */
 
-package com.matthewprenger.servertools.permission.asm;
+package com.matthewprenger.servertools.core.asm;
 
 import com.google.common.eventbus.EventBus;
-import com.matthewprenger.servertools.permission.Reference;
+import com.matthewprenger.servertools.core.lib.Reference;
 import cpw.mods.fml.common.DummyModContainer;
 import cpw.mods.fml.common.LoadController;
 import cpw.mods.fml.common.ModMetadata;
 
-public class STCoreModContainer extends DummyModContainer {
+import java.util.Arrays;
 
-    public STCoreModContainer() {
+public class STPluginModContainer extends DummyModContainer {
 
+    public STPluginModContainer() {
         super(new ModMetadata());
         ModMetadata meta = super.getMetadata();
-        meta.modId = "STPermission-Plugin";
-        meta.name = "ServerTools|Permission Plugin";
-        meta.description = "Patches vamilla for ServerTools Permission System";
+        meta.modId = "STPlugin";
+        meta.name = "ServerTools Plugin";
+        meta.description = "Patches Vanilla Minecraft for ServerTools";
+        meta.authorList = Arrays.asList(Reference.AUTHORS);
         meta.parent = Reference.MOD_ID;
     }
 
