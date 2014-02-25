@@ -19,6 +19,7 @@ package com.matthewprenger.servertools.backup;
 import com.matthewprenger.servertools.core.STLog;
 import com.matthewprenger.servertools.core.ServerTools;
 import com.matthewprenger.servertools.core.command.CommandManager;
+import com.matthewprenger.servertools.core.util.Util;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
@@ -42,6 +43,8 @@ public class ServerToolsBackup implements ICommandSender {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+
+        Util.checkModuleVersion(this.getClass());
 
         File backupDir = new File(ServerTools.serverToolsDir, "backup");
         backupDir.mkdirs();

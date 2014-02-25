@@ -20,6 +20,7 @@ import com.matthewprenger.servertools.core.STLog;
 import com.matthewprenger.servertools.core.ServerTools;
 import com.matthewprenger.servertools.core.asm.STClassTransformer;
 import com.matthewprenger.servertools.core.command.CommandManager;
+import com.matthewprenger.servertools.core.util.Util;
 import com.matthewprenger.servertools.permission.command.*;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -45,6 +46,8 @@ public class ServerToolsPermission {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+
+        Util.checkModuleVersion(this.getClass());
 
         STClassTransformer.PatchNote chPatch = new STClassTransformer.PatchNote("net.minecraft.command.CommandHandler", "com.matthewprenger.servertools.permission.STPCommandHandler");
         chPatch.addMethodToPatch(new MethodNote("executeCommand", "func_71556_a", "(Lnet/minecraft/command/ICommandSender;Ljava/lang/String;)I"));

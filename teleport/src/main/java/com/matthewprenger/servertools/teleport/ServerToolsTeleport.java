@@ -19,6 +19,7 @@ package com.matthewprenger.servertools.teleport;
 import com.matthewprenger.servertools.core.STLog;
 import com.matthewprenger.servertools.core.ServerTools;
 import com.matthewprenger.servertools.core.command.CommandManager;
+import com.matthewprenger.servertools.core.util.Util;
 import com.matthewprenger.servertools.teleport.command.CommandEditTeleport;
 import com.matthewprenger.servertools.teleport.command.CommandHome;
 import com.matthewprenger.servertools.teleport.command.CommandTeleport;
@@ -45,6 +46,8 @@ public class ServerToolsTeleport {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+
+        Util.checkModuleVersion(this.getClass());
 
         TeleportConfig.init(new File(serverToolsTeleportDir, "teleport.cfg"));
     }

@@ -16,6 +16,8 @@
 
 package com.matthewprenger.servertools.core.lib;
 
+import com.matthewprenger.servertools.core.ServerTools;
+
 public class Reference {
 
 
@@ -23,8 +25,19 @@ public class Reference {
     public static final String MOD_NAME = MOD_ID;
     public static final String DEPENDENCIES = "required-after:Forge@[10.12.0.1024,)";
     public static final String MC_VERSION = "1.7.2";
+    public static final String VERSION;
 
     public static final String[] AUTHORS = new String[] {"matthewprenger"};
 
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");
+
+    static {
+        String ver = Reference.class.getPackage().getImplementationVersion();
+
+        if (ver == null) {
+            ServerTools.log.warn("ServerTools doesn't have an assigned version number. Unpredictable results may occur");
+            VERSION = "UNKNOWN";
+        } else
+            VERSION = ver;
+    }
 }

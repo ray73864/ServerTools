@@ -99,4 +99,11 @@ allprojects {
             exclude 'version.properties'
         }
     }
+
+    jar {
+        manifest {
+            attributes 'Implementation-Title': project.name
+            attributes 'Implementation-Version': actualVersion
+        }
+    }
 }

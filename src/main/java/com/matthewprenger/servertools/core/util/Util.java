@@ -16,7 +16,8 @@
 
 package com.matthewprenger.servertools.core.util;
 
-import com.google.common.base.Strings;
+import com.matthewprenger.servertools.core.ServerTools;
+import com.matthewprenger.servertools.core.lib.Reference;
 import net.minecraft.util.ChatComponentStyle;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
@@ -24,39 +25,37 @@ import net.minecraft.util.EnumChatFormatting;
 public class Util {
 
     /**
-     * Check to see if a module is the same version as ServerTools Core
-     * The game will not run if they aren't equal
+     * Check if a module's {@link java.lang.Package} ImplementationVersion matches ServerTools' version
      *
-     * @param moduleName    the name of the module (Used for error reporting)
-     * @param moduleVersion the version of the module
-     */
-    public static void checkModuleVersion(String moduleName, String moduleVersion) {
-//
-//        if (!(ServerTools.VERSION.equals(moduleVersion))) {
-//
-//            String versionMismatch = "ServerTools is %s, %s is %s";
-//
-//            ServerTools.log.fatal("####################################");
-//            ServerTools.log.fatal("#         Version Mismatch         #");
-////            ServerTools.log.fatal(String.format(versionMismatch, FMLMod, moduleName, moduleVersion));
-//            ServerTools.log.fatal("Please download matching versions of ServerTools Modules!");
-//            ServerTools.log.fatal("#     The Game Will Not Load       #");
-//            ServerTools.log.fatal("####################################");
-//
-//            Runtime.getRuntime().exit(1);
-//        }
-    }
-
-    /**
-     * Get the Specification Version from the mod jar
+     * The Game will not load if they aren't equal
      *
-     * @param clazz A mod class
-     * @return The mod version
+     * @param clazz any module class
      */
-    public static String getVersionFromJar(Class<?> clazz) {
+    public static void checkModuleVersion(Class clazz) {
 
-        String version = clazz.getPackage().getImplementationVersion();
-        return Strings.isNullOrEmpty(version) ? "UNKNOWN" : version;
+        String moduleVersion = clazz.getPackage().getImplementationVersion();
+        String moduleName = clazz.getPackage().getImplementationTitle();
+
+        if (moduleVersion == null) {
+            moduleVersion = "UNKNOWN";
+            ServerTools.log.getLogger().warn("Module class: {} doesn't have a version number, unpredicatble results may occur", clazz.getName());
+        }
+
+        if (moduleName == null) {
+            moduleName = "UNKNOWN";
+            ServerTools.log.getLogger().warn("Module class: {} doesn't have an attached name, unpredictable results may occur", clazz.getName());
+        }
+
+        if (Reference.VERSION.equals(moduleVersion)) {
+            ServerTools.log.getLogger().trace("Module: {} version: {} matches ServerTools version: {}", moduleName, moduleVersion, Reference.VERSION);
+        } else {
+            ServerTools.log.getLogger().fatal("Module {} version: {} does not match ServerTools version {}", moduleName, moduleVersion, Reference.VERSION);
+            ServerTools.log.fatal("Download matching versions of ServerTools modules");
+
+            throw new RuntimeException("Mismatched ServerTools module versions");
+        }
+
+
     }
 
     /**
