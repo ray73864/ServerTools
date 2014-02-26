@@ -25,6 +25,7 @@ import com.matthewprenger.servertools.core.util.FlatBedrockGenerator;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.FMLInjectionData;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.server.MinecraftServer;
 
@@ -33,11 +34,11 @@ import java.io.File;
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, dependencies = Reference.DEPENDENCIES)
 public class ServerTools {
 
-    public static final File serverToolsDir = new File("servertools");
+    public static final File minecraftDir = (File) FMLInjectionData.data()[6];
+    public static final File serverToolsDir = new File(minecraftDir, "servertools");
+    static {serverToolsDir.mkdirs();}
 
     public static final STLog log = new STLog(Reference.MOD_ID);
-
-    static {serverToolsDir.mkdirs();}
 
     @Mod.Instance(Reference.MOD_ID)
     public static ServerTools instance;
@@ -57,6 +58,7 @@ public class ServerTools {
         /* Initialize the Core Configuration */
         CoreConfig.init(new File(serverToolsDir, "core.cfg"));
 
+        /* Create a new TickHandler Instance */
         tickHandler = new TickHandler();
     }
 

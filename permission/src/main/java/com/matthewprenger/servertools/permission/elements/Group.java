@@ -28,7 +28,7 @@ public class Group {
     private final Set<String> members;
     private final Set<String> allowedCommands;
     private final Set<String> childGroups;
-    private int chatColor;
+    private String chatColor;
 
     public Group(String groupName) {
 
@@ -36,7 +36,7 @@ public class Group {
         members = new HashSet<>();
         allowedCommands = new HashSet<>();
         childGroups = new HashSet<>();
-        chatColor = 15;
+        chatColor = "white";
     }
 
     public void addMember(String username) {
@@ -114,12 +114,12 @@ public class Group {
         return ImmutableSet.copyOf(childGroups);
     }
 
-    public int getChatColor() {
+    public String getChatColor() {
 
         return chatColor;
     }
 
-    public void setChatColor(int chatColor) {
+    public void setChatColor(String chatColor) {
 
         this.chatColor = chatColor;
     }

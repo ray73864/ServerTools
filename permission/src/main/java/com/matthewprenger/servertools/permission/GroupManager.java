@@ -27,6 +27,7 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -261,7 +262,7 @@ public class GroupManager {
      * @param color     the index of the {@link net.minecraft.util.EnumChatFormatting} color
      * @throws GroupException
      */
-    public static void setGroupChatColor(String groupName, int color) throws GroupException {
+    public static void setGroupChatColor(String groupName, String color) throws GroupException {
 
         if (groups.containsKey(groupName)) {
             groups.get(groupName).setChatColor(color);
@@ -335,9 +336,9 @@ public class GroupManager {
             createGroup(MODERATOR);
             createGroup(PLAYER);
 
-            setGroupChatColor(ADMIN, 12);
-            setGroupChatColor(MODERATOR, 9);
-            setGroupChatColor(PLAYER, 15);
+            setGroupChatColor(ADMIN, EnumChatFormatting.RED.getFriendlyName());
+            setGroupChatColor(MODERATOR, EnumChatFormatting.BLUE.getFriendlyName());
+            setGroupChatColor(PLAYER, EnumChatFormatting.WHITE.getFriendlyName());
 
             addChildGroupToGroup(PLAYER, MODERATOR);
             addChildGroupToGroup(MODERATOR, ADMIN);

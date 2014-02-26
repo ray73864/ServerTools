@@ -14,43 +14,37 @@
  * limitations under the License.
  */
 
-package com.matthewprenger.servertools.core.asm;
+package com.matthewprenger.servertools.permission.asm;
 
-import com.matthewprenger.servertools.core.lib.Reference;
 import cpw.mods.fml.relauncher.IFMLCallHook;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 
-@IFMLLoadingPlugin.Name("STPlugin")
-@IFMLLoadingPlugin.TransformerExclusions({"com.matthewprenger.servertools.core.asm"})
-@IFMLLoadingPlugin.MCVersion(Reference.MC_VERSION)
-public class STPlugin implements IFMLLoadingPlugin, IFMLCallHook {
-
-    public static final Logger log = LogManager.getLogger(STPlugin.class.getSimpleName());
+@IFMLLoadingPlugin.Name("STPPlugin")
+@IFMLLoadingPlugin.DependsOn("STPlugin")
+@IFMLLoadingPlugin.TransformerExclusions({"com.matthewprenger.servertools.permission.asm"})
+public class STPPlugin implements IFMLLoadingPlugin, IFMLCallHook {
 
     @Override
     public Void call() throws Exception {
+
         return null;
     }
 
     @Override
     public String[] getASMTransformerClass() {
-        return new String[] {STClassTransformer.class.getName()};
+        return new String[]{STPClassTransformer.class.getName()};
     }
 
     @Override
     public String getModContainerClass() {
-
-        return STPluginModContainer.class.getName();
+        return null;
     }
 
     @Override
     public String getSetupClass() {
-
-        return getClass().getName();
+        return null;
     }
 
     @Override

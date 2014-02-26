@@ -39,6 +39,7 @@ public class STClassTransformer implements IClassTransformer {
         if (bytes == null)
             return null;
 
+        STPlugin.log.trace("Class: {} | Transformed: {}", name, transformedName);
 
         for (PatchNote patchNote : patches) {
             if (patchNote.sourceClass.equals(transformedName)) {
@@ -115,6 +116,13 @@ public class STClassTransformer implements IClassTransformer {
     public static void addPatch(PatchNote patchNote) {
 
         STPlugin.log.trace("Registering ASM Patch: {}", patchNote.sourceClass);
+        STPlugin.log.trace("  Replacement: {}", patchNote.replacementClass);
+
+        for (MethodNote note : patchNote.methodsToPatch) {
+            STPlugin.log.trace("  Method: {}", note.methodName);
+            STPlugin.log.trace("  SRG: {}", note.srgMethodName);
+        }
+
         patches.add(patchNote);
     }
 
