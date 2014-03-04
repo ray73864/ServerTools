@@ -19,6 +19,8 @@ package com.matthewprenger.servertools.teleport.command;
 import com.matthewprenger.servertools.core.command.ServerToolsCommand;
 import com.matthewprenger.servertools.core.util.Util;
 import com.matthewprenger.servertools.teleport.HomeManager;
+import com.matthewprenger.servertools.teleport.Location;
+import com.matthewprenger.servertools.teleport.TeleportManager;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -43,9 +45,11 @@ public class CommandHome extends ServerToolsCommand {
 
         if (args.length == 0) {
 
-            HomeManager.Location home = HomeManager.getHome(player.getCommandSenderName(), player.worldObj.provider.dimensionId);
+            Location home = HomeManager.getHome(player.getCommandSenderName(), player.worldObj.provider.dimensionId);
 
             if (home != null) {
+
+                TeleportManager.backMap.put(player.getGameProfile().getName() ,new Location(player.worldObj.provider.dimensionId, player.posX, player.posY, player.posZ));
 
                 player.setPositionAndUpdate(home.x, home.y, home.z);
                 player.addChatMessage(Util.getChatComponent("Teleported Home", EnumChatFormatting.GREEN));

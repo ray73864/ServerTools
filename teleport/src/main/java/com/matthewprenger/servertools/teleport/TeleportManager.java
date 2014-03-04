@@ -30,6 +30,8 @@ import java.util.Map;
 
 public class TeleportManager {
 
+    public static Map<String, Location> backMap = new HashMap<>();
+
     public static Map<String, Location> teleportMap = new HashMap<>();
     private static File teleportSaveFile;
     private static Gson gson;
@@ -112,18 +114,6 @@ public class TeleportManager {
         } catch (IOException e) {
             e.printStackTrace();
             ServerToolsTeleport.log.log(Level.WARN, String.format("Failed to close buffered reader stream for: %s", teleportSaveFile.getAbsolutePath()));
-        }
-    }
-
-    public static class Location {
-        public final double x, y, z;
-        public final int dimension;
-
-        public Location(int dimension, double x, double y, double z) {
-            this.dimension = dimension;
-            this.x = x;
-            this.y = y;
-            this.z = z;
         }
     }
 }

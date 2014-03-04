@@ -20,6 +20,7 @@ import com.matthewprenger.servertools.core.STLog;
 import com.matthewprenger.servertools.core.ServerTools;
 import com.matthewprenger.servertools.core.command.CommandManager;
 import com.matthewprenger.servertools.core.util.Util;
+import com.matthewprenger.servertools.teleport.command.CommandBack;
 import com.matthewprenger.servertools.teleport.command.CommandEditTeleport;
 import com.matthewprenger.servertools.teleport.command.CommandHome;
 import com.matthewprenger.servertools.teleport.command.CommandTeleport;
@@ -33,9 +34,12 @@ import java.io.File;
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, dependencies = Reference.DEPENDENCIES)
 public class ServerToolsTeleport {
 
+    public EventHandler eventHandler;
+
     public CommandHome commandHome;
     public CommandTeleport commandTeleport;
     public CommandEditTeleport commandEditTeleport;
+    public CommandBack commandBack;
 
     @Mod.Instance
     public static ServerToolsTeleport instance;
@@ -58,10 +62,12 @@ public class ServerToolsTeleport {
         commandHome = new CommandHome("home");
         commandTeleport = new CommandTeleport("teleport");
         commandEditTeleport = new CommandEditTeleport("editteleport");
+        commandBack = new CommandBack("back");
 
         CommandManager.registerSTCommand(commandHome);
         CommandManager.registerSTCommand(commandTeleport);
         CommandManager.registerSTCommand(commandEditTeleport);
+        CommandManager.registerSTCommand(commandBack);
     }
 
     @Mod.EventHandler
@@ -69,5 +75,7 @@ public class ServerToolsTeleport {
 
         HomeManager.init(new File(serverToolsTeleportDir, "homes"));
         TeleportManager.init(new File(serverToolsTeleportDir, "teleports.json"));
+
+        if (eventHandler == null) eventHandler = new EventHandler();
     }
 }

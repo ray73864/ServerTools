@@ -18,6 +18,7 @@ package com.matthewprenger.servertools.teleport.command;
 
 import com.matthewprenger.servertools.core.command.ServerToolsCommand;
 import com.matthewprenger.servertools.core.util.Util;
+import com.matthewprenger.servertools.teleport.Location;
 import com.matthewprenger.servertools.teleport.TeleportConfig;
 import com.matthewprenger.servertools.teleport.TeleportManager;
 import net.minecraft.command.ICommandSender;
@@ -63,17 +64,19 @@ public class CommandTeleport extends ServerToolsCommand {
 
         EntityPlayer player = (EntityPlayer) icommandsender;
 
-        TeleportManager.Location teleport = TeleportManager.getTeleport(astring[0]);
+        Location teleport = TeleportManager.getTeleport(astring[0]);
 
         if (teleport != null) {
 
-            if (teleport.dimension != player.worldObj.provider.dimensionId) {
+            TeleportManager.backMap.put(player.getGameProfile().getName() ,new Location(player.worldObj.provider.dimensionId, player.posX, player.posY, player.posZ));
+
+            if (teleport.dimID != player.worldObj.provider.dimensionId) {
                 if (!TeleportConfig.ENABLE_TELEPORT_ACROSS_DIMENSION) {
                     icommandsender.addChatMessage(Util.getChatComponent("Teleporting across dimensions isn't allowed", EnumChatFormatting.RED));
                     return;
                 }
 
-                player.travelToDimension(teleport.dimension);
+                player.travelToDimension(teleport.dimID);
             }
 
             player.setPositionAndUpdate(teleport.x, teleport.y, teleport.z);

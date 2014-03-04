@@ -18,6 +18,7 @@ package com.matthewprenger.servertools.teleport.command;
 
 import com.matthewprenger.servertools.core.command.ServerToolsCommand;
 import com.matthewprenger.servertools.core.util.Util;
+import com.matthewprenger.servertools.teleport.Location;
 import com.matthewprenger.servertools.teleport.TeleportManager;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.PlayerNotFoundException;
@@ -70,7 +71,7 @@ public class CommandEditTeleport extends ServerToolsCommand {
 
         if ("set".equalsIgnoreCase(astring[0])) {
 
-            TeleportManager.setTeleport(astring[1], new TeleportManager.Location(player.worldObj.provider.dimensionId, player.posX, player.posY, player.posZ));
+            TeleportManager.setTeleport(astring[1], new Location(player.worldObj.provider.dimensionId, player.posX, player.posY, player.posZ));
             icommandsender.addChatMessage(Util.getChatComponent(String.format("Set teleport: %s", astring[1]), EnumChatFormatting.GREEN));
 
         } else if ("delete".equalsIgnoreCase(astring[0])) {

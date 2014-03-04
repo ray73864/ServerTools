@@ -66,7 +66,7 @@ public class HomeManager {
             userHomeMap.put(username, new HashMap<Integer, Location>());
         }
 
-        userHomeMap.get(username).put(dimension, new Location(x, y, z));
+        userHomeMap.get(username).put(dimension, new Location(dimension, x, y, z));
 
         saveHome(username);
     }
@@ -134,18 +134,6 @@ public class HomeManager {
                     ServerToolsTeleport.log.warn(String.format("Failed to close buffered reader stream for: %s", file.getAbsolutePath()));
                 }
             }
-        }
-    }
-
-    public static class Location {
-        public final double x;
-        public final double y;
-        public final double z;
-
-        Location(double x, double y, double z) {
-            this.x = x;
-            this.y = y;
-            this.z = z;
         }
     }
 }
