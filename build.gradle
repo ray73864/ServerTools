@@ -104,4 +104,85 @@ allprojects {
             attributes 'Implementation-Version': actualVersion
         }
     }
+
+    task sourceJar(type: Jar) {
+        from sourceSets.main.allSource
+        classifier = 'sources'
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        from 'build/docs/javadoc'
+        classifier = 'javadoc'
+    }
+
+    task deobfJar(type: Jar) {
+        from sourceSets.main.output
+        classifier = 'deobf'
+    }
+
+    build.dependsOn sourceJar, javadocJar, deobfJar
+
+    apply plugin: 'maven'
+
+    configurations {
+        deployerJars
+    }
+
+    artifacts {
+        archives sourceJar
+        archives javadocJar
+        archives deobfJar
+    }
+
+    uploadArchives {
+        dependsOn 'reobf'
+
+        if (project.hasProperty("mavendir")) {
+            logger.info("Publishing to maven")
+
+            mavenDeployer {
+                configuration = configurations.deployerJars
+                repository(url: project.mavendir)
+
+                pom {
+                    groupId = project.group
+                    version = project.version
+                    artifactId = project.archivesBaseName
+                    project {
+                        name = project.archivesBaseName
+                        packaging 'jar'
+                        description 'A minecraft server administration mod'
+                        url 'http://servertools.matthewprenger.com/'
+
+                        scm {
+                            url 'https://github.com/matthewprenger/ServerTools'
+                            connection 'scm:git:git://github.com/matthewprenger/ServerTools.git'
+                            developerConnection 'scm:git:git@github.com:matthewprenger/ServerTools.git'
+                        }
+
+                        issueManagement {
+                            system 'github'
+                            url 'https://github.com/matthewprenger/ServerTools/issues'
+                        }
+
+                        licenses {
+                            license {
+                                name 'Apache License Version 2.0'
+                                url 'http://www.apache.org/licenses/LICENSE-2.0.html'
+                                distribution 'repo'
+                            }
+                        }
+
+                        developers {
+                            developer {
+                                id 'matthewprenger'
+                                name 'Matthew Prenger'
+                                roles { role 'developer' }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
