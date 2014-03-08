@@ -22,6 +22,7 @@ version = '2.0.0'
 
 apply plugin: 'forge'
 apply plugin: 'grgit'
+apply plugin: 'maven'
 
 group = "com.matthewprenger.servertools.core"
 archivesBaseName = "ServerTools-CORE"
@@ -122,63 +123,61 @@ allprojects {
 
     build.dependsOn sourceJar, javadocJar, deobfJar
 
-    apply plugin: 'maven'
-
-    configurations {
-        deployerJars
-    }
-
     artifacts {
         archives sourceJar
         archives javadocJar
         archives deobfJar
     }
+}
 
-    uploadArchives {
-        dependsOn 'reobf'
+configurations {
+    deployerJars
+}
 
-        if (project.hasProperty("mavendir")) {
-            logger.info("Publishing to maven")
+uploadArchives {
+    dependsOn 'reobf'
 
-            mavenDeployer {
-                configuration = configurations.deployerJars
-                repository(url: project.mavendir)
+    if (project.hasProperty("mavendir")) {
+        logger.info("Publishing to maven")
 
-                pom {
-                    groupId = project.group
-                    version = project.version
-                    artifactId = project.archivesBaseName
-                    project {
-                        name = project.archivesBaseName
-                        packaging 'jar'
-                        description 'A minecraft server administration mod'
-                        url 'http://servertools.matthewprenger.com/'
+        mavenDeployer {
+            configuration = configurations.deployerJars
+            repository(url: project.mavendir)
 
-                        scm {
-                            url 'https://github.com/matthewprenger/ServerTools'
-                            connection 'scm:git:git://github.com/matthewprenger/ServerTools.git'
-                            developerConnection 'scm:git:git@github.com:matthewprenger/ServerTools.git'
+            pom {
+                groupId = project.group
+                version = project.version
+                artifactId = project.archivesBaseName
+                project {
+                    name = project.archivesBaseName
+                    packaging 'jar'
+                    description 'A minecraft server administration mod'
+                    url 'http://servertools.matthewprenger.com/'
+
+                    scm {
+                        url 'https://github.com/matthewprenger/ServerTools'
+                        connection 'scm:git:git://github.com/matthewprenger/ServerTools.git'
+                        developerConnection 'scm:git:git@github.com:matthewprenger/ServerTools.git'
+                    }
+
+                    issueManagement {
+                        system 'github'
+                        url 'https://github.com/matthewprenger/ServerTools/issues'
+                    }
+
+                    licenses {
+                        license {
+                            name 'Apache License Version 2.0'
+                            url 'http://www.apache.org/licenses/LICENSE-2.0.html'
+                            distribution 'repo'
                         }
+                    }
 
-                        issueManagement {
-                            system 'github'
-                            url 'https://github.com/matthewprenger/ServerTools/issues'
-                        }
-
-                        licenses {
-                            license {
-                                name 'Apache License Version 2.0'
-                                url 'http://www.apache.org/licenses/LICENSE-2.0.html'
-                                distribution 'repo'
-                            }
-                        }
-
-                        developers {
-                            developer {
-                                id 'matthewprenger'
-                                name 'Matthew Prenger'
-                                roles { role 'developer' }
-                            }
+                    developers {
+                        developer {
+                            id 'matthewprenger'
+                            name 'Matthew Prenger'
+                            roles { role 'developer' }
                         }
                     }
                 }
