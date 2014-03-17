@@ -17,6 +17,7 @@
 package com.matthewprenger.servertools.permission;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.matthewprenger.servertools.core.util.FileUtils;
@@ -33,12 +34,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.*;
 
 public class GroupManager {
 
-    private static final Map<String, Group> groups = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    private static final Map<String, File> groupFiles = new TreeMap<>();
+    private static final Map<String, Group> groups = new HashMap<>();
+    private static final Map<String, File> groupFiles = new HashMap<>();
     private static File groupDir;
 
     private static Gson gson;
@@ -309,7 +311,12 @@ public class GroupManager {
                     BufferedReader reader = new BufferedReader(new FileReader(file));
                     String groupName = file.getName().substring(0, file.getName().length() - 5);
 
-                    groups.put(groupName, gson.fromJson(reader, Group.class));
+                    Type type = new TypeToken<Group>() {
+                    }.getType();
+
+                    Group group = gson.fromJson(reader, type);
+
+                    groups.put(groupName, group);
                     groupFiles.put(groupName, file);
 
                 } catch (Exception e) {
