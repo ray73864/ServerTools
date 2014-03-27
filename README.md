@@ -10,6 +10,31 @@ Servertools is a server-side minecraft mod that adds a variety of utilities and 
 
 [License] (#license)
 
+##Depending on ServerTools
+```groovy
+repositories {
+    mavenCentral()
+    maven {
+        name 'Matthews Maven Repo'
+        url 'http://maven.matthewprenger.com'
+    }
+}
+
+dependencies {
+    compile 'com.matthewprenger.servertools:ServerTools-CORE:1.7.2-2.0.+'
+}
+```
+
+Just add the above code to your build.gradle, refresh your project, and you will have access to ServerTools code.
+If you want to depend on multiple modules, refer to the following code block
+
+```groovy
+dependencies {
+    compile 'com.matthewprenger.servertools:ServerTools-CORE:1.7.2-2.0.+'
+    compile 'com.matthewprenger.servertools:ServerTools-BACKUP:1.7.2-2.0.+'
+}
+```
+
 ##License
 Copyright &copy; 2014 matthewprenger
 
