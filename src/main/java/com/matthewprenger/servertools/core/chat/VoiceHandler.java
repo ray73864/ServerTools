@@ -24,8 +24,8 @@ import com.matthewprenger.servertools.core.ServerTools;
 import com.matthewprenger.servertools.core.lib.Strings;
 import com.matthewprenger.servertools.core.util.FileUtils;
 import com.matthewprenger.servertools.core.util.Util;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.server.CommandBroadcast;
 import net.minecraft.command.server.CommandEmote;
 import net.minecraft.command.server.CommandMessage;
@@ -184,7 +184,7 @@ public class VoiceHandler {
             event.component = new ChatComponentTranslation(EnumChatFormatting.AQUA + "[" + CoreConfig.VOICE_CHAT_PREFIX + "]" + EnumChatFormatting.RESET);
             event.component.appendSibling(component);
         }
-        if (CoreConfig.COLOR_OP_CHAT_MESSAGE && MinecraftServer.getServer().getConfigurationManager().isPlayerOpped(event.username) && !Minecraft.getMinecraft().isSingleplayer()) {
+        if (CoreConfig.COLOR_OP_CHAT_MESSAGE && MinecraftServer.getServer().getConfigurationManager().isPlayerOpped(event.username) && FMLCommonHandler.instance().getEffectiveSide().isServer()) {
             ChatComponentTranslation component = event.component;
             event.component = new ChatComponentTranslation(EnumChatFormatting.RED + "[" + CoreConfig.OP_CHAT_PREFIX + "]" + EnumChatFormatting.RESET);
             event.component.appendSibling(component);
