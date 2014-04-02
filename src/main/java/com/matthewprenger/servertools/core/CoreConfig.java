@@ -26,6 +26,7 @@ public class CoreConfig {
     public static boolean SEND_MOTD_ON_LOGIN;
     public static boolean COLOR_OP_CHAT_MESSAGE;
     public static boolean GENERATE_FLAT_BEDROCK;
+    public static boolean LOG_BLOCK_BREAKS;
     public static int DEFAULT_REMOVE_ALL_RANGE;
     public static String OP_CHAT_PREFIX;
     public static String VOICE_CHAT_PREFIX;
@@ -46,6 +47,9 @@ public class CoreConfig {
             DEFAULT_REMOVE_ALL_RANGE = configuration.get(category, "Default RemoveAll Range", 20, "The default range for the /removeall command").getInt();
             OP_CHAT_PREFIX = configuration.get(category, "OP Chat Prefix", "OP", "The prefix in chat for server operators").getString();
             VOICE_CHAT_PREFIX = configuration.get(category, "Voice Chat Prefix", "+", "The prefix in chat for voiced users").getString();
+
+            category = "world";
+            LOG_BLOCK_BREAKS = configuration.get(category, "Log Block Breaks", false, "This will log all blocks broken by players and fake players").getBoolean(false);
 
         } catch (Exception e) {
             e.printStackTrace(System.err);

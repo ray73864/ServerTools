@@ -49,6 +49,8 @@ public class ServerTools {
 
     public TickHandler tickHandler;
 
+    public BlockLogger blockLogger;
+
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
 
@@ -80,6 +82,10 @@ public class ServerTools {
 
         /* Initialize the Voice Handler */
         if (voiceHandler == null) voiceHandler = new VoiceHandler();
+
+        /* Initialize the Block Break Logger */
+        if (blockLogger == null && CoreConfig.LOG_BLOCK_BREAKS)
+            blockLogger = new BlockLogger(new File(serverToolsDir, "blockBreaks"));
 
         /* Initialize the Core Commands to be Registered */
         CommandManager.initCoreCommands();
