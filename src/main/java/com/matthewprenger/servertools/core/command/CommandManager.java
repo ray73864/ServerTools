@@ -102,6 +102,7 @@ public class CommandManager {
         registerSTCommand(new CommandWhereIs("whereis"));
         registerSTCommand(new CommandTPS("tps"));
         registerSTCommand(new CommandRemoveAll("removeall"));
+        registerSTCommand(new CommandMemory("memory"));
     }
 
     public static boolean areCommandsLoaded() {

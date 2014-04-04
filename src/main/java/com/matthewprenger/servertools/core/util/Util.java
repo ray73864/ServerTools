@@ -65,9 +65,9 @@ public class Util {
      * @param formatting any formatting to add
      * @return the component
      */
-    public static ChatComponentStyle getChatComponent(String message, EnumChatFormatting formatting) {
+    public static ChatComponentStyle getChatComponent(Object message, EnumChatFormatting formatting) {
 
-        ChatComponentText componentText = new ChatComponentText(message);
+        ChatComponentText componentText = new ChatComponentText(message.toString());
         componentText.getChatStyle().setColor(formatting);
         return componentText;
     }
