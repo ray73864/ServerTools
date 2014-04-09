@@ -103,6 +103,7 @@ public class CommandManager {
         registerSTCommand(new CommandTPS("tps"));
         registerSTCommand(new CommandRemoveAll("removeall"));
         registerSTCommand(new CommandMemory("memory"));
+        registerSTCommand(new CommandPing("ping"));
     }
 
     public static boolean areCommandsLoaded() {
