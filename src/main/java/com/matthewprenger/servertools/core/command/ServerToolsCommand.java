@@ -18,6 +18,9 @@ package com.matthewprenger.servertools.core.command;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommand;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 
 public abstract class ServerToolsCommand extends CommandBase {
 
@@ -37,6 +40,17 @@ public abstract class ServerToolsCommand extends CommandBase {
 
     @Override
     public abstract int getRequiredPermissionLevel();
+
+    @Override
+    public boolean canCommandSenderUseCommand(ICommandSender sender) {
+
+        MinecraftServer server = MinecraftServer.getServer();
+
+        return !(sender instanceof EntityPlayerMP) || this.getRequiredPermissionLevel() <= 1 ||
+                server.getConfigurationManager().isPlayerOpped(sender.getCommandSenderName()) &&
+                        server.getOpPermissionLevel() >= this.getRequiredPermissionLevel();
+
+    }
 
     @SuppressWarnings("NullableProblems")
     @Override
